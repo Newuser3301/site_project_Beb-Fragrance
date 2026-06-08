@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 38 17% 93%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 38 17% 93%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 38 10% 88%;
+    --muted-foreground: 0 0% 42%;
+
+    --accent: 38 57% 55%;
+    --accent-foreground: 38 60% 20%;
+
+    --destructive: 0 79% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 38 15% 85%;
+    --input: 38 15% 85%;
+    --ring: 0 0% 10%;
+
+    --radius: 0.75rem;
+
+    --font-jost: 'Jost', 'DM Sans', system-ui, sans-serif;
+    --font-playfair: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-[#F5F0E8] text-[#1A1A1A] font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+  }
+}
+
+@layer components {
+  .container-beb {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* SCENTORA Product Card Styles */
+  .card-gradient-blue {
+    background: linear-gradient(135deg, #1B3A6B 0%, #0D1F3C 100%);
+  }
+  .card-gradient-dark {
+    background: linear-gradient(135deg, #1A1A1A 0%, #2D2D2D 100%);
+  }
+  .card-gradient-amber {
+    background: linear-gradient(135deg, #C68B2A 0%, #8B5E1A 100%);
+  }
+  .card-gradient-purple {
+    background: linear-gradient(135deg, #4A1A6B 0%, #2D0D4A 100%);
+  }
+  .card-gradient-pink {
+    background: linear-gradient(135deg, #C4185A 0%, #8B0D3A 100%);
+  }
+  .card-gradient-teal {
+    background: linear-gradient(135deg, #0D4A4A 0%, #1A2D2D 100%);
+  }
+
+  /* SCENTORA Badge */
+  .badge-hot {
+    @apply absolute top-3 left-3 bg-[#E8354A] text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded;
+    letter-spacing: 0.08em;
+  }
+
+  /* SCENTORA Glassmorphism */
+  .glass-icon {
+    @apply w-8 h-8 rounded-full flex items-center justify-center;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+  }
+
+  /* SCENTORA Buy Button */
+  .btn-scentora {
+    @apply flex items-center justify-between w-full rounded-lg py-2 px-3 text-[13px] cursor-pointer mx-3 mb-3;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    color: white;
+  }
+
+  .btn-scentora .arrow-icon {
+    @apply w-6 h-6 rounded-full bg-white text-[#1A1A1A] flex items-center justify-center;
+  }
+
+  /* SCENTORA Filter Chip */
+  .filter-chip {
+    @apply bg-[#1A1A1A] text-white px-3.5 py-1.5 rounded-full text-xs font-medium inline-flex items-center gap-1.5;
+  }
+
+  .sort-btn {
+    @apply ml-auto border border-[#D0D0D0] rounded-full px-3.5 py-1.5 text-xs bg-white;
+  }
+
+  /* SCENTORA Pagination */
+  .page-btn {
+    @apply w-9 h-9 rounded-full border border-[#D0D0D0] text-[13px] cursor-pointer bg-white flex items-center justify-center transition-colors duration-200;
+  }
+  .page-btn.active {
+    @apply bg-[#1A1A1A] text-white border-[#1A1A1A];
+  }
+
+  /* SCENTORA Newsletter */
+  .newsletter-input {
+    @apply rounded-lg px-4 py-3 text-white outline-none w-full;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+  .newsletter-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Section headings */
+  .heading-scentora {
+    @apply font-['Abril_Fatface',_serif] uppercase text-[52px] leading-[56px] font-black;
+    letter-spacing: -0.02em;
+  }
+
+  .heading-section-scentora {
+    @apply font-serif text-3xl font-bold;
+  }
+
+  .subtitle-scentora {
+    @apply text-xs text-[#6B6B6B] font-medium;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* SCENTORA product card image text */
+  .text-white-muted {
+    color: rgba(255, 255, 255, 0.65);
+  }
+  .text-white-dim {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
