@@ -23,7 +23,6 @@ function getBannerCopy(status: Awaited<ReturnType<typeof getServiceStatus>>) {
   }
 
   const disabledServices = [
-    !status.services.googleAuth && 'Google Auth',
     !status.services.stripe && 'Stripe',
     !status.services.resend && 'Email',
     !status.services.supabase && 'Supabase Storage',

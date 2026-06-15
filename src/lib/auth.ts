@@ -1,12 +1,10 @@
 import NextAuth from 'next-auth';
-import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import type { UserRole } from '@prisma/client';
-import { isGoogleAuthEnabled, isMockModeEnabled, logFallbackOnce } from '@/lib/app-mode';
+import { isMockModeEnabled, logFallbackOnce } from '@/lib/app-mode';
 import { prisma } from '@/lib/prisma';
 
-const googleAuthEnabled = isGoogleAuthEnabled();
 const authUsesDatabase = !isMockModeEnabled();
 const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
 
@@ -69,14 +67,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
       },
     }),
-    ...(googleAuthEnabled
-      ? [
-        Google({
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        }),
-      ]
-      : []),
   ],
   pages: {
     signIn: '/auth/login',

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { mockCategories } from '@/lib/mock-store';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -14,11 +15,11 @@ const navLinks = [
 ];
 
 const categories = [
-  { label: 'Oriental', href: '/categories/oriental' },
-  { label: 'Floral', href: '/categories/floral' },
-  { label: 'Woody', href: '/categories/woody' },
-  { label: 'Fresh', href: '/categories/fresh' },
-  { label: 'All', href: '/products' },
+  ...mockCategories.map((category) => ({
+    label: category.name,
+    href: `/categories/${category.slug}`,
+  })),
+  { label: 'All Perfumes', href: '/products' },
 ];
 
 export interface NavbarProps {

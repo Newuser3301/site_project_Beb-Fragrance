@@ -1,7 +1,4 @@
 const FORCE_MOCK_DATA = process.env.FORCE_MOCK_DATA === 'true';
-const GOOGLE_AUTH_ENABLED = Boolean(
-  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
-);
 const STRIPE_ENABLED = Boolean(process.env.STRIPE_SECRET_KEY);
 const RESEND_ENABLED = Boolean(process.env.RESEND_API_KEY);
 const SUPABASE_ENABLED = Boolean(
@@ -17,10 +14,6 @@ const loggedFallbacks = new Set<string>();
 
 export function isMockModeEnabled() {
   return FORCE_MOCK_DATA;
-}
-
-export function isGoogleAuthEnabled() {
-  return GOOGLE_AUTH_ENABLED;
 }
 
 export function isStripeEnabled() {
@@ -99,7 +92,6 @@ export async function getServiceStatus() {
     database,
     services: {
       database,
-      googleAuth: GOOGLE_AUTH_ENABLED,
       stripe: STRIPE_ENABLED,
       resend: RESEND_ENABLED,
       supabase: SUPABASE_ENABLED,

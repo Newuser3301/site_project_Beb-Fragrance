@@ -225,3 +225,46 @@ export async function sendAdminNotification(
     throw new Error(`Failed to send admin notification email: ${error.message}`);
   }
 }
+
+export async function sendPasswordResetEmail(
+  email: string,
+  customerName: string,
+  resetUrl: string
+): Promise<void> {
+  if (!resend) {
+    console.warn('[EMAIL] RESEND_API_KEY is not configured. Skipping password reset email.');
+    return;
+  }
+
+  const content = `
+    <h2 style="margin: 0 0 8px; color: #831843; font-size: 22px; font-family: Georgia, serif;">
+      Parolni tiklash
+    </h2>
+    <p style="margin: 0 0 24px; color: #6b7280; font-size: 14px; line-height: 1.6;">
+      Assalomu alaykum, <strong style="color: #831843;">${customerName}</strong>.
+      Yangi parol o‘rnatish uchun quyidagi tugmadan foydalaning.
+    </p>
+    <p style="margin: 24px 0; text-align: center;">
+      <a href="${resetUrl}" 
+         style="display: inline-block; background: linear-gradient(135deg, #ec4899, #a855f7); color: #ffffff; text-decoration: none; padding: 12px 32px; border-radius: 6px; font-size: 14px; font-weight: 600;">
+        Parolni Yangilash
+      </a>
+    </p>
+    <p style="margin: 0; color: #6b7280; font-size: 13px; line-height: 1.6;">
+      Agar bu so‘rov sizdan bo‘lmagan bo‘lsa, ushbu emailni e’tiborsiz qoldiring.
+    </p>
+    <p style="margin: 16px 0 0; color: #6b7280; font-size: 12px; line-height: 1.6;">
+      Havola: <a href="${resetUrl}" style="color: #9333ea;">${resetUrl}</a>
+    </p>`;
+
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: email,
+    subject: 'Parolni tiklash | Beb Fragrance',
+    html: buildEmailLayout(content),
+  });
+
+  if (error) {
+    throw new Error(`Failed to send password reset email: ${error.message}`);
+  }
+}

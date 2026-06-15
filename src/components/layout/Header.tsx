@@ -7,11 +7,11 @@ import { Navbar } from '@/components/layout/Navbar';
 import { SearchBar } from '@/components/layout/SearchBar';
 import { UserMenu } from '@/components/layout/UserMenu';
 import { MobileMenu } from '@/components/layout/MobileMenu';
-import { Button } from '@/components/ui/Button';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { cn } from '@/lib/utils';
+import { CONTACT_EMAIL, CONTACT_PHONE } from '@/lib/constants';
 
 export interface HeaderProps {
   user?: {
@@ -47,21 +47,18 @@ export function Header({ user }: HeaderProps) {
           'sticky top-0 z-50 w-full border-b border-[rgba(106,53,83,0.08)] bg-white/95 backdrop-blur-xl transition-all duration-300',
           isScrolled && 'shadow-[0_18px_40px_rgba(88,43,70,0.08)]'
         )}
-      >
+        >
         <div className="border-b border-[rgba(255,255,255,0.08)] bg-[#6d415c] text-white">
           <div className="container-beb flex h-9 items-center justify-between gap-4 text-[11px]">
-            <p className="hidden tracking-[0.06em] text-white/80 sm:block">
-              Order Online Call Us 01234 456789
+            <p className="truncate tracking-[0.06em] text-white/80">
+              Order online or call us: {CONTACT_PHONE}
             </p>
-            <div className="ml-auto flex items-center gap-4 text-white/80">
-              <Link href="/contact" className="transition-colors hover:text-white">
-                Find a Store
-              </Link>
+            <div className="ml-auto hidden items-center gap-4 text-white/80 sm:flex">
               <a
-                href="mailto:demo@arome.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="transition-colors hover:text-white"
               >
-                demo@arome.com
+                {CONTACT_EMAIL}
               </a>
             </div>
           </div>
