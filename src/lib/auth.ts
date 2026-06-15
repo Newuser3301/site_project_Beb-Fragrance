@@ -8,6 +8,13 @@ import { prisma } from '@/lib/prisma';
 
 const googleAuthEnabled = isGoogleAuthEnabled();
 const authUsesDatabase = !isMockModeEnabled();
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+
+if (process.env.NODE_ENV === 'production' && !authSecret) {
+  throw new Error(
+    'Missing auth secret. Set AUTH_SECRET or NEXTAUTH_SECRET in production.'
+  );
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: authUsesDatabase ? PrismaAdapter(prisma) : undefined,
@@ -78,11 +85,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   callbacks: {
     async session({ session, user, token }) {
       if (session.user) {
-        session.user.id = (user?.id ?? token.id) as string;
+        session.user.id = (user?.id ?? token.id ?? token.sub) as string;
         session.user.role =
           ((user?.role ?? token.role) as UserRole | undefined) ?? 'CUSTOMER';
       }
@@ -93,6 +100,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.role = (user.role as UserRole | undefined) ?? 'CUSTOMER';
       }
+
+      if (authUsesDatabase && (!token.id || !token.role)) {
+        try {
+          const dbUser = token.email
+            ? await prisma.user.findUnique({
+                where: { email: token.email },
+                select: { id: true, role: true },
+              })
+            : token.sub
+              ? await prisma.user.findUnique({
+                  where: { id: token.sub },
+                  select: { id: true, role: true },
+                })
+              : null;
+
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+          }
+        } catch (error) {
+          logFallbackOnce(
+            'auth.jwt',
+            'Failed to enrich JWT token with database role.',
+            error
+          );
+        }
+      }
+
       return token;
     },
   },

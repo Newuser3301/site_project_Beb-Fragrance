@@ -224,6 +224,7 @@ DIRECT_URL="postgresql://neondb_owner:[YOUR-PASSWORD]@ep-example.us-east-1.aws.n
 # NextAuth
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-minimum-32-characters"
+AUTH_SECRET="your-secret-key-minimum-32-characters"
 
 # Google OAuth
 GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"

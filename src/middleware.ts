@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
 const ADMIN_ROLES = ['ADMIN', 'SUPER_ADMIN'];
+const PUBLIC_AUTH_ROUTES = new Set(['/auth/login', '/auth/error']);
 
 export default auth((request) => {
   const { nextUrl } = request;
@@ -11,6 +12,10 @@ export default auth((request) => {
 
   const isAdminRoute = pathname.startsWith('/admin');
   const isAuthRoute = pathname.startsWith('/auth');
+
+  if (PUBLIC_AUTH_ROUTES.has(pathname)) {
+    return NextResponse.next();
+  }
 
   if (pathname === '/admin/login') {
     const loginUrl = new URL('/auth/login', nextUrl);
@@ -30,10 +35,8 @@ export default auth((request) => {
     }
   }
 
-  if (isAuthRoute && isLoggedIn) {
-    const callbackUrl = nextUrl.searchParams.get('callbackUrl');
-    const redirectUrl = callbackUrl || '/';
-    return NextResponse.redirect(new URL(redirectUrl, nextUrl));
+  if (isAuthRoute) {
+    return NextResponse.next();
   }
 
   return NextResponse.next();
