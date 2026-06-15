@@ -1,0 +1,567 @@
+// ============================================
+// Beb Fragrance - Premium Perfume Store
+// README.adoc
+// ============================================
+
+= Beb Fragrance - Premium Perfume Store
+:toc: macro
+:toc-title: Mundarija
+:toclevels: 3
+:imagesdir: public
+:icons: font
+:source-highlighter: rouge
+:lang: en
+
+image::logo.svg[Beb Fragrance Logo, 200, align="center"]
+
+[.text-center]
+*Luxury Perfume E-Commerce Platform*
+
+https://bebfragrance.vercel.app[Live Demo] | 
+https://github.com/yourusername/beb-fragrance[GitHub Repository]
+
+---
+
+toc::[]
+
+---
+
+== Loyiha Haqida
+
+*Beb Fragrance* - bu premium parfyumeriya mahsulotlarini sotish uchun yaratilgan zamonaviy, to'liq ishlaydigan e-commerce platforma. Loyiha real pul ishlaydigan, foydalanuvchilar Google orqali kiradigan, mahsulotlarni ko'rib savatga soladigan va haqiqiy karta orqali to'lov qiladigan to'liq online do'kon.
+
+=== Asosiy Xususiyatlar
+
+- ✅ *Google Authentication* - Google orqali tezkor kirish
+- ✅ *Mahsulotlar Katalogi* - Filtrlash, qidiruv, kategoriyalar
+- ✅ *Savat Tizimi* - Mahsulot qo'shish, o'chirish, miqdorni o'zgartirish
+- ✅ *Haqiqiy To'lov* - Stripe orqali karta to'lovlari
+- ✅ *Buyurtmalar Tarixi* - Foydalanuvchi buyurtmalarini kuzatish
+- ✅ *Admin Panel* - To'liq boshqaruv paneli
+- ✅ *SEO Optimallashtirilgan* - Har bir sahifa uchun metadata
+- ✅ *Responsive Dizayn* - Mobil, tablet, desktop
+- ✅ *Wishlist* - Sevimli mahsulotlarni saqlash
+- ✅ *Email Xabarlar* - Buyurtma tasdiqlash xabarlari
+
+=== Screenshot'lar
+
+[.text-center]
+*Bosh Sahifa* | *Mahsulotlar Katalogi* | *Admin Panel*
+
+---
+
+== Texnologiyalar Stack
+
+[cols="2,4", options="header"]
+|===
+| Texnologiya | Tavsif
+| *Frontend* | Next.js 14 (App Router) + TypeScript
+| *Styling* | Tailwind CSS + Shadcn/ui
+| *State Management* | Zustand
+| *Database ORM* | Prisma
+| *Database* | PostgreSQL (Neon)
+| *Authentication* | NextAuth.js v5 (Google Provider)
+| *To'lov Tizimi* | Stripe
+| *Rasm Saqlash* | Supabase Storage
+| *Validatsiya* | Zod
+| *Animatsiyalar* | Framer Motion
+| *Email* | Resend
+| *UI Ikonkalar* | Lucide React
+| *Deployment* | Vercel
+|===
+
+---
+
+== Loyiha Tuzilishi
+
+[source,tree]
+----
+beb-fragrance/
+├── prisma/
+│   └── schema.prisma              # Database schema
+├── public/
+│   ├── logo.svg                   # Logo
+│   ├── hero-banner.jpg            # Hero rasm
+│   ├── og-image.png               # Open Graph rasm
+│   └── favicon.ico                # Favicon
+├── src/
+│   ├── app/                       # Next.js App Router
+│   │   ├── layout.tsx             # Root layout
+│   │   ├── page.tsx               # Homepage
+│   │   ├── loading.tsx            # Global loading
+│   │   ├── not-found.tsx          # 404 sahifa
+│   │   ├── error.tsx              # Error boundary
+│   │   ├── global-error.tsx       # Global error
+│   │   ├── sitemap.ts             # Sitemap generator
+│   │   ├── robots.ts              # Robots.txt
+│   │   ├── products/              # Mahsulotlar sahifalari
+│   │   │   ├── page.tsx           # Katalog
+│   │   │   └── [slug]/page.tsx    # Tafsilot
+│   │   ├── categories/            # Kategoriyalar
+│   │   │   └── [slug]/page.tsx
+│   │   ├── cart/page.tsx          # Savat
+│   │   ├── checkout/              # To'lov
+│   │   │   ├── page.tsx
+│   │   │   ├── success/page.tsx
+│   │   │   └── cancel/page.tsx
+│   │   ├── wishlist/page.tsx      # Sevimlilar
+│   │   ├── orders/                # Buyurtmalar
+│   │   │   ├── page.tsx
+│   │   │   └── [id]/page.tsx
+│   │   ├── auth/                  # Autentifikatsiya
+│   │   │   ├── login/page.tsx
+│   │   │   └── error/page.tsx
+│   │   ├── admin/                 # Admin panel
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx           # Dashboard
+│   │   │   ├── products/
+│   │   │   ├── orders/
+│   │   │   ├── categories/
+│   │   │   └── customers/
+│   │   ├── about/page.tsx
+│   │   ├── contact/page.tsx
+│   │   ├── faq/page.tsx
+│   │   ├── shipping/page.tsx
+│   │   ├── returns/page.tsx
+│   │   ├── privacy/page.tsx
+│   │   ├── terms/page.tsx
+│   │   └── api/                   # API endpoints
+│   │       ├── auth/
+│   │       ├── products/
+│   │       ├── cart/
+│   │       ├── wishlist/
+│   │       ├── checkout/
+│   │       ├── orders/
+│   │       ├── newsletter/
+│   │       ├── contact/
+│   │       ├── webhooks/stripe/
+│   │       └── admin/
+│   ├── components/                # React komponentlar
+│   │   ├── ui/                    # UI komponentlar
+│   │   ├── layout/                # Layout (Header, Footer)
+│   │   ├── product/               # Mahsulot komponentlari
+│   │   ├── cart/                  # Savat komponentlari
+│   │   ├── checkout/              # To'lov komponentlari
+│   │   ├── admin/                 # Admin komponentlar
+│   │   └── shared/                # Umumiy komponentlar
+│   ├── lib/                       # Library fayllar
+│   │   ├── prisma.ts              # Prisma client
+│   │   ├── auth.ts                # NextAuth config
+│   │   ├── stripe.ts              # Stripe client
+│   │   ├── supabase.ts            # Supabase client
+│   │   ├── email.ts               # Email service
+│   │   ├── utils.ts               # Utility funksiyalar
+│   │   ├── validations.ts         # Zod schemalar
+│   │   └── constants.ts           # Konstantalar
+│   ├── store/                     # Zustand store'lar
+│   │   ├── useCartStore.ts
+│   │   ├── useUIStore.ts
+│   │   └── useWishlistStore.ts
+│   ├── hooks/                     # Custom hooks
+│   │   ├── useDebounce.ts
+│   │   └── useMediaQuery.ts
+│   └── types/                     # TypeScript tiplar
+│       └── index.ts
+├── .env.local                     # Environment variables
+├── .env.example                   # Environment shablon
+├── .gitignore
+├── next.config.js
+├── tailwind.config.ts
+├── tsconfig.json
+├── postcss.config.js
+├── package.json
+├── vercel.json
+├── LICENSE
+├── CONTRIBUTING.md
+└── README.adoc
+----
+
+---
+
+== O'rnatish va Ishga Tushirish
+
+=== Talablar
+
+- *Node.js* 18.17 yoki undan yuqori
+- *npm* 9.0 yoki undan yuqori (yoki *yarn*/*pnpm*)
+- *PostgreSQL* ma'lumotlar bazasi (Neon tavsiya etiladi)
+- *Stripe* hisobi (test yoki production)
+- *Google Cloud* hisobi (OAuth uchun)
+- *Resend* hisobi (email xabarlar uchun)
+
+=== 1. Repositoriyani Klonlash
+
+[source,bash]
+----
+git clone https://github.com/yourusername/beb-fragrance.git
+cd beb-fragrance
+----
+
+=== 2. Packagelarni O'rnatish
+
+[source,bash]
+----
+npm install
+----
+
+=== 3. Environment Variables Sozlash
+
+`.env.example` faylidan `.env.local` ga nusxa oling:
+
+[source,bash]
+----
+cp .env.example .env.local
+----
+
+`.env.local` faylini oching va quyidagi o'zgaruvchilarni to'ldiring:
+
+[source,env]
+----
+# Database (Neon)
+DATABASE_URL="postgresql://neondb_owner:[YOUR-PASSWORD]@ep-example-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+DIRECT_URL="postgresql://neondb_owner:[YOUR-PASSWORD]@ep-example.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-minimum-32-characters"
+
+# Google OAuth
+GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="GOCSPX-your-google-client-secret"
+NEXT_PUBLIC_GOOGLE_AUTH_ENABLED="false"
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_your-publishable-key"
+STRIPE_SECRET_KEY="sk_test_your-secret-key"
+STRIPE_WEBHOOK_SECRET="whsec_your-webhook-secret"
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL="https://[YOUR-ID].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+
+# Resend (Email)
+RESEND_API_KEY="re_your-resend-api-key"
+EMAIL_FROM="noreply@bebfragrance.com"
+
+# Site
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+
+# Seeded admin account
+ADMIN_EMAIL="admin@bebfragrance.com"
+ADMIN_PASSWORD="Admin12345!"
+
+# Local fallback mode
+FORCE_MOCK_DATA="false"
+----
+
+=== 4. Database Migratsiyasi
+
+[source,bash]
+----
+# Prisma migratsiyani yaratish va ishga tushirish
+npx prisma migrate dev --name init
+
+# Database'ni test ma'lumotlar bilan to'ldirish
+npx prisma db seed
+----
+
+=== 5. Serverni Ishga Tushirish
+
+[source,bash]
+----
+npm run dev
+----
+
+Brauzeringizda http://localhost:3000 manzilini oching.
+
+---
+
+== Xizmatlar Sozlamalari
+
+=== Neon Sozlamalari
+
+. https://neon.tech[neon.tech] saytida ro'yxatdan o'ting
+. Yangi loyiha yarating
+. *Connection Details* bo'limidan `DATABASE_URL` va `DIRECT_URL` ni oling
+. `DATABASE_URL` uchun pooler string ishlating
+. `DIRECT_URL` uchun migratsiya va schema push uchun direct string ishlating
+
+=== Supabase Storage Sozlamalari
+
+. https://supabase.com[supabase.com] saytida ro'yxatdan o'ting
+. Yangi loyiha yarating
+. *Settings > API* bo'limidan API kalitlarini oling
+. *Storage* bo'limida `products` va `categories` bucket'larini yarating
+. Bucket'lar uchun *public* ruxsatini yoqing
+
+=== Google OAuth Sozlamalari
+
+. https://console.cloud.google.com[Google Cloud Console] saytiga kiring
+. Yangi loyiha yarating
+. *APIs & Services > Credentials* bo'limiga o'ting
+. *OAuth 2.0 Client ID* yarating
+. *Authorized redirect URIs* ga qo'shing:
+  - `http://localhost:3000/api/auth/callback/google`
+  - `https://yourdomain.vercel.app/api/auth/callback/google`
+. Client ID va Client Secret ni `.env.local` ga ko'chiring
+
+=== Stripe Sozlamalari
+
+. https://stripe.com[stripe.com] saytida ro'yxatdan o'ting
+. *Developers > API keys* bo'limidan kalitlarni oling
+. *Webhooks* bo'limida endpoint yarating:
+  - URL: `https://yourdomain.vercel.app/api/webhooks/stripe`
+  - Events: `checkout.session.completed`
+. Webhook secret ni `.env.local` ga ko'chiring
+
+=== Resend Sozlamalari
+
+. https://resend.com[resend.com] saytida ro'yxatdan o'ting
+. API kalitini oling
+. Domain'ingizni verify qiling
+. `.env.local` ga API kalitini qo'shing
+
+---
+
+== Admin Foydalanuvchi Yaratish
+
+Admin panelga kirish uchun ADMIN roliga ega foydalanuvchi kerak.
+
+=== Usul 1: Seed orqali
+
+[source,bash]
+----
+npx prisma db seed
+----
+
+Seed fayli avtomatik admin yaratadi:
+- Email: `admin@bebfragrance.com`
+- Parol: `Admin12345!`
+
+Keyin `/auth/login` orqali email/parol bilan yoki Google sozlangan bo'lsa Google orqali login qiling.
+
+=== Usul 2: Qo'lda
+
+[source,sql]
+----
+UPDATE "User" SET "role" = 'ADMIN' WHERE "email" = 'your-email@gmail.com';
+----
+
+---
+
+== Deploy (Vercel)
+
+=== 1. Vercel'ga Deploy
+
+. https://vercel.com[vercel.com] saytida ro'yxatdan o'ting
+. *New Project* tugmasini bosing
+. GitHub repositoriyangizni import qiling
+. Environment variables'larni `.env.local` dan ko'chiring
+. *Deploy* tugmasini bosing
+
+=== 2. Deploy'dan Keyin
+
+- Stripe webhook URL'ni yangilang (production URL)
+- Google OAuth redirect URI'ni yangilang
+- `NEXT_PUBLIC_SITE_URL` ni production URL bilan yangilang
+
+---
+
+== Test Ma'lumotlar
+
+=== Test Karta
+
+Stripe test rejimida quyidagi kartadan foydalaning:
+
+[source]
+----
+Karta raqami: 4242 4242 4242 4242
+Muddati: 12/28 (har qanday kelajak sana)
+CVC: 123 (har qanday 3 raqam)
+ZIP: 12345 (har qanday 5 raqam)
+----
+
+=== Test Foydalanuvchi
+
+[source]
+----
+Email: admin@bebfragrance.com
+Rol: ADMIN
+Kirish: Google orqali
+----
+
+---
+
+== API Endpoint'lar
+
+=== Public API
+
+[cols="3,2,3", options="header"]
+|===
+| Endpoint | Method | Tavsif
+| `/api/products` | GET | Barcha mahsulotlar (filter, pagination)
+| `/api/products/[id]` | GET | Bitta mahsulot
+| `/api/products/[slug]` | GET | Slug bo'yicha mahsulot
+| `/api/auth/[...nextauth]` | GET/POST | NextAuth handler
+|===
+
+=== Foydalanuvchi API (Auth)
+
+[cols="3,2,3", options="header"]
+|===
+| Endpoint | Method | Tavsif
+| `/api/cart` | GET/POST/DELETE | Savat boshqaruvi
+| `/api/wishlist` | GET/POST/DELETE | Wishlist boshqaruvi
+| `/api/checkout` | POST | To'lov sessiyasi yaratish
+| `/api/orders` | GET | Buyurtmalar ro'yxati
+| `/api/orders/[id]` | GET | Buyurtma tafsiloti
+| `/api/newsletter` | POST | Newsletter obuna
+| `/api/contact` | POST | Kontakt xabar
+| `/api/status` | GET | App readiness va servis holati
+|===
+
+=== Admin API
+
+[cols="3,2,3", options="header"]
+|===
+| Endpoint | Method | Tavsif
+| `/api/admin/stats` | GET | Dashboard statistikalar
+| `/api/admin/products` | GET/POST | Mahsulotlar CRUD
+| `/api/admin/products/[id]` | GET/PUT/DELETE | Mahsulot tahrirlash
+| `/api/admin/orders` | GET | Barcha buyurtmalar
+| `/api/admin/orders/[id]` | GET/PUT | Buyurtma yangilash
+| `/api/admin/categories` | GET/POST | Kategoriyalar CRUD
+| `/api/admin/categories/[id]` | PUT/DELETE | Kategoriya tahrirlash
+| `/api/admin/customers` | GET | Mijozlar ro'yxati
+| `/api/admin/customers/[id]` | GET | Mijoz tafsiloti
+| `/api/admin/upload` | POST | Rasm yuklash
+|===
+
+=== Webhook'lar
+
+[cols="3,2,3", options="header"]
+|===
+| Endpoint | Method | Tavsif
+| `/api/webhooks/stripe` | POST | Stripe webhook
+|===
+
+---
+
+== Rang Palitrasi
+
+[cols="2,2,3", options="header"]
+|===
+| Rang | Kod | Tavsif
+| Gold | `#F59E0B` | Asosiy aksent rangi
+| Perfume | `#EC4899` | Ikkinchi aksent (pushti)
+| Oud | `#A855F7` | Uchinchi aksent (binafsha)
+| Cream | `#FEF3C7` | Fon rangi
+| White | `#FFFFFF` | Kartalar rangi
+| Dark | `#1F2937` | Tekst rangi
+|===
+
+---
+
+== Script'lar
+
+[cols="2,4", options="header"]
+|===
+| Komanda | Tavsif
+| `npm run dev` | Development server
+| `npm run build` | Production build
+| `npm run start` | Production server
+| `npm run lint` | ESLint tekshirish
+| `npx prisma studio` | Prisma Studio (DB browser)
+| `npx prisma migrate dev` | Migratsiya yaratish
+| `npx prisma db seed` | Test ma'lumotlar yuklash
+| `npx prisma generate` | Prisma client generatsiya
+|===
+
+---
+
+== Tez-tez So'raladigan Savollar
+
+=== Q: Loyiha ishga tushmayapti?
+
+*A:* `.env.local` faylidagi barcha o'zgaruvchilar to'g'ri ekanligini tekshiring. 
+`npx prisma migrate dev` va `npx prisma generate` komandalarini ishga tushiring.
+
+=== Q: Google login ishlamayapti?
+
+*A:* Google Cloud Console'da `redirect_uri` to'g'ri ekanligini tekshiring. 
+Localhost va production URL'lar ikkalasi ham qo'shilgan bo'lishi kerak.
+
+=== Q: To'lov ishlamayapti?
+
+*A:* Stripe test rejimida ekanligingizni va test karta ma'lumotlarini 
+ishlatayotganingizni tekshiring. Webhook endpoint URL'ni to'g'ri sozlang.
+
+=== Q: Rasmlar yuklanmayapti?
+
+*A:* Supabase Storage bucket'larini yaratganingizni va ularga *public* ruxsat 
+berganingizni tekshiring.
+
+=== Q: Admin panelga kira olmayapman?
+
+*A:* Foydalanuvchi rolingiz `ADMIN` ekanligini tekshiring. 
+Prisma Studio orqali `User` jadvalidan rolingizni tekshiring.
+
+---
+
+== Hissa Qo'shish
+
+Loyihaga hissa qo'shmoqchimisiz? Ajoyib! Iltimos, 
+https://github.com/yourusername/beb-fragrance/blob/main/CONTRIBUTING.md[CONTRIBUTING.md] 
+faylini o'qing.
+
+=== Hissa Qo'shish Bosqichlari
+
+. Repositoriyani fork qiling
+. Yangi branch yarating (`git checkout -b feature/amazing-feature`)
+. O'zgarishlarni commit qiling (`git commit -m 'Add amazing feature'`)
+. Branch'ni push qiling (`git push origin feature/amazing-feature`)
+. Pull Request oching
+
+---
+
+== Litsenziya
+
+Bu loyiha MIT litsenziyasi ostida tarqatilgan. Batafsil ma'lumot uchun 
+https://github.com/yourusername/beb-fragrance/blob/main/LICENSE[LICENSE] faylini o'qing.
+
+---
+
+== Aloqa
+
+- *Email:* info@bebfragrance.com
+- *Website:* https://bebfragrance.vercel.app
+- *GitHub:* https://github.com/yourusername/beb-fragrance
+
+---
+
+== Mualliflar
+
+- *Sizning Ismingiz* - https://github.com/yourusername[GitHub]
+
+---
+
+== Minnatchilik
+
+- https://nextjs.org[Next.js] - React Framework
+- https://www.prisma.io[Prisma] - Database ORM
+- https://tailwindcss.com[Tailwind CSS] - CSS Framework
+- https://ui.shadcn.com[Shadcn/ui] - UI Components
+- https://stripe.com[Stripe] - Payment Processing
+- https://supabase.com[Supabase] - Database & Storage
+- https://authjs.dev[NextAuth.js] - Authentication
+- https://resend.com[Resend] - Email Service
+- https://www.framer.com/motion[Framer Motion] - Animations
+
+---
+
+[.text-center]
+*Made with ❤️ for fragrance lovers everywhere*
+
+[.text-center]
+© 2026 Beb Fragrance. All rights reserved.

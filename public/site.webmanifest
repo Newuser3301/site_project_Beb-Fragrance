@@ -1,0 +1,16 @@
+{
+  "name": "Beb Fragrance",
+  "short_name": "Beb",
+  "description": "Premium perfume store by Beb Fragrance",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff9f8",
+  "theme_color": "#6d415c",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}

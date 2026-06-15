@@ -1,0 +1,316 @@
+// ============================================
+// Beb Fragrance - Contributing Guide
+// CONTRIBUTING.adoc
+// ============================================
+
+= Beb Fragrance - Hissa Qo'shish Yo'riqnomasi
+:toc: macro
+:toc-title: Mundarija
+:toclevels: 2
+:icons: font
+:source-highlighter: rouge
+
+image::public/logo.svg[Beb Fragrance Logo, 150, align="center"]
+
+[.text-center]
+*Loyihaga hissa qo'shganingiz uchun rahmat! 🎉*
+
+---
+
+toc::[]
+
+---
+
+== Kirish
+
+Beb Fragrance ochiq manbali loyiha bo'lib, har qanday hissa qo'shish takliflari qabul qilinadi. 
+Bu hujjat loyihaga qanday hissa qo'shish kerakligini tushuntiradi.
+
+== Xulq-atvor Kodeksi
+
+Iltimos, barcha muloqotlarda hurmatli va professional bo'ling. 
+Biz inklyuziv va do'stona muhitni qadrlaymiz.
+
+---
+
+== Qanday Hissa Qo'shish Mumkin
+
+=== Xatoliklar Haqida Xabar Berish
+
+Agar xatolik topsangiz:
+
+. https://github.com/yourusername/beb-fragrance/issues[Issues] bo'limiga o'ting
+. Yangi issue yarating
+. Quyidagi ma'lumotlarni kiriting:
+  - Xatolikning qisqacha tavsifi
+  - Xatolikni qanday takrorlash mumkinligi (qadam-baqadam)
+  - Kutilgan natija va haqiqiy natija
+  - Skrinshotlar (agar mavjud bo'lsa)
+  - Muhit ma'lumotlari (brauzer, OS, Node.js versiyasi)
+
+=== Yangi Xususiyat Taklif Qilish
+
+. Issues bo'limida yangi feature request yarating
+. Taklifingizni batafsil tavsiflang
+. Nima uchun bu xususiyat kerakligini tushuntiring
+. Implementatsiya bo'yicha takliflaringiz bo'lsa, baham ko'ring
+
+=== Kod Hissa Qo'shish
+
+==== 1. Repositoriyani Tayyorlash
+
+[source,bash]
+----
+# Repositoriyani fork qiling (GitHub interfeysi orqali)
+
+# Fork qilingan repositoriyani klonlang
+git clone https://github.com/YOUR-USERNAME/beb-fragrance.git
+cd beb-fragrance
+
+# Asosiy repositoriyani upstream sifatida qo'shing
+git remote add upstream https://github.com/yourusername/beb-fragrance.git
+
+# Packagelarni o'rnating
+npm install
+
+# .env.local faylini yarating
+cp .env.example .env.local
+# Kerakli o'zgaruvchilarni to'ldiring
+----
+
+==== 2. Yangi Branch Yaratish
+
+[source,bash]
+----
+# Asosiy branch'ni yangilang
+git checkout main
+git pull upstream main
+
+# Yangi branch yarating
+git checkout -b feature/your-feature-name
+# yoki
+git checkout -b fix/your-bug-fix
+# yoki
+git checkout -b docs/your-doc-update
+----
+
+Branch nomlash qoidalari:
+- `feature/` - yangi xususiyatlar
+- `fix/` - xatolik tuzatishlar
+- `docs/` - hujjatlashtirish
+- `refactor/` - kod qayta tashkil qilish
+- `style/` - formatlash, stillash
+- `test/` - test qo'shish
+
+==== 3. Kod Yozish
+
+*Kod Standartlari:*
+
+- TypeScript ishlating
+- Server Component bo'la oladigan joyda `"use client"` ishlatmang
+- Har bir komponent uchun TypeScript interfeyslari yozing
+- Zod validatsiya ishlating (API routelar uchun)
+- Tailwind CSS klasslari, `cn()` utility ishlating
+- Loading, error, empty state'lar qo'shing
+- Responsive dizayn (mobile-first)
+
+*Komponent Strukturasi:*
+
+[source,typescript]
+----
+// components/example/ExampleComponent.tsx
+'use client'; // faqat kerak bo'lsa
+
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
+
+interface ExampleComponentProps {
+  title: string;
+  className?: string;
+}
+
+export function ExampleComponent({ title, className }: ExampleComponentProps) {
+  // State
+  // Effects
+  // Handlers
+  // Render
+  
+  return (
+    <div className={cn('base-classes', className)}>
+      <h2>{title}</h2>
+    </div>
+  );
+}
+----
+
+*API Route Strukturasi:*
+
+[source,typescript]
+----
+// app/api/example/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+
+const schema = z.object({
+  field: z.string().min(1),
+});
+
+export async function GET(request: NextRequest) {
+  try {
+    // Auth tekshirish (agar kerak bo'lsa)
+    // Ma'lumotlarni olish
+    // Response qaytarish
+  } catch (error) {
+    console.error('[EXAMPLE_GET]', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+----
+
+==== 4. O'zgarishlarni Commit Qilish
+
+[source,bash]
+----
+# O'zgarishlarni stage qilish
+git add .
+
+# Commit yozish
+git commit -m "feat: add product filtering by category"
+
+# yoki
+git commit -m "fix: resolve cart quantity update bug"
+
+# yoki
+git commit -m "docs: update installation instructions"
+----
+
+Commit xabar formatlari:
+- `feat:` - yangi xususiyat
+- `fix:` - xatolik tuzatish
+- `docs:` - hujjatlashtirish
+- `style:` - formatlash
+- `refactor:` - kod qayta tashkil qilish
+- `test:` - test qo'shish
+- `chore:` - texnik xizmat
+
+==== 5. Push va Pull Request
+
+[source,bash]
+----
+# Branch'ni push qiling
+git push origin feature/your-feature-name
+
+# GitHub'da Pull Request yarating
+----
+
+Pull Request tavsifi:
+- Nima o'zgarganligini yozing
+- Nima uchun bu o'zgarish kerakligini tushuntiring
+- Skrinshotlar (agar UI o'zgargan bo'lsa)
+- Test qilinganligini tasdiqlang
+
+---
+
+== Loyiha Tuzilishi
+
+[source,tree]
+----
+src/
+├── app/                    # Next.js App Router sahifalari
+│   ├── api/               # API route'lar
+│   ├── admin/             # Admin panel
+│   └── (boshqa sahifalar)
+├── components/            # React komponentlar
+│   ├── ui/               # Base UI komponentlar
+│   ├── layout/           # Layout komponentlar
+│   ├── product/          # Mahsulot komponentlari
+│   ├── cart/             # Savat komponentlari
+│   ├── checkout/         # To'lov komponentlari
+│   ├── admin/            # Admin komponentlar
+│   └── shared/           # Umumiy komponentlar
+├── lib/                   # Library fayllar
+├── store/                 # Zustand store'lar
+├── hooks/                 # Custom hooks
+└── types/                 # TypeScript tiplar
+----
+
+---
+
+== Texnologiyalar
+
+Loyihada quyidagi texnologiyalar ishlatiladi:
+
+[cols="2,4", options="header"]
+|===
+| Texnologiya | Versiya
+| Next.js | 14.x (App Router)
+| TypeScript | 5.x
+| Tailwind CSS | 3.4.x
+| Prisma | 5.x
+| NextAuth.js | 5.x (beta)
+| Zustand | 4.x
+| Zod | 3.x
+| Framer Motion | 10.x
+| Stripe | 14.x
+|===
+
+---
+
+== Test Qilish
+
+Hozircha loyihada avtomatik test'lar mavjud emas. 
+O'zgarishlaringizni qo'lda test qiling:
+
+[source,bash]
+----
+# Development server
+npm run dev
+
+# Build test
+npm run build
+
+# Lint tekshirish
+npm run lint
+----
+
+---
+
+== Database O'zgarishlari
+
+Agar Prisma schema'ga o'zgarish kiritsangiz:
+
+[source,bash]
+----
+# Migratsiya yaratish
+npx prisma migrate dev --name description_of_changes
+
+# Prisma client'ni yangilash
+npx prisma generate
+----
+
+---
+
+== Savollar
+
+Agar savollaringiz bo'lsa:
+
+- GitHub Issues orqali
+- Email: info@bebfragrance.com
+
+---
+
+== Minnatchilik
+
+Hissa qo'shgan barcha ishtirokchilarga rahmat! 🙏
+
+Har bir hissa, katta yoki kichik, loyihani yaxshilashga yordam beradi.
+
+---
+
+[.text.center]
+*Happy Coding! 🚀*

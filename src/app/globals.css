@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 24 38% 98%;
+    --foreground: 332 19% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 332 19% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 332 19% 17%;
+
+    --primary: 302 24% 25%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 12 40% 95%;
+    --secondary-foreground: 332 19% 17%;
+
+    --muted: 18 31% 94%;
+    --muted-foreground: 336 10% 45%;
+
+    --accent: 352 76% 82%;
+    --accent-foreground: 302 24% 25%;
+
+    --destructive: 0 79% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 18 24% 88%;
+    --input: 18 24% 88%;
+    --ring: 302 24% 25%;
+
+    --radius: 1rem;
+
+    --font-jost: 'Jost', 'DM Sans', system-ui, sans-serif;
+    --font-playfair: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top right, rgba(244, 187, 199, 0.22), transparent 28%),
+      linear-gradient(180deg, #fffdfc 0%, #fff9f8 100%);
+    @apply font-sans text-[#341f2b] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+  }
+}
+
+@layer components {
+  .container-beb {
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-shell {
+    @apply rounded-[28px] border border-[rgba(106,53,83,0.08)] bg-white shadow-[0_24px_80px_rgba(81,42,63,0.08)];
+  }
+
+  .section-frame {
+    @apply rounded-[28px] border border-[rgba(106,53,83,0.08)] bg-white;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.34em] text-[#7d4b66];
+  }
+
+  .section-title {
+    @apply font-serif text-[34px] leading-tight text-[#2f1d28] md:text-[42px];
+  }
+
+  .newsletter-input {
+    @apply w-full rounded-full border border-[rgba(255,255,255,0.2)] bg-white/10 px-5 py-3 text-white outline-none;
+  }
+
+  .newsletter-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
