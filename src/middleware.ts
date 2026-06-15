@@ -7,14 +7,21 @@ export default auth((request) => {
   const { nextUrl } = request;
   const isLoggedIn = !!request.auth;
   const userRole = request.auth?.user?.role;
+  const pathname = nextUrl.pathname;
 
-  const isAdminRoute = nextUrl.pathname.startsWith('/admin');
-  const isAuthRoute = nextUrl.pathname.startsWith('/auth');
+  const isAdminRoute = pathname.startsWith('/admin');
+  const isAuthRoute = pathname.startsWith('/auth');
+
+  if (pathname === '/admin/login') {
+    const loginUrl = new URL('/auth/login', nextUrl);
+    loginUrl.searchParams.set('callbackUrl', '/admin');
+    return NextResponse.redirect(loginUrl);
+  }
 
   if (isAdminRoute) {
     if (!isLoggedIn) {
       const loginUrl = new URL('/auth/login', nextUrl);
-      loginUrl.searchParams.set('callbackUrl', nextUrl.pathname);
+      loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
     }
 
