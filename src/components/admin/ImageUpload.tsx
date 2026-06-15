@@ -1,11 +1,12 @@
 // src/components/admin/ImageUpload.tsx
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CloudUpload, X, Star, Loader2, ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useUploadThing } from '@/lib/uploadthing-client';
 
 const MAX_FILES = 5;
 const MAX_SIZE_MB = 5;
@@ -29,29 +30,37 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   );
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { startUpload, isUploading } = useUploadThing('adminImageUploader', {
+    onUploadError: (error) => {
+      toast.error(error.message || 'Upload failed');
+    },
+  });
 
-  const uploadFile = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('file', file);
+  useEffect(() => {
+    setImages((prev) => {
+      const uploading = prev.filter((img) => img.uploading);
+      const stableUrls = prev.filter((img) => !img.uploading).map((img) => img.url);
 
-    const response = await fetch('/api/admin/upload', {
-      method: 'POST',
-      body: formData,
+      if (
+        uploading.length === 0 &&
+        stableUrls.length === value.length &&
+        stableUrls.every((url, index) => url === value[index])
+      ) {
+        return prev;
+      }
+
+      return [
+        ...value.map((url, i) => ({ url, isMain: i === 0 })),
+        ...uploading,
+      ];
     });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error ?? 'Upload failed');
-    }
-
-    const data = await response.json();
-    return data.url as string;
-  };
+  }, [value]);
 
   const processFiles = useCallback(
     async (files: FileList | File[]) => {
       const fileArray = Array.from(files);
-      const remaining = MAX_FILES - images.filter((i) => !i.uploading).length;
+      const currentCount = images.length;
+      const remaining = MAX_FILES - currentCount;
 
       if (remaining <= 0) {
         toast.error(`Maximum ${MAX_FILES} images allowed`);
@@ -60,7 +69,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
 
       const toUpload = fileArray.slice(0, remaining);
 
-      for (const file of toUpload) {
+      for (const [index, file] of toUpload.entries()) {
         if (!ALLOWED_TYPES.includes(file.type)) {
           toast.error(`${file.name}: Only JPG, PNG, WEBP allowed`);
           continue;
@@ -75,7 +84,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         const placeholderUrl = URL.createObjectURL(file);
         const placeholder: UploadedImage = {
           url: placeholderUrl,
-          isMain: images.length === 0,
+          isMain: currentCount === 0 && index === 0,
           uploading: true,
           progress: 0,
         };
@@ -94,8 +103,17 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
             );
           }, 200);
 
-          const uploadedUrl = await uploadFile(file);
+          const uploaded = await startUpload([file]);
           clearInterval(progressInterval);
+
+          const uploadedUrl =
+            uploaded?.[0]?.serverData?.url ??
+            uploaded?.[0]?.ufsUrl ??
+            uploaded?.[0]?.url;
+
+          if (!uploadedUrl) {
+            throw new Error('Upload URL was not returned');
+          }
 
           setImages((prev) => {
             const updated = prev.map((img) =>
@@ -116,7 +134,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         }
       }
     },
-    [images, onChange]
+    [images, onChange, startUpload]
   );
 
   const handleDrop = useCallback(
@@ -156,13 +174,13 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => !isUploading && inputRef.current?.click()}
         className={cn(
           'relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200',
           isDragging
             ? 'border-gold-400 bg-gold-50 scale-[1.01]'
             : 'border-gray-300 bg-gray-50 hover:border-gold-400 hover:bg-gold-50/50',
-          images.length >= MAX_FILES && 'cursor-not-allowed opacity-50'
+          (images.length >= MAX_FILES || isUploading) && 'cursor-not-allowed opacity-50'
         )}
       >
         <input
@@ -172,7 +190,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
           accept={ALLOWED_TYPES.join(',')}
           className="hidden"
           onChange={(e) => e.target.files && processFiles(e.target.files)}
-          disabled={images.length >= MAX_FILES}
+          disabled={images.length >= MAX_FILES || isUploading}
         />
         <CloudUpload
           className={cn(
