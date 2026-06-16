@@ -19,7 +19,7 @@ export function AdminHeader({ onMenuToggle, title }: AdminHeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[rgba(106,53,83,0.08)] bg-white/90 px-4 shadow-sm backdrop-blur-xl sm:px-6">
+    <header className="sticky top-4 z-20 flex h-16 items-center justify-between rounded-[24px] border border-[rgba(106,53,83,0.08)] bg-white/92 px-4 shadow-sm backdrop-blur-xl sm:px-6">
       {/* Left: hamburger + title */}
       <div className="flex items-center gap-3">
         <AdminMenuToggle onClick={onMenuToggle} />

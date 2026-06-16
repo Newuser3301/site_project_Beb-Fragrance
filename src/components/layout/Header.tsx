@@ -60,7 +60,9 @@ export function Header({ user }: HeaderProps) {
 
     if (storedTheme === 'dark' || storedTheme === 'light') {
       setTheme(storedTheme);
-      document.documentElement.classList.toggle('dark', storedTheme === 'dark');
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(storedTheme);
+      document.documentElement.style.colorScheme = storedTheme;
     }
 
     if (storedLanguage === 'uz' || storedLanguage === 'ru' || storedLanguage === 'en') {
@@ -71,7 +73,9 @@ export function Header({ user }: HeaderProps) {
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(nextTheme);
+    document.documentElement.style.colorScheme = nextTheme;
     window.localStorage.setItem('beb-theme', nextTheme);
   };
 

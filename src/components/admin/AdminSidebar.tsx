@@ -54,7 +54,8 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
       <aside
         className={cn(
           'fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-slate-900 transition-transform duration-300',
-          'lg:translate-x-0',
+          'lg:sticky lg:top-4 lg:z-10 lg:h-[calc(100vh-2rem)] lg:self-start lg:overflow-hidden lg:rounded-[28px] lg:border lg:border-slate-800/70',
+          'lg:inset-auto lg:left-auto lg:translate-x-0',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >

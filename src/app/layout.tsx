@@ -99,6 +99,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const themeInitScript = `
+    (function () {
+      try {
+        var storedTheme = localStorage.getItem('beb-theme');
+        var theme = storedTheme === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+        document.documentElement.style.colorScheme = theme;
+      } catch (error) {}
+    })();
+  `;
 
   return (
     <html
@@ -106,7 +117,8 @@ export default async function RootLayout({
       className={`${dmSans.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#F5F0E8] font-sans text-[#1A1A1A] antialiased">
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased transition-colors duration-300">
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Providers session={session}>
           <Header user={session?.user} />
           <main className="min-h-screen">{children}</main>
