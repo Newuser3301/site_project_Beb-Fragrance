@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, Star } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { Heart, Info, Star } from 'lucide-react';
+import { AddToCartButton } from '@/components/product/AddToCartButton';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { formatPrice, cn } from '@/lib/utils';
 
@@ -44,11 +44,15 @@ function getDiscountPercent(price: number, comparePrice?: number | null): number
   return Math.round(((comparePrice - price) / comparePrice) * 100);
 }
 
-export function ProductCard({
-  product,
-  className,
-}: ProductCardProps) {
-  const t = useTranslations('productCard');
+function getBadgeLabel(product: ProductCardProduct, discountPercent: number) {
+  if (product.isNewArrival) return 'NEW';
+  if (discountPercent > 0) return 'SALE';
+  if (product.isBestseller) return 'HOT';
+  if (product.isFeatured) return 'PREMIUM';
+  return 'PREMIUM';
+}
+
+export function ProductCard({ product, className }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const { addItem, removeItem, isInWishlist } = useWishlistStore();
   const inWishlist = isInWishlist(product.id);
@@ -56,12 +60,10 @@ export function ProductCard({
   const primaryImage = getPrimaryImage(product.images);
   const isOutOfStock = product.stock <= 0;
   const discountPercent = getDiscountPercent(product.price, product.comparePrice);
-  const isNew = product.isNewArrival;
-  const isBestseller = product.isBestseller || product.isFeatured;
+  const ratingValue = product.averageRating ?? 4.8;
+  const badgeLabel = getBadgeLabel(product, discountPercent);
 
-  const toggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const toggleWishlist = () => {
     if (inWishlist) {
       removeItem(product.id);
     } else {
@@ -75,105 +77,100 @@ export function ProductCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={`/products/${product.slug}`} className="block">
-        <div
-          className={cn(
-            'overflow-hidden rounded-[24px] border border-[rgba(106,53,83,0.08)] bg-white shadow-[0_16px_35px_rgba(81,42,63,0.05)] transition-all duration-300',
-            isHovered && '-translate-y-1 shadow-[0_22px_45px_rgba(81,42,63,0.1)]'
-          )}
-        >
-          <div className="relative aspect-[0.92/1] overflow-hidden bg-[#fcf1f4]">
-            <div className="absolute inset-x-8 bottom-4 top-8 rounded-[22px] bg-gradient-to-b from-white/95 to-[#f7e1e8]" />
-            <Image
-              src={primaryImage}
-              alt={product.name}
-              fill
+      <div
+        className={cn(
+          'overflow-hidden rounded-[26px] border border-[rgba(13,28,48,0.08)] bg-white shadow-[0_16px_35px_rgba(38,61,99,0.08)] transition-all duration-300',
+          isHovered && '-translate-y-1 shadow-[0_24px_50px_rgba(38,61,99,0.14)]'
+        )}
+      >
+        <div className="relative aspect-[1.05/1] overflow-hidden bg-[#f8fbff]">
+          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-[1]">
+            <span className="sr-only">{product.name}</span>
+          </Link>
+          <Image
+            src={primaryImage}
+            alt={product.name}
+            fill
+            className={cn('object-cover transition-transform duration-500', isHovered && 'scale-105')}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          />
+
+          <span className="absolute left-4 top-4 z-[2] rounded-full bg-[#1e293b] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
+            {badgeLabel}
+          </span>
+
+          <button
+            type="button"
+            onClick={toggleWishlist}
+            className="absolute right-4 top-4 z-[2] flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/90 transition-all hover:scale-110"
+            aria-label={inWishlist ? "Sevimlilardan olib tashlash" : "Sevimlilarga qo'shish"}
+          >
+            <Heart
               className={cn(
-                'object-contain p-8 transition-transform duration-500',
-                isHovered && 'scale-105'
+                'h-4 w-4 transition-all',
+                inWishlist ? 'fill-[#ec4899] text-[#ec4899]' : 'text-[#ec4899]'
               )}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
+          </button>
 
-            {isOutOfStock && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#1A1A1A]">
-                  {t('soldOut')}
-                </span>
-              </div>
-            )}
-
-            {isBestseller && (
-              <span className="absolute left-4 top-4 rounded-full bg-[#6d415c] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                {t('best')}
+          {isOutOfStock && (
+            <div className="absolute inset-0 z-[2] flex items-center justify-center bg-slate-900/30">
+              <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900">
+                Sotuvda yo&apos;q
               </span>
-            )}
+            </div>
+          )}
+        </div>
 
-            {isNew && !isBestseller && (
-              <span className="absolute left-4 top-4 rounded-full bg-[#e88ba4] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                {t('new')}
-              </span>
-            )}
-
-            {discountPercent > 0 && (
-              <span className="absolute left-4 top-4 rounded-full bg-[#55324b] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                -{discountPercent}%
-              </span>
-            )}
-
-            <button
-              type="button"
-              onClick={toggleWishlist}
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(106,53,83,0.08)] bg-white/90 transition-all hover:scale-110"
-              aria-label={inWishlist ? t('removeWishlist') : t('addWishlist')}
-            >
-              <Heart
-                className={cn(
-                  'h-4 w-4 transition-all',
-                  inWishlist
-                    ? 'fill-[#E8354A] text-[#E8354A]'
-                    : 'text-[#6d415c]'
-                )}
-              />
-            </button>
-          </div>
-
-          <div className="space-y-2 px-4 pb-5 pt-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8c6d7d]">
-              {product.brand || product.gender || t('luxury')}
-            </p>
-            <h3 className="line-clamp-1 font-serif text-lg font-semibold text-[#2f1d28]">
+        <div className="space-y-3 px-4 pb-5 pt-4">
+          <Link href={`/products/${product.slug}`} className="block">
+            <h3 className="line-clamp-2 text-lg font-bold text-[#10233e] transition-colors hover:text-[#1d4ed8]">
               {product.name}
             </h3>
-            <div className="flex items-center gap-1 text-[#d18aa0]">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star
-                  key={index}
-                  className={cn(
-                    'h-3.5 w-3.5',
-                    index < Math.round(product.averageRating ?? 4)
-                      ? 'fill-current'
-                      : 'fill-transparent opacity-35'
-                  )}
-                />
-              ))}
+          </Link>
+
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <div className="flex items-center gap-1 text-[#f59e0b]">
+              <Star className="h-4 w-4 fill-current" />
+              <span className="font-medium text-[#10233e]">{ratingValue.toFixed(1)}</span>
             </div>
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-base font-semibold text-[#2f1d28]">
-                {formatPrice(product.price, 'USD', 'en-US')}
+            <span className="text-[#60738f]">Bor: {product.stock} ta</span>
+          </div>
+
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-bold text-[#10233e]">
+              {formatPrice(product.price, 'USD', 'en-US').replace('US$', '$')}
+            </span>
+            {product.comparePrice && product.comparePrice > product.price ? (
+              <span className="text-sm text-[#8a9ab0] line-through">
+                {formatPrice(product.comparePrice, 'USD', 'en-US').replace('US$', '$')}
               </span>
-              {product.comparePrice && product.comparePrice > product.price ? (
-                <span className="text-sm text-[#a58b98] line-through">
-                  {formatPrice(product.comparePrice, 'USD', 'en-US')}
-                </span>
-              ) : null}
-            </div>
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[#8c6d7d]">
-              {product.fragranceFamily || t('luxuryPerfume')}
-            </p>
+            ) : null}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <Link
+              href={`/products/${product.slug}`}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#c7d8f9] px-4 py-3 text-sm font-semibold text-[#163050] transition-colors hover:border-[#93c5fd] hover:bg-[#f8fbff]"
+            >
+              <Info className="h-4 w-4" />
+              Batafsil
+            </Link>
+            <AddToCartButton
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: primaryImage,
+                volume: '100ml',
+                brand: product.brand ?? 'Beb Fragrance',
+                stock: product.stock,
+              }}
+              className="w-full"
+            />
           </div>
         </div>
-      </Link>
+      </div>
     </article>
   );
 }

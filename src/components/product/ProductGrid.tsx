@@ -17,11 +17,11 @@ export interface ProductGridProps {
 
 function ProductCardSkeleton() {
   return (
-    <div className="space-y-4 rounded-[24px] border border-[rgba(106,53,83,0.08)] bg-white p-4">
-      <Skeleton className="aspect-[0.92/1] w-full rounded-[20px] bg-[#f8edf1]" />
-      <Skeleton className="h-3 w-1/3 bg-[#f2dce4]" />
-      <Skeleton className="h-5 w-3/4 bg-[#f2dce4]" />
-      <Skeleton className="h-4 w-1/4 bg-[#f2dce4]" />
+    <div className="space-y-4 rounded-[24px] border border-[rgba(13,28,48,0.08)] bg-white p-4">
+      <Skeleton className="aspect-[1.05/1] w-full rounded-[20px] bg-[#eef5ff]" />
+      <Skeleton className="h-5 w-3/4 bg-[#dfe9f8]" />
+      <Skeleton className="h-4 w-1/2 bg-[#dfe9f8]" />
+      <Skeleton className="h-10 w-full rounded-2xl bg-[#dfe9f8]" />
     </div>
   );
 }
@@ -48,12 +48,7 @@ export function ProductGrid({
 }: ProductGridProps) {
   if (isLoading) {
     return (
-      <div
-        className={cn(
-          'grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4',
-          className
-        )}
-      >
+      <div className={cn('grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4', className)}>
         {Array.from({ length: 6 }).map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
@@ -70,10 +65,7 @@ export function ProductGrid({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={cn(
-        'grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4',
-        className
-      )}
+      className={cn('grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4', className)}
     >
       {products.map((product) => (
         <motion.div key={product.id} variants={itemVariants}>

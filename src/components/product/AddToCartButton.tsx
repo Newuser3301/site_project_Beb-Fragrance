@@ -73,15 +73,12 @@ export function AddToCartButton({
             disabled={isOutOfStock}
             isLoading={isLoading}
             className={cn('rounded-full', className)}
-            aria-label={isOutOfStock ? 'Sold out' : 'Add to cart'}
+            aria-label={isOutOfStock ? "Sotuvda yo'q" : "Savatga qo'shish"}
           >
             {!isLoading && <ShoppingBag className="h-4 w-4" />}
           </Button>
         </motion.div>
-        <Toast
-          show={showToast}
-          message={`Added "${product.name}" to cart!`}
-        />
+        <Toast show={showToast} message={`"${product.name}" savatga qo'shildi!`} />
       </>
     );
   }
@@ -97,10 +94,10 @@ export function AddToCartButton({
           isLoading={isLoading}
         >
           {!isLoading && <ShoppingBag className="h-4 w-4" />}
-          {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
+          {isOutOfStock ? "Sotuvda yo'q" : 'Savatga'}
         </Button>
       </motion.div>
-      <Toast show={showToast} message={`Added "${product.name}" to cart!`} />
+      <Toast show={showToast} message={`"${product.name}" savatga qo'shildi!`} />
     </>
   );
 }
