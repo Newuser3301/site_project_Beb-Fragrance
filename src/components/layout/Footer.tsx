@@ -2,36 +2,20 @@
 
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Pin } from 'lucide-react';
-import { Newsletter } from '@/components/layout/Newsletter';
 import { cn } from '@/lib/utils';
-
-const footerLinks = {
-  shop: [
-    { label: 'All Products', href: '/products' },
-    { label: 'New Arrivals', href: '/products?sort=newest' },
-    { label: 'Best Sellers', href: '/products?sort=popular' },
-    { label: 'Featured', href: '/products?featured=true' },
-  ],
-  about: [
-    { label: 'Our Story', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Contact', href: '/contact' },
-  ],
-  customer: [
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Shipping', href: '/shipping' },
-    { label: 'Returns', href: '/returns' },
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
-  ],
-};
+import {
+  CONTACT_ADDRESS,
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  FOOTER_LINKS,
+  SOCIAL_LINKS,
+} from '@/lib/constants';
 
 const socialLinks = [
-  { label: 'Facebook', href: 'https://facebook.com', icon: Facebook },
-  { label: 'Instagram', href: 'https://instagram.com', icon: Instagram },
-  { label: 'Twitter', href: 'https://twitter.com', icon: Twitter },
-  { label: 'Pinterest', href: 'https://pinterest.com', icon: Pin },
+  { label: 'Facebook', href: SOCIAL_LINKS.facebook, icon: Facebook },
+  { label: 'Instagram', href: SOCIAL_LINKS.instagram, icon: Instagram },
+  { label: 'Twitter', href: SOCIAL_LINKS.twitter, icon: Twitter },
+  { label: 'Pinterest', href: SOCIAL_LINKS.pinterest, icon: Pin },
 ];
 
 export interface FooterProps {
@@ -58,11 +42,20 @@ export function Footer({ className }: FooterProps) {
             </p>
             <div className="mt-6 flex flex-col gap-2">
               <a
-                href="mailto:info@bebfragrance.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-flex items-center justify-center rounded-full border border-[rgba(255,255,255,0.2)] px-4 py-2 text-xs text-[rgba(255,255,255,0.8)] transition-colors hover:border-[rgba(255,255,255,0.4)] hover:text-white"
               >
-                info@bebfragrance.com
+                {CONTACT_EMAIL}
               </a>
+              <a
+                href={`tel:${CONTACT_PHONE.replace(/[^\d+]/g, '')}`}
+                className="inline-flex items-center justify-center rounded-full border border-[rgba(255,255,255,0.12)] px-4 py-2 text-xs text-[rgba(255,255,255,0.68)] transition-colors hover:border-[rgba(255,255,255,0.4)] hover:text-white"
+              >
+                {CONTACT_PHONE}
+              </a>
+              <p className="max-w-xs text-xs leading-5 text-[rgba(255,255,255,0.52)]">
+                {CONTACT_ADDRESS}
+              </p>
             </div>
           </div>
 
@@ -71,7 +64,7 @@ export function Footer({ className }: FooterProps) {
               Shop
             </h3>
             <ul className="space-y-3">
-              {footerLinks.shop.map((link) => (
+              {FOOTER_LINKS.shop.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -89,7 +82,12 @@ export function Footer({ className }: FooterProps) {
               About Us
             </h3>
             <ul className="space-y-3">
-              {footerLinks.about.map((link) => (
+              {[
+                { label: 'Our Story', href: '/about' },
+                { label: 'Premium Collections', href: '/products?featured=true' },
+                { label: 'Best Sellers', href: '/products?sort=popular' },
+                { label: 'Contact', href: '/contact' },
+              ].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -125,7 +123,7 @@ export function Footer({ className }: FooterProps) {
               Customer Care
             </h3>
             <ul className="space-y-3">
-              {footerLinks.customer.map((link) => (
+              {[...FOOTER_LINKS.help, ...FOOTER_LINKS.legal].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

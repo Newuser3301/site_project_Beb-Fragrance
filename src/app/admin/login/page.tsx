@@ -76,6 +76,10 @@ export default function AdminLoginPage() {
       }
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Bu sahifa faqat admin va super admin foydalanuvchilar uchun.
+        </div>
+
         <Input
           id="admin-email"
           type="email"

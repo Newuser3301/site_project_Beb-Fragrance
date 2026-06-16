@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
-import { Loader2, LockKeyhole, Mail } from 'lucide-react';
+import { LockKeyhole, Mail } from 'lucide-react';
 import { AuthShell } from '@/components/auth/AuthShell';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -81,6 +81,10 @@ export function LoginPageClient() {
             Akkaunt yaratildi. Endi email va parolingiz bilan tizimga kiring.
           </p>
         ) : null}
+
+        <div className="rounded-2xl border border-[#f0d9e2] bg-[#fff8fb] px-4 py-3 text-sm text-[#7d4b66]">
+          Customer access for orders, wishlist, and checkout history.
+        </div>
 
         <Input
           id="email"
