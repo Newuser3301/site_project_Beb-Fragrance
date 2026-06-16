@@ -7,7 +7,6 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
-import { SystemNoticeBanner } from '@/components/shared/SystemNoticeBanner';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -109,7 +108,6 @@ export default async function RootLayout({
     >
       <body className="min-h-screen bg-[#F5F0E8] font-sans text-[#1A1A1A] antialiased">
         <Providers session={session}>
-          <SystemNoticeBanner />
           <Header user={session?.user} />
           <main className="min-h-screen">{children}</main>
           <Footer />
