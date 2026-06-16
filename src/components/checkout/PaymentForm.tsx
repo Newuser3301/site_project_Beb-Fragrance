@@ -23,6 +23,7 @@ interface PaymentFormProps {
   data: PaymentFormData;
   errors: PaymentFormErrors;
   onChange: (field: keyof PaymentFormData, value: string) => void;
+  stripeEnabled?: boolean;
 }
 
 function formatCardNumber(value: string): string {
@@ -72,7 +73,12 @@ function AmexIcon() {
   );
 }
 
-export function PaymentForm({ data, errors, onChange }: PaymentFormProps) {
+export function PaymentForm({
+  data,
+  errors,
+  onChange,
+  stripeEnabled = true,
+}: PaymentFormProps) {
   const [focused, setFocused] = useState<keyof PaymentFormData | null>(null);
   const cardType = detectCardType(data.cardNumber);
 
@@ -88,6 +94,25 @@ export function PaymentForm({ data, errors, onChange }: PaymentFormProps) {
     const digits = value.replace(/\D/g, '').slice(0, cardType === 'amex' ? 4 : 3);
     onChange('cvc', digits);
   };
+
+  if (!stripeEnabled) {
+    return (
+      <div>
+        <h2 className="font-serif text-xl font-bold text-foreground">
+          Payment Method
+        </h2>
+        <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <p className="text-sm font-semibold text-amber-900">
+            Online card payment is temporarily unavailable.
+          </p>
+          <p className="mt-2 text-sm leading-6 text-amber-800">
+            Your order will be placed as <strong>Cash on Delivery</strong>. Our team can confirm
+            the order with you before shipment if needed.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

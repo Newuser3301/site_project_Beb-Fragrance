@@ -88,18 +88,25 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Fallback: if no Supabase configured, return a placeholder for development
-    // In production this should not be reached
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        {
+          error:
+            'Image storage is not configured. Add Supabase storage environment variables before uploading product images.',
+        },
+        { status: 503 }
+      );
+    }
+
     console.warn('[UPLOAD] Supabase not configured, using placeholder URL');
 
-    // Create a base64 data URL for development preview
     const buffer = await file.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
     const dataUrl = `data:${file.type};base64,${base64}`;
 
     return NextResponse.json({
       url: dataUrl,
-      message: 'File uploaded (dev mode — configure Supabase for production)',
+      message: 'File uploaded (development preview only)',
     });
   } catch (error) {
     console.error('[POST /api/admin/upload]', error);

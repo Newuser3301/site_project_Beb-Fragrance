@@ -1,5 +1,6 @@
 import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
+import { isResendEnabled } from '@/lib/app-mode';
 import { prisma } from '@/lib/prisma';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { SITE_URL } from '@/lib/constants';
@@ -11,6 +12,16 @@ export async function POST(request: Request) {
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'Yaroqli email kiriting.' }, { status: 400 });
+    }
+
+    if (!isResendEnabled()) {
+      return NextResponse.json(
+        {
+          error:
+            'Parolni tiklash xizmati vaqtincha ishlamayapti. Iltimos, support bilan bog‘laning.',
+        },
+        { status: 503 }
+      );
     }
 
     const user = await prisma.user.findUnique({

@@ -1,6 +1,8 @@
 // src/app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { isResendEnabled } from '@/lib/app-mode';
+import { sendContactMessageEmail } from '@/lib/email';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -23,8 +25,14 @@ export async function POST(request: NextRequest) {
 
     const { name, email, subject, message } = validation.data;
 
-    // In production, send email using Resend or similar service
-    console.log('[CONTACT] New message:', { name, email, subject, message });
+    if (!isResendEnabled()) {
+      return NextResponse.json(
+        { error: 'Contact form is temporarily unavailable. Please email us directly.' },
+        { status: 503 }
+      );
+    }
+
+    await sendContactMessageEmail({ name, email, subject, message });
 
     return NextResponse.json(
       { message: 'Message sent successfully' },

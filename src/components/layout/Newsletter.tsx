@@ -25,12 +25,18 @@ export function Newsletter() {
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) throw new Error('Failed to subscribe');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to subscribe');
+      }
 
       toast.success('Thank you for subscribing!');
       setEmail('');
-    } catch {
-      toast.error('Failed to subscribe. Please try again.');
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to subscribe. Please try again.'
+      );
     } finally {
       setIsLoading(false);
     }

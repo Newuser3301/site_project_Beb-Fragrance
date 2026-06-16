@@ -1,7 +1,7 @@
 // src/components/checkout/CheckoutForm.tsx
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Loader2, Check, Truck, CreditCard, Package } from 'lucide-react';
@@ -50,6 +50,38 @@ export function CheckoutForm() {
   const [payment, setPayment] = useState<PaymentFormData>(initialPayment);
   const [shippingErrors, setShippingErrors] = useState<ShippingFormErrors>({});
   const [paymentErrors, setPaymentErrors] = useState<PaymentFormErrors>({});
+  const [stripeEnabled, setStripeEnabled] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadServiceStatus = async () => {
+      try {
+        const response = await fetch('/api/status', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Failed to load service status');
+        }
+
+        const data = (await response.json()) as {
+          services?: { stripe?: boolean };
+        };
+
+        if (isMounted) {
+          setStripeEnabled(Boolean(data.services?.stripe));
+        }
+      } catch {
+        if (isMounted) {
+          setStripeEnabled(false);
+        }
+      }
+    };
+
+    loadServiceStatus();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const subtotal = getTotal();
   const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
@@ -94,6 +126,11 @@ export function CheckoutForm() {
   };
 
   const validatePayment = (): boolean => {
+    if (!stripeEnabled) {
+      setPaymentErrors({});
+      return true;
+    }
+
     const errs: PaymentFormErrors = {};
     const rawCard = payment.cardNumber.replace(/\s/g, '');
 
@@ -241,6 +278,7 @@ export function CheckoutForm() {
                 data={payment}
                 errors={paymentErrors}
                 onChange={handlePaymentChange}
+                stripeEnabled={stripeEnabled}
               />
             )}
 
@@ -285,10 +323,18 @@ export function CheckoutForm() {
                       Edit
                     </button>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    •••• •••• •••• {payment.cardNumber.replace(/\s/g, '').slice(-4)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{payment.cardholderName}</p>
+                  {stripeEnabled ? (
+                    <>
+                      <p className="text-sm text-muted-foreground">
+                        •••• •••• •••• {payment.cardNumber.replace(/\s/g, '').slice(-4)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">{payment.cardholderName}</p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Cash on delivery
+                    </p>
+                  )}
                 </div>
 
                 {/* Terms */}

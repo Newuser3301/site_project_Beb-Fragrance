@@ -268,3 +268,50 @@ export async function sendPasswordResetEmail(
     throw new Error(`Failed to send password reset email: ${error.message}`);
   }
 }
+
+export async function sendContactMessageEmail(details: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): Promise<void> {
+  if (!resend) {
+    throw new Error('RESEND_API_KEY is not configured.');
+  }
+
+  const content = `
+    <h2 style="margin: 0 0 8px; color: #581c87; font-size: 22px; font-family: Georgia, serif;">
+      New contact form message
+    </h2>
+    <div style="background-color: #faf5ff; border-radius: 8px; padding: 20px; border-left: 4px solid #a855f7;">
+      <p style="margin: 0 0 8px; color: #374151; font-size: 14px;">
+        <strong style="color: #581c87;">From:</strong> ${details.name}
+      </p>
+      <p style="margin: 0 0 8px; color: #374151; font-size: 14px;">
+        <strong style="color: #581c87;">Email:</strong> ${details.email}
+      </p>
+      <p style="margin: 0; color: #374151; font-size: 14px;">
+        <strong style="color: #581c87;">Subject:</strong> ${details.subject}
+      </p>
+    </div>
+    <div style="margin-top: 24px;">
+      <p style="margin: 0 0 8px; color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+        Message
+      </p>
+      <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.7; white-space: pre-wrap;">
+        ${details.message}
+      </p>
+    </div>`;
+
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: ADMIN_EMAIL,
+    replyTo: details.email,
+    subject: `Contact form: ${details.subject}`,
+    html: buildEmailLayout(content),
+  });
+
+  if (error) {
+    throw new Error(`Failed to send contact message email: ${error.message}`);
+  }
+}

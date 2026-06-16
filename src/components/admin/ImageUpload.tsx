@@ -6,7 +6,6 @@ import { CloudUpload, X, Star, Loader2, ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useUploadThing } from '@/lib/uploadthing-client';
 
 const MAX_FILES = 5;
 const MAX_SIZE_MB = 5;
@@ -30,11 +29,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
   );
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { startUpload, isUploading } = useUploadThing('adminImageUploader', {
-    onUploadError: (error) => {
-      toast.error(error.message || 'Upload failed');
-    },
-  });
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     setImages((prev) => {
@@ -68,6 +63,8 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       }
 
       const toUpload = fileArray.slice(0, remaining);
+      let uploadStarted = false;
+      setIsUploading(true);
 
       for (const [index, file] of toUpload.entries()) {
         if (!ALLOWED_TYPES.includes(file.type)) {
@@ -90,10 +87,12 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         };
 
         setImages((prev) => [...prev, placeholder]);
+        uploadStarted = true;
+        let progressInterval: ReturnType<typeof setInterval> | null = null;
 
         try {
           // Simulate progress
-          const progressInterval = setInterval(() => {
+          progressInterval = setInterval(() => {
             setImages((prev) =>
               prev.map((img) =>
                 img.url === placeholderUrl
@@ -103,13 +102,21 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
             );
           }, 200);
 
-          const uploaded = await startUpload([file]);
-          clearInterval(progressInterval);
+          const formData = new FormData();
+          formData.append('file', file);
 
-          const uploadedUrl =
-            uploaded?.[0]?.serverData?.url ??
-            uploaded?.[0]?.ufsUrl ??
-            uploaded?.[0]?.url;
+          const response = await fetch('/api/admin/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.error || 'Upload failed');
+          }
+
+          const uploadedUrl = result.url;
 
           if (!uploadedUrl) {
             throw new Error('Upload URL was not returned');
@@ -131,10 +138,16 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
           toast.error(message);
           setImages((prev) => prev.filter((img) => img.url !== placeholderUrl));
           URL.revokeObjectURL(placeholderUrl);
+        } finally {
+          if (progressInterval) {
+            clearInterval(progressInterval);
+          }
         }
       }
+
+      setIsUploading(false);
     },
-    [images, onChange, startUpload]
+    [images, onChange]
   );
 
   const handleDrop = useCallback(

@@ -52,12 +52,18 @@ export default function ContactPage() {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message');
+      }
 
       toast.success('Message sent successfully! We will get back to you soon.');
       (e.target as HTMLFormElement).reset();
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to send message. Please try again.'
+      );
     } finally {
       setIsLoading(false);
     }

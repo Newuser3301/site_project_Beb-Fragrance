@@ -1,6 +1,8 @@
 // src/app/api/newsletter/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { canUseDatabase } from '@/lib/app-mode';
+import { prisma } from '@/lib/prisma';
 
 const newsletterSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -18,10 +20,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email } = validation.data;
+    const email = validation.data.email.trim().toLowerCase();
+    const databaseReady = await canUseDatabase();
 
-    // In production, save email to database or email service
-    console.log('[NEWSLETTER] New subscriber:', email);
+    if (!databaseReady) {
+      return NextResponse.json(
+        { error: 'Newsletter service is temporarily unavailable' },
+        { status: 503 }
+      );
+    }
+
+    await prisma.newsletterSubscriber.upsert({
+      where: { email },
+      update: {
+        isActive: true,
+        unsubscribedAt: null,
+      },
+      create: {
+        email,
+      },
+    });
 
     return NextResponse.json(
       { message: 'Successfully subscribed to newsletter' },
