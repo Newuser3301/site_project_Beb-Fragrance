@@ -7,6 +7,7 @@ import {
   fetchCategoryBySlug,
   fetchProducts,
 } from '@/lib/products-server';
+import { getTranslator } from '@/lib/i18n-server';
 import { parseProductsSearchParams } from '@/lib/parse-search-params';
 
 interface CategoryPageProps {
@@ -52,6 +53,7 @@ export default async function CategoryPage({
   params,
   searchParams,
 }: CategoryPageProps) {
+  const t = await getTranslator();
   const category = await fetchCategoryBySlug(params.slug);
 
   if (!category) {
@@ -82,8 +84,8 @@ export default async function CategoryPage({
         `Explore our ${category.name.toLowerCase()} fragrance collection. Premium scents curated for those who appreciate luxury.`
       }
       breadcrumbs={[
-        { label: 'Home', href: '/' },
-        { label: 'Products', href: '/products' },
+        { label: t('common.home'), href: '/' },
+        { label: t('common.shop'), href: '/products' },
         { label: category.name },
       ]}
       fixedCategoryId={category.id}

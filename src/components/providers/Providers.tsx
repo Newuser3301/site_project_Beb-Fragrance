@@ -1,16 +1,25 @@
 'use client';
 
 import { useEffect } from 'react';
+import { NextIntlClientProvider } from 'next-intl';
 import { SessionProvider } from 'next-auth/react';
 import { Toaster } from 'sonner';
 import type { Session } from 'next-auth';
+import type { AppLocale, AppMessages } from '@/lib/i18n';
 
 export interface ProvidersProps {
   children: React.ReactNode;
   session?: Session | null;
+  locale: AppLocale;
+  messages: AppMessages;
 }
 
-export function Providers({ children, session }: ProvidersProps) {
+export function Providers({
+  children,
+  session,
+  locale,
+  messages,
+}: ProvidersProps) {
   useEffect(() => {
     const storedTheme = window.localStorage.getItem('beb-theme');
     const theme = storedTheme === 'dark' ? 'dark' : 'light';
@@ -22,8 +31,10 @@ export function Providers({ children, session }: ProvidersProps) {
 
   return (
     <SessionProvider session={session}>
-      {children}
-      <Toaster position="top-right" richColors closeButton />
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+        <Toaster position="top-right" richColors closeButton />
+      </NextIntlClientProvider>
     </SessionProvider>
   );
 }

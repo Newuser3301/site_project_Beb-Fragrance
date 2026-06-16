@@ -3,7 +3,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { X, SlidersHorizontal } from 'lucide-react';
+import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { ProductFilters, type ProductFilterState } from '@/components/product/ProductFilters';
 import { ProductSearch } from '@/components/product/ProductSearch';
@@ -84,6 +85,8 @@ export function ProductsCatalog({
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
+  const tProducts = useTranslations('products');
+  const tFilters = useTranslations('products.filters');
 
   const currentSort = (getParam(searchParams, 'sort') ?? 'newest') as ProductSortValue;
   const currentSearch = getParam(searchParams, 'search') ?? '';
@@ -118,7 +121,7 @@ export function ProductsCatalog({
         }
       });
 
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
       setTimeout(() => setIsLoading(false), 300);
     },
     [
@@ -160,13 +163,20 @@ export function ProductsCatalog({
   const activeBadges = useMemo(() => {
     const badges: Array<{ label: string; key: string }> = [];
     if (filters.gender && filters.gender !== 'ALL') {
-      badges.push({ label: filters.gender, key: 'gender' });
+      const genderKey = filters.gender.toLowerCase();
+      badges.push({ label: tFilters(`genders.${genderKey}`), key: 'gender' });
     }
     if (filters.minPrice) {
-      badges.push({ label: `Min $${filters.minPrice}`, key: 'minPrice' });
+      badges.push({
+        label: tProducts('badges.min', { value: filters.minPrice }),
+        key: 'minPrice',
+      });
     }
     if (filters.maxPrice) {
-      badges.push({ label: `Max $${filters.maxPrice}`, key: 'maxPrice' });
+      badges.push({
+        label: tProducts('badges.max', { value: filters.maxPrice }),
+        key: 'maxPrice',
+      });
     }
     filters.brands.forEach((brand) => {
       badges.push({ label: brand, key: `brand-${brand}` });
@@ -178,7 +188,7 @@ export function ProductsCatalog({
       badges.push({ label: `"${currentSearch}"`, key: 'search' });
     }
     return badges;
-  }, [filters, currentSearch]);
+  }, [filters, currentSearch, tFilters, tProducts]);
 
   const removeBadge = (key: string) => {
     if (key === 'gender') updateParams({ gender: undefined, page: '1' });
@@ -240,7 +250,7 @@ export function ProductsCatalog({
           </p>
         )}
         <p className="mt-3 text-xs text-[#6B6B6B]">
-          Showing {startItem}–{endItem} of {total} products
+          {tProducts('showing', { start: startItem, end: endItem, total })}
         </p>
       </div>
 
@@ -249,7 +259,7 @@ export function ProductsCatalog({
         <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
           <ProductSearch
             onSearch={handleSearch}
-            placeholder="Search perfumes..."
+            placeholder={tProducts('searchPlaceholder')}
             className="max-w-md flex-1"
           />
           <ProductFilters
@@ -265,7 +275,7 @@ export function ProductsCatalog({
       {/* Active filter chips - SCENTORA style */}
       {activeBadges.length > 0 && (
         <div className="mb-6 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-[#6B6B6B]">Active filters:</span>
+          <span className="text-xs text-[#6B6B6B]">{tProducts('activeFilters')}</span>
           {activeBadges.map((badge) => (
             <span key={badge.key} className="filter-chip">
               {badge.label}
@@ -281,10 +291,10 @@ export function ProductsCatalog({
           ))}
           <button
             type="button"
-            onClick={() => router.push(pathname)}
+            onClick={() => router.push(pathname, { scroll: false })}
             className="text-xs text-[#6B6B6B] underline transition-colors hover:text-[#1A1A1A]"
           >
-            Clear all
+            {tProducts('clearAll')}
           </button>
         </div>
       )}

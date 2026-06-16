@@ -198,26 +198,33 @@ export async function fetchProducts(
     const sort = query.sort ?? 'newest';
     const where = buildWhereClause(query);
     const skip = (page - 1) * limit;
+    const isPriceSort = sort === 'price-asc' || sort === 'price-desc';
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
         include: productInclude,
-        skip,
-        take: limit,
-        orderBy: buildOrderBy(sort),
+        ...(isPriceSort
+          ? {}
+          : {
+              skip,
+              take: limit,
+              orderBy: buildOrderBy(sort),
+            }),
       }),
       prisma.product.count({ where }),
     ]);
 
     let sortedProducts = products;
 
-    if (sort === 'price-asc' || sort === 'price-desc') {
-      sortedProducts = [...products].sort((a, b) => {
-        const priceA = a.variants[0] ? Number(a.variants[0].price) : 0;
-        const priceB = b.variants[0] ? Number(b.variants[0].price) : 0;
-        return sort === 'price-asc' ? priceA - priceB : priceB - priceA;
-      });
+    if (isPriceSort) {
+      sortedProducts = [...products]
+        .sort((a, b) => {
+          const priceA = a.variants[0] ? Number(a.variants[0].price) : 0;
+          const priceB = b.variants[0] ? Number(b.variants[0].price) : 0;
+          return sort === 'price-asc' ? priceA - priceB : priceB - priceA;
+        })
+        .slice(skip, skip + limit);
     }
 
     const items = await attachReviewStats(sortedProducts);

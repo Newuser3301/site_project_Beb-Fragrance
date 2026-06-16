@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Filter } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
   Accordion,
   AccordionContent,
@@ -51,10 +52,10 @@ const defaultFilters: ProductFilterState = {
 };
 
 const genderOptions = [
-  { value: 'ALL' as const, label: 'All' },
-  { value: 'MEN' as const, label: 'Men' },
-  { value: 'WOMEN' as const, label: 'Women' },
-  { value: 'UNISEX' as const, label: 'Unisex' },
+  { value: 'ALL' as const, labelKey: 'all' },
+  { value: 'MEN' as const, labelKey: 'men' },
+  { value: 'WOMEN' as const, labelKey: 'women' },
+  { value: 'UNISEX' as const, labelKey: 'unisex' },
 ];
 
 const volumeOptions = [50, 100, 150];
@@ -85,6 +86,8 @@ function FilterContent({
   brandSearch: string;
   onBrandSearchChange: (value: string) => void;
 }) {
+  const t = useTranslations('products.filters');
+  const tCommon = useTranslations('common');
   const filteredBrands = brands.filter((brand) =>
     brand.name.toLowerCase().includes(brandSearch.toLowerCase())
   );
@@ -108,14 +111,14 @@ function FilterContent({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-serif text-lg font-semibold">Filters</h3>
+        <h3 className="font-serif text-lg font-semibold">{t('title')}</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={clearAll}
           className="text-muted-foreground hover:text-gold-600"
         >
-          Clear All
+          {tCommon('clearAll')}
         </Button>
       </div>
 
@@ -126,7 +129,7 @@ function FilterContent({
       >
         <AccordionItem value="category" className="rounded-lg border border-border px-4">
           <AccordionTrigger className="text-sm font-medium hover:text-gold-600 hover:no-underline">
-            Category
+            {t('category')}
           </AccordionTrigger>
           <AccordionContent className="space-y-2 pb-4">
             <label className="flex cursor-pointer items-center gap-2 text-sm">
@@ -139,7 +142,7 @@ function FilterContent({
                 }
                 className="accent-gold-500"
               />
-              All Categories
+              {t('allCategories')}
             </label>
             {categories.map((category) => (
               <label
@@ -163,7 +166,7 @@ function FilterContent({
 
         <AccordionItem value="gender" className="rounded-lg border border-border px-4">
           <AccordionTrigger className="text-sm font-medium hover:text-gold-600 hover:no-underline">
-            Gender
+            {t('gender')}
           </AccordionTrigger>
           <AccordionContent className="space-y-2 pb-4">
             {genderOptions.map((option) => (
@@ -180,7 +183,7 @@ function FilterContent({
                   }
                   className="accent-gold-500"
                 />
-                {option.label}
+                {t(`genders.${option.labelKey}`)}
               </label>
             ))}
           </AccordionContent>
@@ -188,13 +191,13 @@ function FilterContent({
 
         <AccordionItem value="price" className="rounded-lg border border-border px-4">
           <AccordionTrigger className="text-sm font-medium hover:text-gold-600 hover:no-underline">
-            Price Range
+            {t('priceRange')}
           </AccordionTrigger>
           <AccordionContent className="space-y-3 pb-4">
             <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                placeholder="Min $"
+                <Input
+                  type="number"
+                  placeholder={t('minPrice')}
                 defaultValue={filters.minPrice ?? ''}
                 onChange={(e) =>
                   onFilterChange({
@@ -207,7 +210,7 @@ function FilterContent({
               <span className="text-muted-foreground">—</span>
               <Input
                 type="number"
-                placeholder="Max $"
+                placeholder={t('maxPrice')}
                 defaultValue={filters.maxPrice ?? ''}
                 onChange={(e) =>
                   onFilterChange({
@@ -223,12 +226,12 @@ function FilterContent({
 
         <AccordionItem value="brand" className="rounded-lg border border-border px-4">
           <AccordionTrigger className="text-sm font-medium hover:text-gold-600 hover:no-underline">
-            Brand
+            {t('brand')}
           </AccordionTrigger>
           <AccordionContent className="space-y-3 pb-4">
             <Input
               type="search"
-              placeholder="Search brands..."
+              placeholder={t('brandSearch')}
               value={brandSearch}
               onChange={(e) => onBrandSearchChange(e.target.value)}
               className="h-9"
@@ -254,7 +257,7 @@ function FilterContent({
 
         <AccordionItem value="volume" className="rounded-lg border border-border px-4">
           <AccordionTrigger className="text-sm font-medium hover:text-gold-600 hover:no-underline">
-            Volume
+            {t('volume')}
           </AccordionTrigger>
           <AccordionContent className="space-y-2 pb-4">
             {volumeOptions.map((volume) => (
@@ -285,6 +288,7 @@ export function ProductFilters({
   className,
   display = 'both',
 }: ProductFiltersProps) {
+  const t = useTranslations('products.filters');
   const [brands, setBrands] = useState<BrandOption[]>([]);
   const [brandSearch, setBrandSearch] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -337,7 +341,7 @@ export function ProductFilters({
           <SheetTrigger asChild>
             <Button variant="outline" className="gap-2">
               <Filter className="h-4 w-4" />
-              Filters
+              {t('title')}
               {activeCount > 0 && (
                 <Badge variant="warning" size="sm">
                   {activeCount}
@@ -348,9 +352,9 @@ export function ProductFilters({
           <SheetContent side="left" className="w-full max-w-sm overflow-y-auto">
             <SheetHeader>
               <SheetTitle className="flex items-center justify-between font-serif">
-                Filters
+                {t('title')}
                 {activeCount > 0 && (
-                  <Badge variant="warning">{activeCount} active</Badge>
+                  <Badge variant="warning">{t('activeCount', { count: activeCount })}</Badge>
                 )}
               </SheetTitle>
             </SheetHeader>
@@ -360,7 +364,7 @@ export function ProductFilters({
               className="mt-6 w-full"
               onClick={() => setMobileOpen(false)}
             >
-              Apply Filters
+              {t('apply')}
             </Button>
           </SheetContent>
         </Sheet>

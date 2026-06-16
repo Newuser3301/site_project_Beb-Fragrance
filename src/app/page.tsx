@@ -15,6 +15,7 @@ import {
   fetchBestsellerProducts,
   fetchFeaturedProducts,
 } from '@/lib/products-server';
+import { getTranslator } from '@/lib/i18n-server';
 
 export const metadata: Metadata = {
   title: 'Beb Fragrance | Premium Perfume Store',
@@ -51,14 +52,15 @@ function HomeSectionHeading({
 }
 
 async function FeaturedProductsSection() {
+  const t = await getTranslator();
   const products = await fetchFeaturedProducts(4);
 
   return (
     <section className="py-10 md:py-14">
       <div className="container-beb">
         <HomeSectionHeading
-          eyebrow="Our Best Sellers"
-          title="A soft edit of signature bottles for women, men, and gift moments"
+          eyebrow={t('home.featuredEyebrow')}
+          title={t('home.featuredTitle')}
         />
 
         <div className="mb-8 flex items-center justify-center gap-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8c6d7d]">
@@ -74,15 +76,16 @@ async function FeaturedProductsSection() {
 }
 
 async function BestSellersSection() {
+  const t = await getTranslator();
   const products = await fetchBestsellerProducts(8);
 
   return (
     <section className="py-10 md:py-14">
       <div className="container-beb">
         <HomeSectionHeading
-          eyebrow="Popular Perfumes"
-          title="Curated bottles with a polished department-store feel"
-          description="A clean pastel grid inspired by classic fragrance boutiques, made to spotlight the bottle first."
+          eyebrow={t('home.popularEyebrow')}
+          title={t('home.popularTitle')}
+          description={t('home.popularDescription')}
         />
 
         <ProductGrid products={products} />
@@ -91,25 +94,26 @@ async function BestSellersSection() {
   );
 }
 
-function EditorialBannerSection() {
+async function EditorialBannerSection() {
+  const t = await getTranslator();
   return (
     <section className="py-10 md:py-14">
       <div className="container-beb">
         <div className="overflow-hidden rounded-[30px] bg-[#f5eadf] p-6 md:p-8">
-          <p className="eyebrow mb-3">Your Signature Scent</p>
+          <p className="eyebrow mb-3">{t('home.editorialEyebrow')}</p>
           <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
             <div className="max-w-xl">
               <h2 className="section-title">
-                Find the perfect perfume to express your unique style
+                {t('home.editorialTitle')}
               </h2>
               <p className="mt-4 text-sm leading-7 text-[#7d6874]">
-                Warm amber evenings, soft rose mornings, and elegant fresh notes for daily rituals. Explore the moods behind each scent family.
+                {t('home.editorialDescription')}
               </p>
               <Link
                 href="/products"
                 className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#55324b] px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#43253a]"
               >
-                Shop The Collection
+                {t('home.editorialButton')}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -134,7 +138,8 @@ function EditorialBannerSection() {
   );
 }
 
-function BrandRibbonSection() {
+async function BrandRibbonSection() {
+  const t = await getTranslator();
   const brands = ['Chanel', 'Dior', 'Tom Ford', 'Creed', 'Byredo', 'YSL'];
 
   return (
@@ -143,7 +148,7 @@ function BrandRibbonSection() {
         <div className="rounded-[26px] border border-[rgba(106,53,83,0.08)] bg-white px-6 py-5 shadow-[0_16px_35px_rgba(81,42,63,0.04)]">
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8c6d7d]">
-              Stocking Luxury Icons
+              {t('home.brandRibbon')}
             </p>
             {brands.map((brand) => (
               <span
@@ -160,20 +165,21 @@ function BrandRibbonSection() {
   );
 }
 
-function ScentJournalSection() {
+async function ScentJournalSection() {
+  const t = await getTranslator();
   const articles = [
     {
-      title: 'How to choose a daytime fragrance',
+      title: t('home.articles.daytime'),
       image:
         'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=900&h=700&fit=crop',
     },
     {
-      title: 'Romantic florals for elegant gifting',
+      title: t('home.articles.gifting'),
       image:
         'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=900&h=700&fit=crop',
     },
     {
-      title: 'Layering scents for a lasting signature',
+      title: t('home.articles.layering'),
       image:
         'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&h=700&fit=crop',
     },
@@ -183,8 +189,8 @@ function ScentJournalSection() {
     <section className="py-10 md:py-14">
       <div className="container-beb">
         <HomeSectionHeading
-          eyebrow="News & Blog Updates"
-          title="Soft editorial moments inspired by boutique perfume magazines"
+          eyebrow={t('home.journalEyebrow')}
+          title={t('home.journalTitle')}
         />
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -204,7 +210,7 @@ function ScentJournalSection() {
               </div>
               <div className="p-5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8c6d7d]">
-                  Fragrance Journal
+                  {t('home.journalLabel')}
                 </p>
                 <h3 className="mt-2 font-serif text-xl text-[#2f1d28]">
                   {article.title}
@@ -233,7 +239,9 @@ function ProductsFallback() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const t = await getTranslator();
+
   return (
     <>
       <HeroSection />
@@ -256,10 +264,10 @@ export default function HomePage() {
         <div className="container-beb">
           <div className="overflow-hidden rounded-[30px] bg-[#f8b7c2] px-6 py-12 text-center md:px-12">
             <ScrollReveal className="mx-auto max-w-2xl">
-              <p className="eyebrow mb-3 text-[#73475f]">Stay Connected</p>
-              <h2 className="section-title">Join the club for new arrivals and exclusive offers</h2>
+              <p className="eyebrow mb-3 text-[#73475f]">{t('home.newsletterEyebrow')}</p>
+              <h2 className="section-title">{t('home.newsletterTitle')}</h2>
               <p className="mt-4 text-sm leading-7 text-[#583849]">
-                Receive launches, restock alerts, and perfume notes from our fragrance desk.
+                {t('home.newsletterDescription')}
               </p>
               <div className="mx-auto mt-8 max-w-xl">
                 <Newsletter />

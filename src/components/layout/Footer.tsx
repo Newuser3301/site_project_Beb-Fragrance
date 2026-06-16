@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Pin } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import {
   CONTACT_ADDRESS,
@@ -23,6 +24,8 @@ export interface FooterProps {
 }
 
 export function Footer({ className }: FooterProps) {
+  const t = useTranslations('footer');
+
   return (
     <footer className={cn('bg-[#6d415c] text-white', className)}>
       <div className="container-beb py-16 lg:py-20">
@@ -35,10 +38,10 @@ export function Footer({ className }: FooterProps) {
               BEB FRAGRANCE
             </Link>
             <p className="mt-3 text-sm uppercase tracking-[0.24em] text-white/65">
-              Timeless Scents, Lasting Impressions
+              {t('tagline')}
             </p>
             <p className="mt-4 text-sm leading-relaxed text-[rgba(255,255,255,0.68)]">
-              Discover the art of luxury perfumery. Curating the world&apos;s finest scents since 2024.
+              {t('description')}
             </p>
             <div className="mt-6 flex flex-col gap-2">
               <a
@@ -61,7 +64,7 @@ export function Footer({ className }: FooterProps) {
 
           <div>
             <h3 className="mb-5 font-serif text-sm font-semibold uppercase tracking-[0.2em] text-white">
-              Shop
+              {t('shop')}
             </h3>
             <ul className="space-y-3">
               {FOOTER_LINKS.shop.map((link) => (
@@ -79,13 +82,13 @@ export function Footer({ className }: FooterProps) {
 
           <div>
             <h3 className="mb-5 font-serif text-sm font-semibold uppercase tracking-[0.2em] text-white">
-              About Us
+              {t('about')}
             </h3>
             <ul className="space-y-3">
               {[
-                { label: 'Our Story', href: '/about' },
-                { label: 'Premium Collections', href: '/products?featured=true' },
-                { label: 'Best Sellers', href: '/products?sort=popular' },
+                { label: t('ourStory'), href: '/about' },
+                { label: t('premiumCollections'), href: '/products?featured=true' },
+                { label: t('bestSellers'), href: '/products?sort=bestseller' },
                 { label: 'Contact', href: '/contact' },
               ].map((link) => (
                 <li key={link.href}>
@@ -120,7 +123,7 @@ export function Footer({ className }: FooterProps) {
 
           <div>
             <h3 className="mb-5 font-serif text-sm font-semibold uppercase tracking-[0.2em] text-white">
-              Customer Care
+              {t('customerCare')}
             </h3>
             <ul className="space-y-3">
               {[...FOOTER_LINKS.help, ...FOOTER_LINKS.legal].map((link) => (
@@ -141,20 +144,20 @@ export function Footer({ className }: FooterProps) {
 
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-xs text-[rgba(255,255,255,0.4)]">
-            © 2026 Beb Fragrance. All rights reserved.
+            {t('rights')}
           </p>
           <div className="flex items-center gap-6">
             <Link
               href="/privacy"
               className="text-xs text-[rgba(255,255,255,0.4)] transition-colors hover:text-[rgba(255,255,255,0.6)]"
             >
-              Privacy Policy
+              {t('privacy')}
             </Link>
             <Link
               href="/terms"
               className="text-xs text-[rgba(255,255,255,0.4)] transition-colors hover:text-[rgba(255,255,255,0.6)]"
             >
-              Terms of Service
+              {t('terms')}
             </Link>
           </div>
         </div>

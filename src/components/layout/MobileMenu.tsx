@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LogOut, Package, Heart } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import {
   Sheet,
   SheetContent,
@@ -36,6 +37,8 @@ export interface MobileMenuProps {
 export function MobileMenu({ user }: MobileMenuProps) {
   const pathname = usePathname();
   const { isMobileMenuOpen, closeMobileMenu } = useUIStore();
+  const tCommon = useTranslations('common');
+  const tNav = useTranslations('nav');
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -81,14 +84,14 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   isActive(link.href) && 'bg-cream-100 text-gold-600'
                 )}
               >
-                {link.label}
+                {tNav(`links.${link.key}`)}
               </Link>
             ))}
 
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="categories" className="border-none">
                 <AccordionTrigger className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-cream-100 hover:text-gold-600 hover:no-underline">
-                  Kategoriyalar
+                  {tNav('categoryMenu')}
                 </AccordionTrigger>
                 <AccordionContent className="pb-0 pl-3">
                   {categories.map((category) => (
@@ -99,7 +102,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                       className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-cream-100 hover:text-gold-600"
                     >
                       <category.icon className="h-3.5 w-3.5" />
-                      {category.label}
+                      {tNav(`categories.${category.key}`)}
                     </Link>
                   ))}
                 </AccordionContent>
@@ -117,7 +120,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-cream-100 hover:text-gold-600"
                 >
                   <Package className="h-4 w-4" />
-                  My Orders
+                  {tCommon('myOrders')}
                 </Link>
                 <Link
                   href="/wishlist"
@@ -125,7 +128,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-cream-100 hover:text-gold-600"
                 >
                   <Heart className="h-4 w-4" />
-                  Wishlist
+                  {tCommon('wishlist')}
                 </Link>
                 <Button
                   variant="ghost"
@@ -136,7 +139,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                   }}
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {tCommon('signOut')}
                 </Button>
               </div>
             </>
@@ -146,7 +149,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
             <div className="mt-auto pt-8">
               <Button variant="luxury" className="w-full" asChild>
                 <Link href="/auth/login" onClick={closeMobileMenu}>
-                  Sign In
+                  {tCommon('signIn')}
                 </Link>
               </Button>
             </div>

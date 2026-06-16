@@ -1,6 +1,7 @@
 // src/app/products/page.tsx
 import type { Metadata } from 'next';
 import { ProductsCatalog } from '@/components/products/ProductsCatalog';
+import { getTranslator } from '@/lib/i18n-server';
 import { fetchCategories, fetchProducts } from '@/lib/products-server';
 import { parseProductsSearchParams } from '@/lib/parse-search-params';
 
@@ -23,6 +24,7 @@ interface ProductsPageProps {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
+  const t = await getTranslator();
   const query = parseProductsSearchParams(searchParams);
 
   const [productsResult, categories] = await Promise.all([
@@ -38,11 +40,11 @@ export default async function ProductsPage({
       page={productsResult.page}
       totalPages={productsResult.totalPages}
       searchParams={searchParams}
-      pageTitle="All Perfumes"
-      pageDescription="Browse our complete collection of luxury fragrances from the world's finest perfume houses. Filter by gender, price, brand and more."
+      pageTitle={t('products.pageTitle')}
+      pageDescription={t('products.pageDescription')}
       breadcrumbs={[
-        { label: 'Home', href: '/' },
-        { label: 'Products' },
+        { label: t('common.home'), href: '/' },
+        { label: t('common.shop') },
       ]}
     />
   );

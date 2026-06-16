@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Input } from '@/components/ui/Input';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useUIStore } from '@/store/useUIStore';
@@ -24,6 +25,7 @@ export interface SearchBarProps {
 }
 
 export function SearchBar({ className }: SearchBarProps) {
+  const t = useTranslations('searchBar');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +101,7 @@ export function SearchBar({ className }: SearchBarProps) {
       >
         <Input
           type="search"
-          placeholder="Mahsulot qidirish..."
+          placeholder={t('placeholder')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
@@ -113,7 +115,7 @@ export function SearchBar({ className }: SearchBarProps) {
             {isLoading ? (
               <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Qidirilmoqda...
+                {t('loading')}
               </div>
             ) : results.length > 0 ? (
               <>
@@ -157,13 +159,13 @@ export function SearchBar({ className }: SearchBarProps) {
                     onClick={handleClose}
                     className="block rounded-md px-3 py-2 text-center text-sm font-medium text-gold-600 transition-colors hover:bg-cream-50"
                   >
-                    Barcha natijalar
+                    {t('allResults')}
                   </Link>
                 </div>
               </>
             ) : (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                Hech narsa topilmadi
+                {t('empty')}
               </div>
             )}
           </div>

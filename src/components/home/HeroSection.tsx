@@ -4,8 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function HeroSection() {
+  const t = useTranslations('hero');
   const bottles = [
     {
       src: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=700&fit=crop',
@@ -44,7 +46,7 @@ export function HeroSection() {
                 className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,53,83,0.10)] bg-white px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#6d415c]"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Timeless Elegance
+                {t('eyebrow')}
               </motion.div>
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
@@ -52,9 +54,9 @@ export function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.1 }}
                 className="max-w-[480px] font-serif text-4xl font-semibold leading-[0.97] text-[#2f1d28] md:text-5xl lg:text-[58px]"
               >
-                Fragrance For
+                {t('titleLine1')}
                 <br />
-                Every Occasion
+                {t('titleLine2')}
               </motion.h1>
 
               <motion.p
@@ -63,7 +65,7 @@ export function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.2 }}
                 className="mt-4 max-w-md text-sm leading-7 text-[#5f5860] md:text-base"
               >
-                Discover romantic florals, elegant musks, and statement evening scents curated for daily rituals and unforgettable moments.
+                {t('description')}
               </motion.p>
 
               <motion.div
@@ -76,14 +78,14 @@ export function HeroSection() {
                   href="/products"
                   className="inline-flex items-center gap-2 rounded-xl bg-[#55324b] px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.16em] text-white transition-all hover:bg-[#43253a]"
                 >
-                  Shop Now
+                  {t('shopNow')}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/products?featured=true"
                   className="inline-flex items-center gap-2 rounded-xl border border-[rgba(85,50,75,0.18)] bg-white/80 px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.16em] text-[#55324b] transition-all hover:bg-white"
                 >
-                  Explore Best Sellers
+                  {t('exploreBestSellers')}
                 </Link>
               </motion.div>
 
@@ -94,9 +96,9 @@ export function HeroSection() {
                 className="mt-6 grid max-w-lg grid-cols-3 gap-3"
               >
                 {[
-                  { label: 'Luxury Brands', value: '120+' },
-                  { label: 'Gift Ready', value: '24h' },
-                  { label: 'Signature Picks', value: 'Top 50' },
+                  { label: t('stats.brands'), value: '120+' },
+                  { label: t('stats.giftReady'), value: '24h' },
+                  { label: t('stats.signaturePicks'), value: 'Top 50' },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -129,7 +131,7 @@ export function HeroSection() {
                 >
                   <Image
                     src={item.src}
-                    alt="Luxury perfume bottle"
+                    alt={t('bottleAlt')}
                     fill
                     className="object-cover"
                     sizes="220px"
@@ -138,9 +140,9 @@ export function HeroSection() {
               ))}
               <div className="absolute bottom-[8%] right-[8%] rounded-[24px] border border-white/70 bg-white/80 px-5 py-4 backdrop-blur-md">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#73475f]">
-                  New Season Edit
+                  {t('newSeason')}
                 </p>
-                <p className="mt-2 font-serif text-2xl text-[#2f1d28]">Soft pink shelf mood</p>
+                <p className="mt-2 font-serif text-2xl text-[#2f1d28]">{t('shelfMood')}</p>
               </div>
             </motion.div>
           </div>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import {
   Droplets,
   Flower2,
@@ -14,11 +15,11 @@ import { cn } from '@/lib/utils';
 import { mockCategories } from '@/lib/mock-store';
 
 const navLinks = [
-  { label: "Bosh sahifa", href: '/' },
-  { label: "Do'kon", href: '/products' },
-  { label: 'Biz haqimizda', href: '/about' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Kontakt', href: '/contact' },
+  { key: 'home', href: '/' },
+  { key: 'shop', href: '/products' },
+  { key: 'about', href: '/about' },
+  { key: 'faq', href: '/faq' },
+  { key: 'contact', href: '/contact' },
 ];
 
 const iconMap = {
@@ -30,14 +31,14 @@ const iconMap = {
 
 const categories = [
   ...mockCategories.map((category) => ({
-    label: category.name,
+    key: category.slug,
     href: `/categories/${category.slug}`,
     icon:
       iconMap[category.slug as keyof typeof iconMap] ??
       Sparkles,
   })),
-  { label: 'Gift Sets', href: '/products?gender=UNISEX', icon: Gift },
-  { label: 'Hammasi', href: '/products', icon: Grid2x2 },
+  { key: 'giftSets', href: '/products?gender=UNISEX', icon: Gift },
+  { key: 'all', href: '/products', icon: Grid2x2 },
 ];
 
 export interface NavbarProps {
@@ -47,6 +48,7 @@ export interface NavbarProps {
 
 export function Navbar({ className, onLinkClick }: NavbarProps) {
   const pathname = usePathname();
+  const tNav = useTranslations('nav');
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -60,6 +62,7 @@ export function Navbar({ className, onLinkClick }: NavbarProps) {
       {categories.map((category) => {
         const Icon = category.icon;
         const active = isActive(category.href);
+        const label = tNav(`categories.${category.key}`);
 
         return (
           <Link
@@ -74,7 +77,7 @@ export function Navbar({ className, onLinkClick }: NavbarProps) {
             )}
           >
             <Icon className="h-4 w-4" />
-            <span>{category.label}</span>
+            <span>{label}</span>
           </Link>
         );
       })}
@@ -90,7 +93,7 @@ export function Navbar({ className, onLinkClick }: NavbarProps) {
               isActive(link.href) && 'text-[#1d4ed8]'
             )}
           >
-            {link.label}
+            {tNav(`links.${link.key}`)}
           </Link>
         ))}
       </div>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Star } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useWishlistStore } from '@/store/useWishlistStore';
 import { formatPrice, cn } from '@/lib/utils';
 
@@ -47,6 +48,7 @@ export function ProductCard({
   product,
   className,
 }: ProductCardProps) {
+  const t = useTranslations('productCard');
   const [isHovered, setIsHovered] = useState(false);
   const { addItem, removeItem, isInWishlist } = useWishlistStore();
   const inWishlist = isInWishlist(product.id);
@@ -96,20 +98,20 @@ export function ProductCard({
             {isOutOfStock && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                 <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold uppercase tracking-wider text-[#1A1A1A]">
-                  Sold Out
+                  {t('soldOut')}
                 </span>
               </div>
             )}
 
             {isBestseller && (
               <span className="absolute left-4 top-4 rounded-full bg-[#6d415c] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                Best
+                {t('best')}
               </span>
             )}
 
             {isNew && !isBestseller && (
               <span className="absolute left-4 top-4 rounded-full bg-[#e88ba4] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">
-                New
+                {t('new')}
               </span>
             )}
 
@@ -123,7 +125,7 @@ export function ProductCard({
               type="button"
               onClick={toggleWishlist}
               className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(106,53,83,0.08)] bg-white/90 transition-all hover:scale-110"
-              aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              aria-label={inWishlist ? t('removeWishlist') : t('addWishlist')}
             >
               <Heart
                 className={cn(
@@ -138,7 +140,7 @@ export function ProductCard({
 
           <div className="space-y-2 px-4 pb-5 pt-4">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8c6d7d]">
-              {product.brand || product.gender || 'Luxury'}
+              {product.brand || product.gender || t('luxury')}
             </p>
             <h3 className="line-clamp-1 font-serif text-lg font-semibold text-[#2f1d28]">
               {product.name}
@@ -167,7 +169,7 @@ export function ProductCard({
               ) : null}
             </div>
             <p className="text-[11px] uppercase tracking-[0.18em] text-[#8c6d7d]">
-              {product.fragranceFamily || 'Luxury Perfume'}
+              {product.fragranceFamily || t('luxuryPerfume')}
             </p>
           </div>
         </div>

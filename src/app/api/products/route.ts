@@ -15,6 +15,8 @@ import {
   productSchema,
   searchParamsSchema,
 } from '@/lib/validations';
+import { canUseDatabase, logFallbackOnce } from '@/lib/app-mode';
+import { getMockProducts } from '@/lib/mock-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -121,6 +123,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     const params = parseResult.data;
+    if (!(await canUseDatabase())) {
+      return NextResponse.json(getMockProducts(params));
+    }
+
     const where = buildWhereClause(params);
     const skip = (params.page - 1) * params.limit;
     const isPriceSort =
@@ -200,11 +206,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       hasMore,
     });
   } catch (error) {
-    console.error('GET /api/products error:', error);
-    return NextResponse.json(
-      { error: 'Mahsulotlarni yuklashda xatolik yuz berdi' },
-      { status: 500 }
+    logFallbackOnce(
+      'api.products.get',
+      'Products API query failed. Falling back to mock products.',
+      error
     );
+    const fallbackParams = searchParamsSchema.parse({});
+    return NextResponse.json(getMockProducts(fallbackParams));
   }
 }
 

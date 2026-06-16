@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Heart, LogOut, Package } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { signOut } from 'next-auth/react';
@@ -18,10 +19,12 @@ export interface UserMenuProps {
 }
 
 export function UserMenu({ user, className }: UserMenuProps) {
+  const tCommon = useTranslations('common');
+
   if (!user) {
     return (
       <Button variant="outline" size="sm" className={className} asChild>
-        <Link href="/auth/login">Sign In</Link>
+        <Link href="/auth/login">{tCommon('signIn')}</Link>
       </Button>
     );
   }
@@ -61,7 +64,7 @@ export function UserMenu({ user, className }: UserMenuProps) {
               className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors hover:bg-cream-100 focus:bg-cream-100"
             >
               <Package className="h-4 w-4" />
-              My Orders
+              {tCommon('myOrders')}
             </Link>
           </DropdownMenu.Item>
 
@@ -71,7 +74,7 @@ export function UserMenu({ user, className }: UserMenuProps) {
               className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors hover:bg-cream-100 focus:bg-cream-100"
             >
               <Heart className="h-4 w-4" />
-              Wishlist
+              {tCommon('wishlist')}
             </Link>
           </DropdownMenu.Item>
 
@@ -82,7 +85,7 @@ export function UserMenu({ user, className }: UserMenuProps) {
             onSelect={() => signOut({ callbackUrl: '/' })}
           >
             <LogOut className="h-4 w-4" />
-            Sign Out
+            {tCommon('signOut')}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

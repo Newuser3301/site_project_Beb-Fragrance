@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 export interface PaginationProps {
@@ -51,6 +52,8 @@ export function Pagination({
   onPageChange,
   className,
 }: PaginationProps) {
+  const t = useTranslations('products.pagination');
+
   if (totalPages <= 1) {
     return null;
   }
@@ -71,7 +74,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
           className="page-btn disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Previous page"
+          aria-label={t('previous')}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -82,8 +85,8 @@ export function Pagination({
             return (
               <span
                 key={`ellipsis-${index}`}
-                className="flex h-9 w-9 items-center justify-center text-xs text-[#6B6B6B]"
-              >
+              className="flex h-9 w-9 items-center justify-center text-xs text-[#6B6B6B]"
+            >
                 ...
               </span>
             );
@@ -100,7 +103,7 @@ export function Pagination({
                 'page-btn',
                 isActive && 'active'
               )}
-              aria-label={`Page ${page}`}
+              aria-label={t('page', { page })}
               aria-current={isActive ? 'page' : undefined}
             >
               {page}
@@ -114,7 +117,7 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
           className="page-btn disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Next page"
+          aria-label={t('next')}
         >
           <ChevronRight className="h-4 w-4" />
         </button>

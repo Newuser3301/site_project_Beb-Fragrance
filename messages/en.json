@@ -1,0 +1,179 @@
+{
+  "common": {
+    "home": "Home",
+    "shop": "Shop",
+    "about": "About Us",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "all": "All",
+    "search": "Search",
+    "login": "Login",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "categories": "Categories",
+    "myOrders": "My Orders",
+    "signOut": "Sign Out",
+    "signIn": "Sign In",
+    "clearAll": "Clear",
+    "viewAll": "View All"
+  },
+  "header": {
+    "topbar": "Order online and contact us: {phone}",
+    "storeTagline": "premium perfume store",
+    "toggleTheme": "Toggle color mode",
+    "selectLanguage": "Select language",
+    "openMenu": "Open menu",
+    "openCart": "Open cart"
+  },
+  "searchBar": {
+    "placeholder": "Search products...",
+    "loading": "Searching...",
+    "allResults": "View all results",
+    "empty": "Nothing found"
+  },
+  "nav": {
+    "categoryMenu": "Categories",
+    "links": {
+      "home": "Home",
+      "shop": "Shop",
+      "about": "About Us",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "categories": {
+      "oriental": "Oriental",
+      "floral": "Floral",
+      "woody": "Woody",
+      "fresh": "Fresh",
+      "giftSets": "Gift Sets",
+      "all": "All"
+    }
+  },
+  "hero": {
+    "eyebrow": "Timeless Elegance",
+    "titleLine1": "Fragrance For",
+    "titleLine2": "Every Occasion",
+    "description": "Discover romantic florals, elegant musks, and statement evening scents curated for daily rituals and unforgettable moments.",
+    "shopNow": "Shop Now",
+    "exploreBestSellers": "Explore Best Sellers",
+    "stats": {
+      "brands": "Luxury Brands",
+      "giftReady": "Gift Ready",
+      "signaturePicks": "Signature Picks"
+    },
+    "newSeason": "New Season Edit",
+    "shelfMood": "Soft pink shelf mood",
+    "bottleAlt": "Luxury perfume bottle"
+  },
+  "homeCategories": {
+    "eyebrow": "Signature Families",
+    "title": "Boutique shelves arranged by mood, gift, and daily ritual",
+    "cards": {
+      "women": {
+        "title": "Women Perfumes",
+        "subtitle": "7 items"
+      },
+      "men": {
+        "title": "Men Cologne",
+        "subtitle": "8 items"
+      },
+      "gift": {
+        "title": "Gift Sets",
+        "subtitle": "10 items"
+      }
+    },
+    "description": "Discover curated perfumes tailored to this scent mood.",
+    "shop": "Shop"
+  },
+  "home": {
+    "featuredEyebrow": "Our Best Sellers",
+    "featuredTitle": "A soft edit of signature bottles for women, men, and gift moments",
+    "popularEyebrow": "Popular Perfumes",
+    "popularTitle": "Curated bottles with a polished department-store feel",
+    "popularDescription": "A clean pastel grid inspired by classic fragrance boutiques, made to spotlight the bottle first.",
+    "editorialEyebrow": "Your Signature Scent",
+    "editorialTitle": "Find the perfect perfume to express your unique style",
+    "editorialDescription": "Warm amber evenings, soft rose mornings, and elegant fresh notes for daily rituals. Explore the moods behind each scent family.",
+    "editorialButton": "Shop The Collection",
+    "brandRibbon": "Stocking Luxury Icons",
+    "newsletterEyebrow": "Stay Connected",
+    "newsletterTitle": "Join the club for new arrivals and exclusive offers",
+    "newsletterDescription": "Receive launches, restock alerts, and perfume notes from our fragrance desk.",
+    "journalEyebrow": "News & Blog Updates",
+    "journalTitle": "Soft editorial moments inspired by boutique perfume magazines",
+    "journalLabel": "Fragrance Journal",
+    "articles": {
+      "daytime": "How to choose a daytime fragrance",
+      "gifting": "Romantic florals for elegant gifting",
+      "layering": "Layering scents for a lasting signature"
+    }
+  },
+  "products": {
+    "pageTitle": "All Perfumes",
+    "pageDescription": "Browse our complete collection of premium perfumes from the world's finest fragrance houses. Filter by gender, price, brand, and more.",
+    "showing": "Showing {start}–{end} of {total} products",
+    "searchPlaceholder": "Search perfumes...",
+    "activeFilters": "Active filters:",
+    "clearAll": "Clear all",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "allCategories": "All Categories",
+      "gender": "Gender",
+      "priceRange": "Price Range",
+      "brand": "Brand",
+      "brandSearch": "Search brands...",
+      "volume": "Volume",
+      "apply": "Apply Filters",
+      "activeCount": "{count} active",
+      "genders": {
+        "all": "All",
+        "men": "Men",
+        "women": "Women",
+        "unisex": "Unisex"
+      },
+      "minPrice": "Min price",
+      "maxPrice": "Max price"
+    },
+    "sort": {
+      "label": "Sort by:",
+      "placeholder": "Sort products",
+      "newest": "Newest",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "bestseller": "Popularity",
+      "nameAsc": "Name: A-Z"
+    },
+    "pagination": {
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {page}"
+    },
+    "badges": {
+      "min": "Min ${value}",
+      "max": "Max ${value}"
+    }
+  },
+  "productCard": {
+    "soldOut": "Sold Out",
+    "best": "Best",
+    "new": "New",
+    "luxury": "Luxury",
+    "luxuryPerfume": "Luxury Perfume",
+    "addWishlist": "Add to wishlist",
+    "removeWishlist": "Remove from wishlist"
+  },
+  "footer": {
+    "tagline": "Timeless Scents, Lasting Impressions",
+    "description": "Discover the art of luxury perfumery with a curated edit of the world's finest scents.",
+    "shop": "Shop",
+    "about": "About Us",
+    "customerCare": "Customer Care",
+    "rights": "© 2026 Beb Fragrance. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "ourStory": "Our Story",
+    "premiumCollections": "Premium Collections",
+    "bestSellers": "Best Sellers"
+  }
+}

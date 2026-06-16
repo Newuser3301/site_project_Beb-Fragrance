@@ -7,6 +7,8 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { CartDrawer } from '@/components/layout/CartDrawer';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
+import { getMessages } from '@/lib/i18n';
+import { getLocaleFromRequest } from '@/lib/i18n-server';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -99,6 +101,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const locale = await getLocaleFromRequest();
+  const messages = getMessages(locale);
   const themeInitScript = `
     (function () {
       try {
@@ -113,14 +117,14 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${dmSans.variable} ${playfair.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans text-foreground antialiased transition-colors duration-300">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <Providers session={session}>
-          <Header user={session?.user} />
+        <Providers session={session} locale={locale} messages={messages}>
+          <Header user={session?.user} locale={locale} />
           <main className="min-h-screen">{children}</main>
           <Footer />
           <CartDrawer />

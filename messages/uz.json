@@ -1,0 +1,179 @@
+{
+  "common": {
+    "home": "Bosh sahifa",
+    "shop": "Do'kon",
+    "about": "Biz haqimizda",
+    "faq": "FAQ",
+    "contact": "Kontakt",
+    "all": "Hammasi",
+    "search": "Qidirish",
+    "login": "Kirish",
+    "cart": "Savatcha",
+    "wishlist": "Sevimlilar",
+    "categories": "Kategoriyalar",
+    "myOrders": "Buyurtmalarim",
+    "signOut": "Chiqish",
+    "signIn": "Kirish",
+    "clearAll": "Tozalash",
+    "viewAll": "Barchasini ko'rish"
+  },
+  "header": {
+    "topbar": "Onlayn buyurtma va aloqa: {phone}",
+    "storeTagline": "premium perfume store",
+    "toggleTheme": "Rang rejimini almashtirish",
+    "selectLanguage": "Til tanlash",
+    "openMenu": "Menyuni ochish",
+    "openCart": "Savatchani ochish"
+  },
+  "searchBar": {
+    "placeholder": "Mahsulot qidirish...",
+    "loading": "Qidirilmoqda...",
+    "allResults": "Barcha natijalar",
+    "empty": "Hech narsa topilmadi"
+  },
+  "nav": {
+    "categoryMenu": "Kategoriyalar",
+    "links": {
+      "home": "Bosh sahifa",
+      "shop": "Do'kon",
+      "about": "Biz haqimizda",
+      "faq": "FAQ",
+      "contact": "Kontakt"
+    },
+    "categories": {
+      "oriental": "Oriental",
+      "floral": "Floral",
+      "woody": "Woody",
+      "fresh": "Fresh",
+      "giftSets": "Gift Sets",
+      "all": "Hammasi"
+    }
+  },
+  "hero": {
+    "eyebrow": "Betakror nafislik",
+    "titleLine1": "Har bir",
+    "titleLine2": "lahza uchun ifor",
+    "description": "Kundalik marosimlar va unutilmas uchrashuvlar uchun tanlangan romantik floral, nafis musk va kechki aksent iforlarni kashf eting.",
+    "shopNow": "Hozir xarid qiling",
+    "exploreBestSellers": "Mashhur mahsulotlar",
+    "stats": {
+      "brands": "Lux brendlar",
+      "giftReady": "Sovg'aga tayyor",
+      "signaturePicks": "Saralangan hitlar"
+    },
+    "newSeason": "Yangi mavsum tanlovi",
+    "shelfMood": "Yumshoq pushti vitrinalar",
+    "bottleAlt": "Premium atir flakoni"
+  },
+  "homeCategories": {
+    "eyebrow": "Asosiy yo'nalishlar",
+    "title": "Kayfiyat, sovg'a va kundalik uslub bo'yicha tanlangan kolleksiyalar",
+    "cards": {
+      "women": {
+        "title": "Ayollar atirlari",
+        "subtitle": "7 mahsulot"
+      },
+      "men": {
+        "title": "Erkaklar kolleksiyasi",
+        "subtitle": "8 mahsulot"
+      },
+      "gift": {
+        "title": "Sovg'a setlari",
+        "subtitle": "10 mahsulot"
+      }
+    },
+    "description": "Ushbu ifor kayfiyati uchun tanlangan premium parfyumlarni ko'ring.",
+    "shop": "Xarid qilish"
+  },
+  "home": {
+    "featuredEyebrow": "Bizning bestsellerlar",
+    "featuredTitle": "Ayollar, erkaklar va sovg'a lahzalari uchun tanlangan yumshoq kolleksiya",
+    "popularEyebrow": "Mashhur atirlar",
+    "popularTitle": "Yirik butiklar ruhidagi sayqal berilgan flakonlar",
+    "popularDescription": "Klassik parfyumeriya butiklaridan ilhomlangan toza pastel ko'rinish, diqqatni flakonning o'ziga qaratadi.",
+    "editorialEyebrow": "Sizning o'ziga xos iforingiz",
+    "editorialTitle": "Uslubingizni ifodalovchi mukammal atirni toping",
+    "editorialDescription": "Issiq amber kechalari, yumshoq atirgul tonglari va har kun uchun nafis yangi notalarni kayfiyat bo'yicha o'rganing.",
+    "editorialButton": "Kolleksiyani ko'rish",
+    "brandRibbon": "Premium brendlar",
+    "newsletterEyebrow": "Bog'lanib turing",
+    "newsletterTitle": "Yangi kelganlar va maxsus takliflar uchun klubga qo'shiling",
+    "newsletterDescription": "Yangi kolleksiyalar, qayta sotuvga chiqishlar va ifor tavsiyalarini birinchi bo'lib oling.",
+    "journalEyebrow": "Yangiliklar va blog",
+    "journalTitle": "Butik parfyumeriya jurnallaridan ilhomlangan yumshoq editorial lahzalar",
+    "journalLabel": "Fragrance Journal",
+    "articles": {
+      "daytime": "Kunduzgi iforni qanday tanlash kerak",
+      "gifting": "Elegant sovg'alar uchun romantik floral yo'nalishlar",
+      "layering": "O'ziga xos uslub uchun iforlarni qatlamlash"
+    }
+  },
+  "products": {
+    "pageTitle": "Barcha atirlar",
+    "pageDescription": "Dunyoning mashhur parfyum uylari tomonidan yaratilgan premium iforlar kolleksiyasini ko'ring. Gender, narx, brend va boshqa filtrlar orqali saralang.",
+    "showing": "{start}–{end} / {total} mahsulot",
+    "searchPlaceholder": "Atir qidiring...",
+    "activeFilters": "Faol filtrlar:",
+    "clearAll": "Barchasini tozalash",
+    "filters": {
+      "title": "Filtrlar",
+      "category": "Kategoriya",
+      "allCategories": "Barcha kategoriyalar",
+      "gender": "Gender",
+      "priceRange": "Narx oralig'i",
+      "brand": "Brend",
+      "brandSearch": "Brend qidirish...",
+      "volume": "Hajm",
+      "apply": "Filtrlarni qo'llash",
+      "activeCount": "{count} faol",
+      "genders": {
+        "all": "Hammasi",
+        "men": "Erkaklar",
+        "women": "Ayollar",
+        "unisex": "Uniseks"
+      },
+      "minPrice": "Min narx",
+      "maxPrice": "Max narx"
+    },
+    "sort": {
+      "label": "Saralash:",
+      "placeholder": "Mahsulotlarni saralash",
+      "newest": "Yangi",
+      "priceAsc": "Narx: arzonidan",
+      "priceDesc": "Narx: qimmatidan",
+      "bestseller": "Ommabop",
+      "nameAsc": "Nom: A-Z"
+    },
+    "pagination": {
+      "previous": "Oldingi sahifa",
+      "next": "Keyingi sahifa",
+      "page": "{page}-sahifa"
+    },
+    "badges": {
+      "min": "Min ${value}",
+      "max": "Max ${value}"
+    }
+  },
+  "productCard": {
+    "soldOut": "Sotuvda yo'q",
+    "best": "Top",
+    "new": "Yangi",
+    "luxury": "Premium",
+    "luxuryPerfume": "Premium atir",
+    "addWishlist": "Sevimlilarga qo'shish",
+    "removeWishlist": "Sevimlilardan olib tashlash"
+  },
+  "footer": {
+    "tagline": "Betakror iforlar, uzoq taassurot",
+    "description": "Dunyoning eng nafis iforlarini saralab taqdim etamiz.",
+    "shop": "Do'kon",
+    "about": "Biz haqimizda",
+    "customerCare": "Mijozlar xizmati",
+    "rights": "© 2026 Beb Fragrance. Barcha huquqlar himoyalangan.",
+    "privacy": "Maxfiylik siyosati",
+    "terms": "Foydalanish shartlari",
+    "ourStory": "Bizning hikoya",
+    "premiumCollections": "Premium kolleksiyalar",
+    "bestSellers": "Bestsellerlar"
+  }
+}
