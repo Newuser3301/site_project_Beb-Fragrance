@@ -37,6 +37,33 @@
     --font-jost: 'Jost', 'DM Sans', system-ui, sans-serif;
     --font-playfair: 'Playfair Display', Georgia, serif;
   }
+
+  .dark {
+    --background: 226 28% 11%;
+    --foreground: 210 22% 96%;
+
+    --card: 223 26% 14%;
+    --card-foreground: 210 22% 96%;
+
+    --popover: 223 26% 14%;
+    --popover-foreground: 210 22% 96%;
+
+    --primary: 214 90% 57%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 223 20% 20%;
+    --secondary-foreground: 210 22% 96%;
+
+    --muted: 223 20% 18%;
+    --muted-foreground: 217 12% 70%;
+
+    --accent: 223 24% 22%;
+    --accent-foreground: 210 22% 96%;
+
+    --border: 223 18% 22%;
+    --input: 223 18% 22%;
+    --ring: 214 90% 57%;
+  }
 }
 
 @layer base {
@@ -53,6 +80,13 @@
       radial-gradient(circle at top right, rgba(244, 187, 199, 0.22), transparent 28%),
       linear-gradient(180deg, #fffdfc 0%, #fff9f8 100%);
     @apply font-sans text-[#341f2b] antialiased;
+  }
+
+  .dark body {
+    background:
+      radial-gradient(circle at top right, rgba(47, 103, 201, 0.16), transparent 24%),
+      linear-gradient(180deg, #0d1420 0%, #121a27 100%);
+    @apply text-slate-100;
   }
 
   h1, h2, h3, h4, h5, h6 {

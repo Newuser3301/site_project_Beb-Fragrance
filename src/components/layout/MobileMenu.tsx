@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, LogOut, Package, Heart } from 'lucide-react';
+import { LogOut, Package, Heart } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -88,7 +88,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="categories" className="border-none">
                 <AccordionTrigger className="rounded-md px-3 py-2.5 text-sm font-medium hover:bg-cream-100 hover:text-gold-600 hover:no-underline">
-                  Categories
+                  Kategoriyalar
                 </AccordionTrigger>
                 <AccordionContent className="pb-0 pl-3">
                   {categories.map((category) => (
@@ -98,7 +98,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
                       onClick={closeMobileMenu}
                       className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-cream-100 hover:text-gold-600"
                     >
-                      <ChevronDown className="h-3 w-3 -rotate-90" />
+                      <category.icon className="h-3.5 w-3.5" />
                       {category.label}
                     </Link>
                   ))}

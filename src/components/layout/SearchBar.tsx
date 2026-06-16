@@ -99,13 +99,13 @@ export function SearchBar({ className }: SearchBarProps) {
       >
         <Input
           type="search"
-          placeholder="Search fragrances..."
+          placeholder="Mahsulot qidirish..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           icon={<Search className="h-4 w-4" />}
           iconPosition="left"
-          className="bg-cream-50/50"
+          className="h-12 rounded-full border-[rgba(106,53,83,0.10)] bg-white pl-11 pr-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]"
         />
 
         {showDropdown && (
@@ -113,7 +113,7 @@ export function SearchBar({ className }: SearchBarProps) {
             {isLoading ? (
               <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Searching...
+                Qidirilmoqda...
               </div>
             ) : results.length > 0 ? (
               <>
@@ -157,13 +157,13 @@ export function SearchBar({ className }: SearchBarProps) {
                     onClick={handleClose}
                     className="block rounded-md px-3 py-2 text-center text-sm font-medium text-gold-600 transition-colors hover:bg-cream-50"
                   >
-                    View all results
+                    Barcha natijalar
                   </Link>
                 </div>
               </>
             ) : (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                No products found
+                Hech narsa topilmadi
               </div>
             )}
           </div>

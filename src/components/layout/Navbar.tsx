@@ -2,24 +2,42 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown } from 'lucide-react';
+import {
+  Droplets,
+  Flower2,
+  Gift,
+  Grid2x2,
+  Sparkles,
+  Trees,
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockCategories } from '@/lib/mock-store';
 
 const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Shop', href: '/products' },
-  { label: 'About', href: '/about' },
+  { label: "Bosh sahifa", href: '/' },
+  { label: "Do'kon", href: '/products' },
+  { label: 'Biz haqimizda', href: '/about' },
   { label: 'FAQ', href: '/faq' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Kontakt', href: '/contact' },
 ];
+
+const iconMap = {
+  floral: Flower2,
+  woody: Trees,
+  fresh: Droplets,
+  oriental: Sparkles,
+} as const;
 
 const categories = [
   ...mockCategories.map((category) => ({
     label: category.name,
     href: `/categories/${category.slug}`,
+    icon:
+      iconMap[category.slug as keyof typeof iconMap] ??
+      Sparkles,
   })),
-  { label: 'All Perfumes', href: '/products' },
+  { label: 'Gift Sets', href: '/products?gender=UNISEX', icon: Gift },
+  { label: 'Hammasi', href: '/products', icon: Grid2x2 },
 ];
 
 export interface NavbarProps {
@@ -38,45 +56,43 @@ export function Navbar({ className, onLinkClick }: NavbarProps) {
   };
 
   return (
-    <nav className={cn('hidden items-center gap-6 xl:gap-8 lg:flex', className)}>
-      {navLinks.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          onClick={onLinkClick}
-          className={cn(
-            'text-[11px] font-semibold uppercase tracking-[0.18em] text-[#34202b] transition-colors duration-200 hover:text-[#7d4b66]',
-            isActive(link.href) && 'text-[#7d4b66]'
-          )}
-        >
-          {link.label}
-        </Link>
-      ))}
+    <nav className={cn('flex items-center gap-3 overflow-x-auto scrollbar-hide', className)}>
+      {categories.map((category) => {
+        const Icon = category.icon;
+        const active = isActive(category.href);
 
-      <div className="group relative">
-        <button
-          type="button"
-          className={cn(
-            'flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#34202b] transition-colors duration-200 hover:text-[#7d4b66]',
-            (pathname.startsWith('/products') || pathname.startsWith('/categories')) && 'text-[#7d4b66]'
-          )}
-        >
-          Categories
-          <ChevronDown className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" />
-        </button>
+        return (
+          <Link
+            key={category.href}
+            href={category.href}
+            onClick={onLinkClick}
+            className={cn(
+              'inline-flex min-w-max items-center gap-2 rounded-2xl border px-4 py-3 text-sm font-medium transition-all',
+              active
+                ? 'border-[#2a68f3] bg-[#1d4ed8] text-white shadow-[0_12px_24px_rgba(29,78,216,0.24)]'
+                : 'border-[rgba(13,28,48,0.08)] bg-white text-[#1a2a3d] hover:border-[#c7d8f9] hover:bg-[#f4f8ff]'
+            )}
+          >
+            <Icon className="h-4 w-4" />
+            <span>{category.label}</span>
+          </Link>
+        );
+      })}
 
-        <div className="invisible absolute left-0 top-full z-50 mt-3 min-w-[200px] translate-y-2 rounded-2xl border border-[rgba(106,53,83,0.08)] bg-white p-2 opacity-0 shadow-[0_18px_40px_rgba(88,43,70,0.12)] transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-          {categories.map((category) => (
-            <Link
-              key={category.href}
-              href={category.href}
-              onClick={onLinkClick}
-              className="block rounded-xl px-4 py-3 text-sm text-[#34202b] transition-colors hover:bg-[#fdf3f5] hover:text-[#7d4b66]"
-            >
-              {category.label}
-            </Link>
-          ))}
-        </div>
+      <div className="ml-auto hidden items-center gap-4 pl-4 xl:flex">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={onLinkClick}
+            className={cn(
+              'text-xs font-semibold uppercase tracking-[0.14em] text-[#4d6077] transition-colors hover:text-[#1d4ed8]',
+              isActive(link.href) && 'text-[#1d4ed8]'
+            )}
+          >
+            {link.label}
+          </Link>
+        ))}
       </div>
     </nav>
   );

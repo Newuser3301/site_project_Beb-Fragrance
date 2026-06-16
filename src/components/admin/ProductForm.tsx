@@ -459,13 +459,29 @@ export function ProductForm({ initialData, categories, mode = 'create' }: Produc
         <p className="mb-5 text-sm text-gray-500">
           Upload up to 5 images. The first (starred) image will be the main display image.
         </p>
-        {errors.images && (
-          <p className="mb-3 text-sm text-destructive">{errors.images}</p>
-        )}
-        <ImageUpload
-          value={form.images}
-          onChange={(urls) => set('images', urls)}
-        />
+        <div className="rounded-[24px] border border-dashed border-[rgba(245,158,11,0.35)] bg-[linear-gradient(180deg,#fffdf8_0%,#fff8ec_100%)] p-5">
+          <div className="mb-4 flex flex-col gap-1 border-b border-[rgba(245,158,11,0.14)] pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-gold-700">
+                Media Upload Studio
+              </p>
+              <h3 className="mt-1 font-serif text-xl text-gray-900">
+                Bottle photos and gallery assets
+              </h3>
+            </div>
+            <p className="text-xs text-gray-500">
+              Recommended: clean bottle shots on light background.
+            </p>
+          </div>
+
+          {errors.images && (
+            <p className="mb-3 text-sm text-destructive">{errors.images}</p>
+          )}
+          <ImageUpload
+            value={form.images}
+            onChange={(urls) => set('images', urls)}
+          />
+        </div>
       </div>
 
       {/* Actions */}

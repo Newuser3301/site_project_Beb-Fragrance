@@ -26,34 +26,31 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="pb-8 pt-6 md:pb-10 md:pt-8">
+    <section className="pb-6 pt-4 md:pb-8 md:pt-6">
       <div className="container-beb">
-        <div className="relative overflow-hidden rounded-[32px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(90deg,#f6c4cf_0%,#f8bcc7_28%,#f7b4c3_100%)] px-6 py-8 shadow-[0_28px_70px_rgba(86,43,66,0.10)] md:px-10 md:py-14 lg:px-14 lg:py-16">
-          <div className="absolute inset-y-0 right-0 w-[58%] bg-gradient-to-l from-[rgba(255,255,255,0.26)] via-[rgba(255,255,255,0.08)] to-transparent" />
-          <div className="absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(109,65,92,0.10),transparent)]" />
-          <div className="absolute left-[42%] top-12 h-44 w-44 rounded-full bg-white/35 blur-3xl" />
-          <div className="absolute bottom-10 right-16 h-32 w-32 rounded-full bg-[#dfa0af] blur-2xl" />
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.18))]" />
+        <div className="relative overflow-hidden rounded-[32px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(180deg,#ffffff_0%,#fbfbfc_55%,#f6f7f8_100%)] px-6 py-6 shadow-[0_24px_60px_rgba(86,43,66,0.08)] md:px-10 md:py-10 lg:px-14 lg:py-12">
+          <div className="absolute inset-y-0 right-0 w-[58%] bg-gradient-to-l from-[rgba(234,236,239,0.75)] via-[rgba(255,255,255,0.35)] to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(186,191,198,0.10),transparent)]" />
+          <div className="absolute left-[42%] top-10 h-36 w-36 rounded-full bg-white/80 blur-3xl" />
+          <div className="absolute bottom-6 right-12 h-28 w-28 rounded-full bg-[#e7e9ee] blur-2xl" />
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-[linear-gradient(180deg,transparent,rgba(241,243,245,0.85))]" />
 
-          <div className="relative z-10 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+          <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1.02fr_1fr]">
             <div className="max-w-xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/55 bg-white/55 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#73475f] backdrop-blur-sm"
+                className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(106,53,83,0.10)] bg-white px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-[#6d415c]"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 Timeless Elegance
               </motion.div>
-{/*
- spacing preserved intentionally for readable motion blocks
-*/}
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="max-w-[480px] font-serif text-5xl font-semibold leading-[0.95] text-[#2f1d28] md:text-6xl lg:text-[72px]"
+                className="max-w-[480px] font-serif text-4xl font-semibold leading-[0.97] text-[#2f1d28] md:text-5xl lg:text-[58px]"
               >
                 Fragrance For
                 <br />
@@ -64,7 +61,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="mt-6 max-w-md text-base leading-7 text-[#583849] md:text-lg"
+                className="mt-4 max-w-md text-sm leading-7 text-[#5f5860] md:text-base"
               >
                 Discover romantic florals, elegant musks, and statement evening scents curated for daily rituals and unforgettable moments.
               </motion.p>
@@ -73,7 +70,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.35 }}
-                className="mt-10 flex flex-col gap-4 sm:flex-row"
+                className="mt-7 flex flex-col gap-3 sm:flex-row"
               >
                 <Link
                   href="/products"
@@ -94,7 +91,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.45 }}
-                className="mt-8 grid max-w-lg grid-cols-3 gap-3"
+                className="mt-6 grid max-w-lg grid-cols-3 gap-3"
               >
                 {[
                   { label: 'Luxury Brands', value: '120+' },
@@ -118,17 +115,17 @@ export function HeroSection() {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative hidden min-h-[420px] lg:block"
+              className="relative hidden min-h-[320px] lg:block"
             >
               <div className="absolute left-[6%] top-[48%] h-24 w-24 rounded-full bg-white/70 blur-xl" />
-              <div className="absolute bottom-[8%] left-[12%] h-28 w-28 rounded-full bg-[#efc1cb] blur-lg" />
+              <div className="absolute bottom-[8%] left-[12%] h-28 w-28 rounded-full bg-[#eef0f3] blur-lg" />
               {bottles.map((item, index) => (
                 <motion.div
                   key={item.src}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.75, delay: 0.18 + index * 0.1 }}
-                  className={`absolute overflow-hidden rounded-[26px] border border-white/35 bg-white/20 shadow-[0_24px_50px_rgba(120,67,90,0.18)] backdrop-blur-sm ${item.className}`}
+                  className={`absolute overflow-hidden rounded-[26px] border border-white/55 bg-white/45 shadow-[0_18px_40px_rgba(112,118,130,0.16)] backdrop-blur-sm ${item.className}`}
                 >
                   <Image
                     src={item.src}
@@ -139,7 +136,7 @@ export function HeroSection() {
                   />
                 </motion.div>
               ))}
-              <div className="absolute bottom-[8%] right-[8%] rounded-[24px] border border-white/40 bg-white/35 px-5 py-4 backdrop-blur-md">
+              <div className="absolute bottom-[8%] right-[8%] rounded-[24px] border border-white/70 bg-white/80 px-5 py-4 backdrop-blur-md">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#73475f]">
                   New Season Edit
                 </p>

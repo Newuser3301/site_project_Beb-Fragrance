@@ -138,12 +138,26 @@ export function CategoryForm({ initialData, onSuccess, mode = 'create' }: Catego
       </div>
 
       {/* Image */}
-      <div className="space-y-1.5">
+      <div className="rounded-[24px] border border-dashed border-[rgba(245,158,11,0.35)] bg-[linear-gradient(180deg,#fffdf8_0%,#fff8ec_100%)] p-5">
+        <div className="mb-4 border-b border-[rgba(245,158,11,0.14)] pb-4">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-gold-700">
+            Category Media
+          </p>
+          <h3 className="mt-1 font-serif text-xl text-gray-900">
+            Category banner image
+          </h3>
+          <p className="mt-1 text-xs text-gray-500">
+            Use one clean visual to represent this fragrance family.
+          </p>
+        </div>
+
         <label className="text-sm font-medium text-gray-700">Category Image</label>
-        <ImageUpload
-          value={form.image ? [form.image] : []}
-          onChange={(urls) => set('image', urls[0] ?? '')}
-        />
+        <div className="mt-2">
+          <ImageUpload
+            value={form.image ? [form.image] : []}
+            onChange={(urls) => set('image', urls[0] ?? '')}
+          />
+        </div>
       </div>
 
       {/* Submit */}
