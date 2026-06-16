@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 import { ProductDetails } from '@/components/product/ProductDetails';
-import { RelatedProducts } from '@/components/product/RelatedProducts';
 import { ProductStructuredData } from '@/components/product/ProductStructuredData';
-import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
 import {
   fetchProductBySlug,
   fetchProductSlugs,
@@ -69,18 +66,6 @@ export async function generateMetadata({
   };
 }
 
-function RelatedProductsFallback() {
-  return (
-    <div className="container-beb py-12">
-      <div className="mb-8 space-y-2">
-        <div className="h-6 w-40 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-64 animate-pulse rounded bg-muted" />
-      </div>
-      <LoadingSkeleton variant="product-card" count={3} />
-    </div>
-  );
-}
-
 export default async function ProductPage({ params }: ProductPageProps) {
   const product = await fetchProductBySlug(params.slug);
 
@@ -94,16 +79,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <div className="container-beb py-10">
         <ProductDetails product={product} />
-      </div>
-
-      <div className="bg-[#f8fbff]">
-        <Suspense fallback={<RelatedProductsFallback />}>
-          <RelatedProducts
-            currentProductId={product.id}
-            categoryId={product.categoryId}
-            categorySlug={product.category.slug}
-          />
-        </Suspense>
       </div>
     </>
   );

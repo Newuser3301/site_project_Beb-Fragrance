@@ -21,7 +21,7 @@ export interface AddToCartProduct {
 export interface AddToCartButtonProps {
   product: AddToCartProduct;
   quantity?: number;
-  variant?: 'primary' | 'secondary' | 'icon';
+  variant?: 'primary' | 'secondary' | 'icon' | 'blue';
   className?: string;
 }
 
@@ -76,6 +76,29 @@ export function AddToCartButton({
             aria-label={isOutOfStock ? "Sotuvda yo'q" : "Savatga qo'shish"}
           >
             {!isLoading && <ShoppingBag className="h-4 w-4" />}
+          </Button>
+        </motion.div>
+        <Toast show={showToast} message={`"${product.name}" savatga qo'shildi!`} />
+      </>
+    );
+  }
+
+  if (variant === 'blue') {
+    return (
+      <>
+        <motion.div whileTap={{ scale: 0.98 }} className={className}>
+          <Button
+            variant="default"
+            className={cn(
+              "w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white border-0 font-semibold shadow-sm h-11 rounded-[12px] flex items-center justify-center gap-1.5",
+              isOutOfStock && "opacity-50 cursor-not-allowed"
+            )}
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            isLoading={isLoading}
+          >
+            {!isLoading && <span className="text-base">🛒</span>}
+            {isOutOfStock ? "Sotuvda yo'q" : 'Savatga'}
           </Button>
         </motion.div>
         <Toast show={showToast} message={`"${product.name}" savatga qo'shildi!`} />
