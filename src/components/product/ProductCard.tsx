@@ -63,6 +63,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
   const ratingValue = product.averageRating ?? 4.8;
   const badgeLabel = getBadgeLabel(product, discountPercent);
 
+  const formatUzPrice = (val: number) => {
+    return val >= 1000
+      ? val.toLocaleString('en-US') + " so'm"
+      : (val * 12800).toLocaleString('en-US') + " so'm";
+  };
+
   const toggleWishlist = () => {
     if (inWishlist) {
       removeItem(product.id);
@@ -139,11 +145,11 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-[#10233e]">
-              {formatPrice(product.price, 'USD', 'en-US').replace('US$', '$')}
+              {formatUzPrice(product.price)}
             </span>
             {product.comparePrice && product.comparePrice > product.price ? (
               <span className="text-sm text-[#8a9ab0] line-through">
-                {formatPrice(product.comparePrice, 'USD', 'en-US').replace('US$', '$')}
+                {formatUzPrice(product.comparePrice)}
               </span>
             ) : null}
           </div>

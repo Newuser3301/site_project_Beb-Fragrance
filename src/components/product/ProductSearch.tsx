@@ -11,6 +11,7 @@ import type { ProductDisplay } from '@/lib/product-helpers';
 
 export interface ProductSearchProps {
   onSearch?: (query: string) => void;
+  initialValue?: string;
   placeholder?: string;
   className?: string;
 }
@@ -39,23 +40,39 @@ function highlightMatch(text: string, query: string): React.ReactNode {
 
 export function ProductSearch({
   onSearch,
+  initialValue = '',
   placeholder = 'Search fragrances...',
   className,
 }: ProductSearchProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialValue);
   const [results, setResults] = useState<SearchProduct[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setQuery(initialValue);
+  }, [initialValue]);
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const debouncedQuery = useDebounce(query, 300);
 
   const showDropdown = isFocused && debouncedQuery.length > 0;
 
+  const isFirstMount = useRef(true);
+  const onSearchRef = useRef(onSearch);
+
   useEffect(() => {
-    if (onSearch) {
-      onSearch(debouncedQuery);
+    onSearchRef.current = onSearch;
+  }, [onSearch]);
+
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
     }
-  }, [debouncedQuery, onSearch]);
+    if (onSearchRef.current) {
+      onSearchRef.current(debouncedQuery);
+    }
+  }, [debouncedQuery]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -85,7 +102,6 @@ export function ProductSearch({
 
   const handleClose = useCallback(() => {
     setIsFocused(false);
-    setQuery('');
   }, []);
 
   useEffect(() => {

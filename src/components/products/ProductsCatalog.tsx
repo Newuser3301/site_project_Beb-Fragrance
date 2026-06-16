@@ -93,17 +93,26 @@ export function ProductsCatalog({
     [router, pathname, page, limit, currentSort, currentSearch, currentCategory]
   );
 
-  const handleSearch = (query: string) => {
-    updateParams({ search: query || undefined, page: '1' });
-  };
+  const handleSearch = useCallback(
+    (query: string) => {
+      updateParams({ search: query || undefined, page: '1' });
+    },
+    [updateParams]
+  );
 
-  const handleSortChange = (sort: ProductSortValue) => {
-    updateParams({ sort, page: '1' });
-  };
+  const handleSortChange = useCallback(
+    (sort: ProductSortValue) => {
+      updateParams({ sort, page: '1' });
+    },
+    [updateParams]
+  );
 
-  const handlePageChange = (newPage: number) => {
-    updateParams({ page: String(newPage) });
-  };
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      updateParams({ page: String(newPage) });
+    },
+    [updateParams]
+  );
 
   const startItem = total === 0 ? 0 : (page - 1) * limit + 1;
   const endItem = Math.min(page * limit, total);
@@ -156,7 +165,12 @@ export function ProductsCatalog({
 
       <div className="mb-5 grid gap-3 lg:grid-cols-[minmax(0,1fr)_220px_220px]">
         <div className="min-w-0">
-          <ProductSearch onSearch={handleSearch} placeholder="Atir qidiring..." className="w-full" />
+          <ProductSearch
+            onSearch={handleSearch}
+            initialValue={currentSearch}
+            placeholder="Atir qidiring..."
+            className="w-full"
+          />
         </div>
         <select
           value={currentCategory}
