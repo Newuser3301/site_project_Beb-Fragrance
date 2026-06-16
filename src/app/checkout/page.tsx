@@ -42,7 +42,7 @@ export default function CheckoutPage() {
     setMounted(true);
   }, []);
 
-  const subtotal = getTotal() * 1000; // Multiply by 1000 to match UZS scale
+  const subtotal = getTotal() * 12800; // Multiply by 12800 to match UZS scale
   const itemCount = getItemsCount();
   const isEmpty = items.length === 0;
 
@@ -592,7 +592,7 @@ export default function CheckoutPage() {
 
                 <div className="space-y-3 max-h-[250px] overflow-y-auto pr-1">
                   {items.map((item) => {
-                    const itemTotal = (item.price * 1000) * item.quantity;
+                    const itemTotal = (item.price * 12800) * item.quantity;
                     return (
                       <div key={item.productId} className="flex gap-3 items-center text-xs justify-between">
                         <div className="flex gap-2.5 items-center flex-1 min-w-0">
@@ -618,7 +618,7 @@ export default function CheckoutPage() {
                             Qty: {item.quantity}
                           </span>
                           <span className="rounded-full bg-gray-50 border border-gray-200 px-2 py-0.5 text-[10px] text-gray-600 font-bold">
-                            {formatUzPrice(item.price * 1000)}
+                            {formatUzPrice(item.price * 12800)}
                           </span>
                           <span className="rounded-full bg-blue-50 border border-blue-100 px-2 py-0.5 text-[10px] text-blue-700 font-bold">
                             {formatUzPrice(itemTotal)}

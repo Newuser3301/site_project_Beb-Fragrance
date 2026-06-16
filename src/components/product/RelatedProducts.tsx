@@ -60,7 +60,7 @@ export function RelatedProducts({
   const formatUzPrice = (val: number) => {
     return val >= 1000
       ? val.toLocaleString('en-US') + " so'm"
-      : (val * 1000).toLocaleString('en-US') + " so'm";
+      : (val * 12800).toLocaleString('en-US') + " so'm";
   };
 
   const getPrimaryImage = (images: any[]): string => {

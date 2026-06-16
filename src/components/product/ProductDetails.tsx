@@ -103,7 +103,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
   const formatUzPrice = (val: number) => {
     return val >= 1000
       ? val.toLocaleString('en-US') + " so'm"
-      : (val * 1000).toLocaleString('en-US') + " so'm";
+      : (val * 12800).toLocaleString('en-US') + " so'm";
   };
 
   const dynamicVolumeLabel = product.variants && product.variants.length > 0

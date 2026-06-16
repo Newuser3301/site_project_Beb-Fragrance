@@ -21,7 +21,7 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  const subtotal = getTotal() * 1000; // Multiply by 1000 to match UZS thousands scale
+  const subtotal = getTotal() * 12800; // Multiply by 12800 to match UZS thousands scale
   const itemCount = getItemsCount();
   const isEmpty = items.length === 0;
 
@@ -125,7 +125,7 @@ export default function CartPage() {
 
                 <div className="divide-y divide-gray-100">
                   {items.map((item) => {
-                    const itemTotal = (item.price * 1000) * item.quantity;
+                    const itemTotal = (item.price * 12800) * item.quantity;
                     return (
                       <div key={item.productId} className="flex flex-col sm:flex-row gap-4 py-5 items-start sm:items-center justify-between">
                         <div className="flex gap-4 items-center flex-1 min-w-0">
@@ -146,7 +146,7 @@ export default function CartPage() {
                               <Link href={`/products/${item.id}`}>{item.name}</Link>
                             </h3>
                             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mt-1 text-xs text-gray-500">
-                              <span>Dona: {formatUzPrice(item.price * 1000)}</span>
+                              <span>Dona: {formatUzPrice(item.price * 12800)}</span>
                               <span className="hidden sm:inline">•</span>
                               <span className="font-semibold text-gray-700">Item total: {formatUzPrice(itemTotal)}</span>
                             </div>

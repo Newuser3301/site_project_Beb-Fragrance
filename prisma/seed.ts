@@ -3,208 +3,182 @@ import {
   NoteType,
   PrismaClient,
 } from '@prisma/client';
-import { hashPassword } from '../src/lib/password';
-import { slugify } from '../src/lib/utils';
+import { randomBytes, scrypt as scryptCallback } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(scryptCallback);
+const KEY_LENGTH = 64;
+
+async function hashPassword(password: string) {
+  const salt = randomBytes(16).toString('hex');
+  const derivedKey = (await scrypt(password, salt, KEY_LENGTH)) as Buffer;
+  return `${salt}:${derivedKey.toString('hex')}`;
+}
+
+function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+    .replace(/\-\-+/g, '-'); // Replace multiple - with single -
+}
+
+function guessGender(name: string): Gender {
+  const n = name.toLowerCase();
+  if (n.includes('man') || n.includes('male') || n.includes('sauvage') || n.includes('eros') || n.includes('explorer') || n.includes('azzaro')) {
+    return Gender.MALE;
+  }
+  if (n.includes('woman') || n.includes('daisy') || n.includes('flora') || n.includes('feminine') || n.includes('chloè') || n.includes('bombshell') || n.includes('my way') || n.includes('libre') || n.includes('guidance')) {
+    return Gender.FEMALE;
+  }
+  return Gender.UNISEX;
+}
+
+function parseVolumeToMl(volume: string): number {
+  if (!volume) return 0;
+  const matches = volume.match(/\d+/g);
+  if (!matches) return 0;
+  return matches.reduce((sum, val) => sum + parseInt(val, 10), 0);
+}
+
+function getNotesForCategory(category: string): string[] {
+  const c = category.toLowerCase();
+  if (c.includes('fresh')) {
+    return ['Sitrus', 'Yalpiz', 'Dengiz notalari', 'Lavanda', 'Sadr daraxti', 'Oq mushk'];
+  }
+  if (c.includes('oriental')) {
+    return ['Zafaron', 'Bergamot', 'Atirgul', 'Oud', 'Sandal daraxti', 'Vanil'];
+  }
+  if (c.includes('woody')) {
+    return ['Kardamon', 'Greypfrut', 'Sadr daraxti', 'Vetiver', 'Sandal daraxti', 'Mushk'];
+  }
+  if (c.includes('floral')) {
+    return ['Neroli', 'Shaftoli', 'Atirgul', 'Yasmin', 'Oq mushk', 'Vanil'];
+  }
+  return ['Sitrus', 'Gul notalari', 'Yog\'och notalari', 'Ziravorlar', 'Ambar', 'Mushk'];
+}
 
 const prisma = new PrismaClient();
 
-type SeedProduct = {
-  name: string;
-  description: string;
-  price: number;
-  comparePrice: number | null;
-  stock: number;
-  volume: number;
-  brand: string;
-  gender: Gender;
-  notes: string[];
-  featured?: boolean;
-  bestseller?: boolean;
-  newArrival?: boolean;
-  images: string[];
-  categorySlug: string;
-};
-
-const categories = [
+const categoriesData = [
   {
     name: 'Oriental',
     slug: 'oriental',
-    description: 'Warm, exotic, and sensual fragrances with amber, oud, and spice notes.',
+    description: 'Issiq, ekzotik va shahvoniy sharqona iforlar.',
     image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800',
   },
   {
     name: 'Floral',
     slug: 'floral',
-    description: 'Elegant floral perfumes with rose, jasmine, and peony accords.',
+    description: 'Atirgul, yasmin va pion notalariga boy nafis gul iforlari.',
     image: 'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=800',
   },
   {
     name: 'Woody',
     slug: 'woody',
-    description: 'Refined woody blends built around cedar, sandalwood, and vetiver.',
+    description: 'Sadr, sandal va vetiver daraxtlari notalariga asoslangan olijanob iforlar.',
     image: 'https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=800',
   },
   {
     name: 'Fresh',
     slug: 'fresh',
-    description: 'Bright, clean, and uplifting fragrances with citrus and aquatic notes.',
+    description: 'Yorqin, toza va tetiklashtiruvchi sitrus hamda dengiz iforlari.',
     image: 'https://images.unsplash.com/photo-1557170339-96395f6c2c7a?w=800',
   },
   {
-    name: 'Gourmand',
-    slug: 'gourmand',
-    description: 'Rich edible-inspired scents with vanilla, chocolate, coffee, and caramel.',
-    image: 'https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?w=800',
+    name: 'Gift Set',
+    slug: 'gift-set',
+    description: 'Sovg\'a qilish uchun maxsus chiroyli qadoqlangan premium to\'plamlar.',
+    image: '/images/products/placeholder.jpg',
   },
+  {
+    name: 'Probnik',
+    slug: 'probnik',
+    description: 'Turli iforlarni arzon narxda sinab ko\'rish uchun qulay mini namunalar.',
+    image: '/images/products/placeholder.jpg',
+  }
 ];
 
-const products: SeedProduct[] = [
-  {
-    name: 'Oud Royale',
-    description: 'A majestic oud fragrance layered with saffron, rose, sandalwood, and vanilla for a deep luxurious trail.',
-    price: 295,
-    comparePrice: 350,
-    stock: 25,
-    volume: 100,
-    brand: 'Beb Fragrance',
-    gender: 'UNISEX',
-    notes: ['Bergamot', 'Saffron', 'Oud', 'Rose', 'Sandalwood', 'Vanilla'],
-    featured: true,
-    bestseller: true,
-    images: [
-      'https://images.unsplash.com/photo-1541643600914-78b084683601?w=900',
-      'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=900',
-    ],
-    categorySlug: 'oriental',
-  },
-  {
-    name: 'Rose Noire',
-    description: 'A dark rose composition with black pepper, patchouli, leather, and musk for dramatic evening wear.',
-    price: 245,
-    comparePrice: 290,
-    stock: 30,
-    volume: 100,
-    brand: 'Beb Fragrance',
-    gender: 'FEMALE',
-    notes: ['Black Pepper', 'Turkish Rose', 'Patchouli', 'Oud', 'Leather', 'Musk'],
-    featured: true,
-    images: [
-      'https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=900',
-      'https://images.unsplash.com/photo-1557170339-96395f6c2c7a?w=900',
-    ],
-    categorySlug: 'floral',
-  },
-  {
-    name: 'Golden Amber',
-    description: 'A glowing amber scent wrapped in vanilla, cinnamon, clove, and tonka bean.',
-    price: 185,
-    comparePrice: 220,
-    stock: 40,
-    volume: 50,
-    brand: 'Beb Fragrance',
-    gender: 'UNISEX',
-    notes: ['Citrus', 'Cinnamon', 'Clove', 'Amber', 'Vanilla', 'Tonka Bean'],
-    bestseller: true,
-    images: [
-      'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900',
-      'https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?w=900',
-    ],
-    categorySlug: 'gourmand',
-  },
-  {
-    name: 'Santal Supreme',
-    description: 'Creamy sandalwood with iris, amber, and cardamom for a smooth modern woody signature.',
-    price: 210,
-    comparePrice: null,
-    stock: 20,
-    volume: 100,
-    brand: 'Beb Fragrance',
-    gender: 'MALE',
-    notes: ['Cardamom', 'Iris', 'Sandalwood', 'Cedar', 'Amber', 'Musk'],
-    featured: true,
-    images: [
-      'https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=900',
-      'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=900',
-    ],
-    categorySlug: 'woody',
-  },
-  {
-    name: 'Citrus Bloom',
-    description: 'A sparkling Mediterranean blend of bergamot, lemon, neroli, petitgrain, and white musk.',
-    price: 150,
-    comparePrice: 175,
-    stock: 50,
-    volume: 50,
-    brand: 'Beb Fragrance',
-    gender: 'FEMALE',
-    notes: ['Bergamot', 'Lemon', 'Neroli', 'Petitgrain', 'White Musk', 'Vetiver'],
-    newArrival: true,
-    images: [
-      'https://images.unsplash.com/photo-1557170339-96395f6c2c7a?w=900',
-      'https://images.unsplash.com/photo-1541643600914-78b084683601?w=900',
-    ],
-    categorySlug: 'fresh',
-  },
-  {
-    name: 'Noir Velvet',
-    description: 'Dark chocolate, rum, tobacco, coffee, and patchouli create a velvety statement fragrance.',
-    price: 320,
-    comparePrice: 380,
-    stock: 15,
-    volume: 100,
-    brand: 'Beb Fragrance',
-    gender: 'UNISEX',
-    notes: ['Dark Chocolate', 'Rum', 'Tobacco', 'Coffee', 'Patchouli', 'Vanilla'],
-    featured: true,
-    bestseller: true,
-    images: [
-      'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=900',
-      'https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?w=900',
-    ],
-    categorySlug: 'gourmand',
-  },
-  {
-    name: 'Ocean Mist',
-    description: 'A fresh aquatic perfume with sea salt, lavender, rosemary, driftwood, and moss.',
-    price: 140,
-    comparePrice: null,
-    stock: 45,
-    volume: 50,
-    brand: 'Beb Fragrance',
-    gender: 'UNISEX',
-    notes: ['Sea Salt', 'Marine Notes', 'Lavender', 'Rosemary', 'Driftwood', 'Moss'],
-    images: [
-      'https://images.unsplash.com/photo-1557170339-96395f6c2c7a?w=900',
-      'https://images.unsplash.com/photo-1541643600914-78b084683601?w=900',
-    ],
-    categorySlug: 'fresh',
-  },
-  {
-    name: 'Midnight Orchid',
-    description: 'A mysterious floral-oriental scent with black orchid, plum, patchouli, incense, and vanilla.',
-    price: 280,
-    comparePrice: null,
-    stock: 22,
-    volume: 100,
-    brand: 'Beb Fragrance',
-    gender: 'FEMALE',
-    notes: ['Black Orchid', 'Plum', 'Patchouli', 'Incense', 'Dark Chocolate', 'Vanilla'],
-    featured: true,
-    newArrival: true,
-    images: [
-      'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?w=900',
-      'https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?w=900',
-    ],
-    categorySlug: 'floral',
-  },
+const productsData = [
+  { name: "Mercedes Benz Man", price: 150000, oldPrice: 130000, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 15, rating: 4.7, description: "Mercedes Benz Man — zamonaviy erkak uchun yaratilgan elegant ifor. Yangi va yengil notalar bilan kundalik foydalanishga ideal.", image: "/images/products/placeholder.jpg" },
+  { name: "JPG Le Male", price: 200000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 10, rating: 4.8, description: "Jean Paul Gaultier Le Male — ikonik erkakona ifor. Lavanda va vanil notalarining uyg'un kombinatsiyasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Louis Vuitton", price: 455000, oldPrice: 490000, volume: "10 ml", category: "Woody", badge: "LUX", stock: 6, rating: 4.9, description: "Louis Vuitton — fransuz luksining timsoli bo'lgan premium ifor. Noyob yog'och va sharq notalarining nafis aralashmasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Moscow 2", price: 180000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "YANGI", stock: 8, rating: 4.5, description: "Moscow 2 — sharqona va issiq notalar bilan boyitilgan kuchli ifor. Kechki tadbirlar uchun mukammal tanlov.", image: "/images/products/placeholder.jpg" },
+  { name: "Imagination", price: 160000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "YANGI", stock: 12, rating: 4.4, description: "Imagination — erkin va ijodiy ruhni aks ettiruvchi yorqin ifor. Sitrus va gul notalarining uyg'un qo'shilmasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Analogy Dubai", price: 220000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 9, rating: 4.6, description: "Analogy Dubai — Dubai ilhomidan yaratilgan boy va hashamatli ifor. Ud va ambar notalarining kuchli kombinatsiyasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Valentino", price: 190000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "YANGI", stock: 11, rating: 4.5, description: "Valentino — italyan elegantligini aks ettiruvchi nafis ifor. Gul va meva notalarining romantik qo'shilmasi.", image: "/images/products/placeholder.jpg" },
+  { name: "YSL Y", price: 200000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 14, rating: 4.7, description: "YSL Y — zamonaviy erkak uchun kuchli va o'ziga xos ifor. Alma va zanjabil notalarining jonli uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "TT Kirke", price: 1152000, oldPrice: 1408000, volume: "10 ml", category: "Woody", badge: "LUX", stock: 4, rating: 4.9, description: "TT Kirke — noyob va eksklyuziv premium ifor. Chuqur yog'och va sharq notalarining betakror kombinatsiyasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Escentric 02", price: 1856000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "LUX", stock: 3, rating: 4.8, description: "Escentric 02 — molekulyar parfyumeriyaning noyob namunasi. O'ziga xos va uzoq davom etuvchi ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik To'plam", price: 35000, oldPrice: null, volume: "50 ml", category: "Probnik", badge: "YANGI", stock: 50, rating: 4.3, description: "Umumiy probniklar to'plami — turli iforlarni sinab ko'rish imkoniyati. Sovg'a sifatida ham ideal.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Boadicea", price: 35000, oldPrice: null, volume: "50 ml", category: "Probnik", badge: "YANGI", stock: 30, rating: 4.4, description: "Boadicea brendining probnik to'plami. Premium iforlarni arzon narxda sinab ko'ring.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Chloè", price: 30000, oldPrice: null, volume: "30 ml", category: "Probnik", badge: "YANGI", stock: 40, rating: 4.5, description: "Chloè brendining probnik namunasi. Nafis va feminlik iforini sinab ko'ring.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Wood 20ml", price: 25000, oldPrice: null, volume: "20 ml", category: "Probnik", badge: "YANGI", stock: 45, rating: 4.3, description: "Yog'och notali iforlar probnik to'plami. Woody kategoriyasini arzon narxda tatib ko'ring.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Wood 30ml", price: 30000, oldPrice: null, volume: "30 ml", category: "Probnik", badge: "YANGI", stock: 35, rating: 4.3, description: "Yog'och notali iforlar katta probnik to'plami. Woody kategoriyasini to'liq his eting.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Mramor", price: 15000, oldPrice: null, volume: "10 ml", category: "Probnik", badge: "YANGI", stock: 60, rating: 4.2, description: "Mramor seriyasining mini probnik namunasi. Yangi iforni eng arzon narxda sinab ko'ring.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik Leather", price: 25000, oldPrice: null, volume: "10 ml", category: "Probnik", badge: "YANGI", stock: 40, rating: 4.4, description: "Teri notali iforlar probnik namunasi. Kuchli va o'ziga xos Leather kategoriyasini his eting.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik (Plastik, 10ml)", price: 5000, oldPrice: null, volume: "10 ml", category: "Probnik", badge: "YANGI", stock: 100, rating: 4.0, description: "Plastik qopqoqli probnik idishi. Iforingizni qulay tarzda olib yuring.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik (Plastik, 5ml)", price: 3500, oldPrice: null, volume: "5 ml", category: "Probnik", badge: "YANGI", stock: 100, rating: 4.0, description: "Plastik qopqoqli mini probnik idishi. Sayohat uchun eng qulay variant.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik (Metall, 10ml)", price: 6000, oldPrice: null, volume: "10 ml", category: "Probnik", badge: "YANGI", stock: 80, rating: 4.2, description: "Metall qopqoqli probnik idishi. Chiroyli va bardoshli dizayn.", image: "/images/products/placeholder.jpg" },
+  { name: "Probnik (Metall, 5ml)", price: 4000, oldPrice: null, volume: "5 ml", category: "Probnik", badge: "YANGI", stock: 80, rating: 4.2, description: "Metall qopqoqli mini probnik idishi. Premium ko'rinish, qulay o'lcham.", image: "/images/products/placeholder.jpg" },
+  { name: "Mancera Red Tobacco Intense", price: 200000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 8, rating: 4.8, description: "Mancera Red Tobacco Intense — tamaki va qizil meva notalarining kuchli uyg'unligi. Kechki tadbirlar uchun ideal ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "LV Symphony", price: 850000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "LUX", stock: 5, rating: 4.9, description: "Louis Vuitton Symphony — murakkab gul notalarining simfoniyasi. Eksklyuziv va unutilmas ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "MJ Daisy So Fresh", price: 135000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "HIT", stock: 18, rating: 4.6, description: "Marc Jacobs Daisy So Fresh — bahorgi gul notalarining yengil va yangi ifori. Kundalik foydalanish uchun mukammal.", image: "/images/products/placeholder.jpg" },
+  { name: "Versace Dylan Purple", price: 155000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "HIT", stock: 14, rating: 4.6, description: "Versace Dylan Purple — binafsha va tropik meva notalarining yorqin kombinatsiyasi. Hayajonli va zamonaviy ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Gucci Flora Intense", price: 250000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "PREMIUM", stock: 9, rating: 4.7, description: "Gucci Flora Intense — gul notalarining to'q va boyitilgan versiyasi. Italyan elegantligining timsoli.", image: "/images/products/placeholder.jpg" },
+  { name: "Giorgio Armani My Way", price: 200000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "PREMIUM", stock: 11, rating: 4.7, description: "Giorgio Armani My Way — sayohat ilhomidan yaratilgan ozod va nafis ifor. Bergamot va yasmin notalarining uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Bombshell", price: 200000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "HIT", stock: 13, rating: 4.6, description: "Victoria's Secret Bombshell — tropik meva va gul notalarining portlovchi kombinatsiyasi. Quvnoq va hayajonli ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Chloè Cedrus", price: 300000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "PREMIUM", stock: 7, rating: 4.7, description: "Chloè Cedrus — sadr daraxti va yog'och notalarining nafis uyg'unligi. Tabiatdan ilhomlanib yaratilgan ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Xerjoff Erba Pura", price: 300000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "LUX", stock: 6, rating: 4.8, description: "Xerjoff Erba Pura — italyan parfyumeriyasining eng noyob namunalaridan biri. Vanil va musk notalarining boylik ifori.", image: "/images/products/placeholder.jpg" },
+  { name: "Marc-Antoine Barrois", price: 350000, oldPrice: 450000, volume: "10 ml", category: "Woody", badge: "SALE", stock: 5, rating: 4.8, description: "Marc-Antoine Barrois — fransuz haute couture ruhidagi eksklyuziv ifor. Chuqur va murakkab notalar uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Creed Silver Mountain", price: 400000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "LUX", stock: 7, rating: 4.9, description: "Creed Silver Mountain Water — tog' chashmasining toza va kristall ifori. Sporty va elegant erkaklar uchun.", image: "/images/products/placeholder.jpg" },
+  { name: "PDM Haltane & Greenlay", price: 300000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "PREMIUM", stock: 6, rating: 4.7, description: "Parfums de Marly Haltane & Greenlay — yog'och va yashil notalarining aristokratik uyg'unligi. Klassik va zamonaviy.", image: "/images/products/placeholder.jpg" },
+  { name: "TK Star Chaser", price: 250000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 9, rating: 4.6, description: "TK Star Chaser — yulduzlardan ilhomlanib yaratilgan mistik va chuqur ifor. Kechqi osmondek cheksiz nafosati bor.", image: "/images/products/placeholder.jpg" },
+  { name: "Chrome Azzaro", price: 135000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 20, rating: 4.5, description: "Azzaro Chrome — klassik erkakona ifor. Toza va yangi notalar bilan har kuni yangi his eting.", image: "/images/products/placeholder.jpg" },
+  { name: "Gucci Guilty Essence", price: 200000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 12, rating: 4.6, description: "Gucci Guilty Essence — aybdorlik his-tuyg'usini aks ettiruvchi kuchli va o'ziga jalb etuvchi ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Bvlgari Omnia", price: 200000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "PREMIUM", stock: 10, rating: 4.6, description: "Bvlgari Omnia — italyan zargarligidan ilhomlanib yaratilgan issiq va ziyofatli ifor. Kakao va yog'och notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "YSL Libre", price: 200000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "HIT", stock: 15, rating: 4.7, description: "Yves Saint Laurent Libre — ozodlik va kuchni aks ettiruvchi zamonaviy ayol ifori. Lavanda va vanil uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Jaguar Classic", price: 100000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "YANGI", stock: 22, rating: 4.3, description: "Jaguar Classic — sport avtomobil ruhidagi toza va kuchli erkakona ifor. Kundalik foydalanish uchun qulay.", image: "/images/products/placeholder.jpg" },
+  { name: "Victoria's Secret Set", price: 704000, oldPrice: null, volume: "100+100+75 ml", category: "Gift Set", badge: "HIT", stock: 8, rating: 4.7, description: "Victoria's Secret sovg'a to'plami — uchta premium mahsulot bir qutida. Sevganingizga eng yaxshi sovg'a.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Hair & Body Mist", price: 320000, oldPrice: null, volume: "236 ml", category: "Floral", badge: "YANGI", stock: 12, rating: 4.5, description: "Victoria's Secret Hair & Body Mist — soch va tana uchun engil va xushbo'y spray. Butun kun davomida yangi his.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Peach Lotion", price: 320000, oldPrice: null, volume: "236 ml", category: "Floral", badge: "YANGI", stock: 10, rating: 4.5, description: "Victoria's Secret Peach Lotion — shaftoli notali yumshatuvchi tana losyoni. Nafis ifor va yumshoq teri.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Spray", price: 250000, oldPrice: null, volume: "250 ml", category: "Floral", badge: "YANGI", stock: 14, rating: 4.4, description: "Victoria's Secret Body Spray — engil va xushbo'y tana spreyi. Har kuni yangilanib turing.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Body Lotion", price: 250000, oldPrice: null, volume: "236 ml", category: "Floral", badge: "YANGI", stock: 11, rating: 4.4, description: "Victoria's Secret Body Lotion — namlovchi va xushbo'y tana losyoni. Yumshoq va ipakdek teri uchun.", image: "/images/products/placeholder.jpg" },
+  { name: "212 MTV", price: 200000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 16, rating: 4.6, description: "Carolina Herrera 212 MTV — Nyu-York shahrining energiyasidan ilhomlanib yaratilgan ifor. Yosh va zamonaviy ruh.", image: "/images/products/placeholder.jpg" },
+  { name: "Dior Sauvage", price: 200000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 20, rating: 4.9, description: "Dior Sauvage — yovvoyi tabiatning kuchini aks ettiruvchi mashhur erkakona ifor. Biber va ambroxan notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "Versace Eros", price: 135000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "HIT", stock: 18, rating: 4.7, description: "Versace Eros — yunoncha sevgi xudosidan ilhomlanib yaratilgan kuchli va jo'shqin ifor. Yashil olma va vanil.", image: "/images/products/placeholder.jpg" },
+  { name: "VS Bombshell Bouquet", price: 250000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "PREMIUM", stock: 9, rating: 4.6, description: "Victoria's Secret Bombshell Bouquet — gul bouquetidan ilhomlanib yaratilgan nozik va romantik ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Acqua Di Parma Colonia Club", price: 250000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "PREMIUM", stock: 7, rating: 4.7, description: "Acqua Di Parma Colonia Club — italyan dolce vita ruhidagi yangi va yorqin ifor. Sitrus va dengiz notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "Clive Christian Iconic Feminine", price: 1250000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "LUX", stock: 3, rating: 5.0, description: "Clive Christian Iconic Feminine — dunyodagi eng qimmat iforlardan biri. Mutlaq feminlik va hashamatning timsoli.", image: "/images/products/placeholder.jpg" },
+  { name: "Amouage Guidance", price: 450000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "LUX", stock: 5, rating: 4.9, description: "Amouage Guidance — Ummondan ilhomlanib yaratilgan boy va chuqur ifor. Ud va atirgul notalarining shahona uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Calvin Klein Woman", price: 100000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "YANGI", stock: 20, rating: 4.4, description: "Calvin Klein Woman — zamonaviy ayol uchun yaratilgan ozod va o'ziga xos ifor. Lavanda va yog'och notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "D&G Light Blue", price: 150000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 18, rating: 4.7, description: "Dolce & Gabbana Light Blue — O'rta dengiz ilhomidan yaratilgan yozgi ifor. Limon va bambuk notalarining yangiligi.", image: "/images/products/placeholder.jpg" },
+  { name: "D&G K King", price: 150000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "HIT", stock: 15, rating: 4.6, description: "Dolce & Gabbana K King — shohlik va kuchni aks ettiruvchi erkakona ifor. Vetiver va yog'och notalarining uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Terre Hermes Eau Givree", price: 160000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "PREMIUM", stock: 10, rating: 4.7, description: "Hermès Terre d'Hermès Eau Givrée — yer va muzning sovuq va issiq notalarining betakror uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Lacoste Blanc", price: 160000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "YANGI", stock: 14, rating: 4.5, description: "Lacoste Blanc — oqlik va soflikning ramzi bo'lgan yangi va engillikni his ettiruvchi ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Versace Dylan Blue", price: 135000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 17, rating: 4.6, description: "Versace Dylan Blue — ko'k dengiz ruhidagi yangi va kuchli erkakona ifor. Greypfrut va incir bargi notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "Tom Ford Ombre Leather", price: 300000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "PREMIUM", stock: 8, rating: 4.8, description: "Tom Ford Ombre Leather — teri va yog'och notalarining quyosh botishi kabi issiq uyg'unligi. Zamonaviy klassika.", image: "/images/products/placeholder.jpg" },
+  { name: "Mont Blanc Explorer", price: 150000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "HIT", stock: 16, rating: 4.6, description: "Mont Blanc Explorer — dunyo sayohatchisidan ilhomlanib yaratilgan ifor. Vetiver va ambroksanin notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "Creed Imperial Millesime", price: 500000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "LUX", stock: 4, rating: 4.9, description: "Creed Imperial Millesime — qirol saroylaridan ilhomlanib yaratilgan eksklyuziv ifor. Bergamot va shaftoli notalar.", image: "/images/products/placeholder.jpg" },
+  { name: "Memo Marfa", price: 250000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "PREMIUM", stock: 6, rating: 4.7, description: "Memo Marfa — Amerika cho'li ilhomidan yaratilgan kuchli va o'ziga xos ifor. Kaktus va teri notalarining betakror uyg'unligi.", image: "/images/products/placeholder.jpg" },
+  { name: "Hormone Paris GABA", price: 280000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "YANGI", stock: 7, rating: 4.6, description: "Hormone Paris GABA — neyromediator ilhomidan yaratilgan ilmiy parfyumeriya. Relaksatsiya va qulaylik ifori.", image: "/images/products/placeholder.jpg" },
+  { name: "Versace Eau Fraiche Extreme", price: 165000, oldPrice: null, volume: "10 ml", category: "Fresh", badge: "HIT", stock: 13, rating: 4.5, description: "Versace Eau Fraiche Extreme — intensiv yangilanish va salqinlik ifori. Yoz kunlari uchun ideal tanlov.", image: "/images/products/placeholder.jpg" },
+  { name: "Ormonde Jayne Osmanthus", price: 365000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "LUX", stock: 5, rating: 4.8, description: "Ormonde Jayne Osmanthus — osmantus guli notalarining nozik va noyob ifori. Britaniya parfyumeriyasining eng yaxshi namunasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Ormonde Jayne Montabaco Intensivo", price: 400000, oldPrice: null, volume: "10 ml", category: "Woody", badge: "LUX", stock: 4, rating: 4.8, description: "Ormonde Jayne Montabaco Intensivo — tamaki va yog'och notalarining intensiv va chuqur kombinatsiyasi. Kuchli va yodda qolarli ifor.", image: "/images/products/placeholder.jpg" },
+  { name: "Guerlain Neroli Outrenoir", price: 650000, oldPrice: null, volume: "10 ml", category: "Floral", badge: "LUX", stock: 3, rating: 4.9, description: "Guerlain Neroli Outrenoir — neroli guli va qora notalarning hashamatli uyg'unligi. Fransuz parfyumeriyasining zirvasi.", image: "/images/products/placeholder.jpg" },
+  { name: "Bvlgari Yasep Le Gemme", price: 600000, oldPrice: null, volume: "10 ml", category: "Oriental", badge: "LUX", stock: 4, rating: 4.9, description: "Bvlgari Le Gemme — qimmatbaho toshlardan ilhomlanib yaratilgan eksklyuziv ifor kolleksiyasi. Boylik va nafosatning timsoli.", image: "/images/products/placeholder.jpg" }
 ];
 
 async function main() {
-  console.log('Seeding fragrance store data...');
+  console.log('Seeding fragrance store data (UZS-adapted relational mapping)...');
+
   const adminEmail = (process.env.ADMIN_EMAIL ?? 'admin@bebfragrance.com').toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD ?? 'Admin12345!';
   const adminPasswordHash = await hashPassword(adminPassword);
 
+  // Clear existing transactions first
   await prisma.review.deleteMany();
   await prisma.wishlistItem.deleteMany();
   await prisma.cartItem.deleteMany();
@@ -219,7 +193,8 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.brand.deleteMany();
 
-  await prisma.user.upsert({
+  // Create admin user
+  const adminUser = await prisma.user.upsert({
     where: { email: adminEmail },
     update: {
       name: 'Store Admin',
@@ -234,10 +209,32 @@ async function main() {
     },
   });
 
-  const categoryMap = new Map<string, { id: string }>();
+  // Create customer 1
+  const user1 = await prisma.user.upsert({
+    where: { email: 'customer1@bebfragrance.com' },
+    update: { name: 'Azizbek Karimov' },
+    create: {
+      email: 'customer1@bebfragrance.com',
+      name: 'Azizbek Karimov',
+      role: 'CUSTOMER',
+    },
+  });
 
-  for (let index = 0; index < categories.length; index += 1) {
-    const category = categories[index];
+  // Create customer 2
+  const user2 = await prisma.user.upsert({
+    where: { email: 'customer2@bebfragrance.com' },
+    update: { name: 'Madina Aliyeva' },
+    create: {
+      email: 'customer2@bebfragrance.com',
+      name: 'Madina Aliyeva',
+      role: 'CUSTOMER',
+    },
+  });
+
+  // Seed categories
+  const categoryMap = new Map<string, { id: string }>();
+  for (let index = 0; index < categoriesData.length; index += 1) {
+    const category = categoriesData[index];
     const created = await prisma.category.create({
       data: {
         name: category.name,
@@ -252,6 +249,7 @@ async function main() {
     categoryMap.set(category.slug, created);
   }
 
+  // Create standard brand
   const brand = await prisma.brand.create({
     data: {
       name: 'Beb Fragrance',
@@ -261,55 +259,71 @@ async function main() {
     },
   });
 
-  for (let index = 0; index < products.length; index += 1) {
-    const product = products[index];
-    const category = categoryMap.get(product.categorySlug);
+  const CONVERSION_RATE = 12800;
 
+  // Seed products
+  for (let index = 0; index < productsData.length; index += 1) {
+    const prod = productsData[index];
+    
+    // Find category id
+    const catSlug = slugify(prod.category);
+    const category = categoryMap.get(catSlug);
     if (!category) {
-      throw new Error(`Category not found for ${product.name}`);
+      throw new Error(`Category id not found for slug: ${catSlug}`);
     }
 
     const skuBase = `BEB-${String(index + 1).padStart(4, '0')}`;
+    const productSlug = slugify(prod.name);
 
-    await prisma.product.create({
+    // Badges mapping
+    const isNew = prod.badge === 'YANGI';
+    const isBest = prod.badge === 'HIT';
+    const isFeat = prod.badge === 'LUX' || prod.badge === 'PREMIUM' || prod.badge === 'SALE';
+
+    // Parse volumes and convert UZS prices to USD values stored in DB
+    const parsedVolume = parseVolumeToMl(prod.volume);
+    const priceUsd = prod.price / CONVERSION_RATE;
+    const comparePriceUsd = prod.oldPrice ? (prod.oldPrice / CONVERSION_RATE) : null;
+
+    const createdProduct = await prisma.product.create({
       data: {
-        name: product.name,
-        slug: slugify(product.name),
-        description: product.description,
-        shortDescription: product.description.slice(0, 150),
+        name: prod.name,
+        slug: productSlug,
+        description: prod.description,
+        shortDescription: prod.description.slice(0, 150),
         sku: skuBase,
-        gender: product.gender,
+        gender: guessGender(prod.name),
         isActive: true,
-        isFeatured: product.featured ?? false,
-        isBestseller: product.bestseller ?? false,
-        isNewArrival: product.newArrival ?? false,
-        metaTitle: `${product.name} | Beb Fragrance`,
-        metaDescription: product.description.slice(0, 155),
+        isFeatured: isFeat,
+        isBestseller: isBest,
+        isNewArrival: isNew,
+        metaTitle: `${prod.name} | Beb Fragrance`,
+        metaDescription: prod.description.slice(0, 155),
         brandId: brand.id,
         categoryId: category.id,
         images: {
-          create: product.images.map((url, imageIndex) => ({
-            url,
-            alt: product.name,
-            isPrimary: imageIndex === 0,
-            sortOrder: imageIndex,
-          })),
+          create: {
+            url: prod.image || '/images/products/placeholder.jpg',
+            alt: prod.name,
+            isPrimary: true,
+            sortOrder: 0,
+          },
         },
         variants: {
           create: {
-            name: `${product.volume}ml`,
-            sku: `${skuBase}-${product.volume}`,
-            size: `${product.volume}ml`,
-            sizeMl: product.volume,
-            price: product.price,
-            comparePrice: product.comparePrice,
-            stock: product.stock,
+            name: prod.volume,
+            sku: `${skuBase}-${parsedVolume}`,
+            size: prod.volume,
+            sizeMl: parsedVolume,
+            price: priceUsd,
+            comparePrice: comparePriceUsd,
+            stock: prod.stock,
             isActive: true,
           },
         },
         notes: {
-          create: product.notes.map((name, noteIndex) => ({
-            name,
+          create: getNotesForCategory(prod.category).map((noteName, noteIndex) => ({
+            name: noteName,
             type:
               noteIndex < 2
                 ? NoteType.TOP
@@ -320,11 +334,46 @@ async function main() {
         },
       },
     });
+
+    // Seed mock reviews from unique users to populate averageRating (rating is out of 5)
+    const ratingTarget = prod.rating;
+    let reviewRatings: number[] = [];
+    if (ratingTarget >= 4.9) {
+      reviewRatings = [5, 5, 5];
+    } else if (ratingTarget >= 4.7) {
+      reviewRatings = [5, 5, 4]; // average 4.67
+    } else if (ratingTarget >= 4.5) {
+      reviewRatings = [5, 4, 4]; // average 4.33
+    } else if (ratingTarget >= 4.3) {
+      reviewRatings = [4, 4, 5]; // average 4.33
+    } else {
+      reviewRatings = [4, 4, 4]; // average 4.0
+    }
+
+    const reviewUsers = [adminUser.id, user1.id, user2.id];
+    const comments = [
+      "Menga juda yoqdi, hidi uzoq saqlanadi va juda premium!",
+      "Original mahsulot, qadoqlanishi ham ajoyib. Rahmat!",
+      "Yaxshi atir, kundalik foydalanish uchun juda mos keladi."
+    ];
+    const titles = ["Ajoyib ifor", "Yuqori sifat", "Tavsiya etaman"];
+
+    for (let rIndex = 0; rIndex < reviewRatings.length; rIndex++) {
+      await prisma.review.create({
+        data: {
+          rating: reviewRatings[rIndex],
+          title: titles[rIndex],
+          comment: comments[rIndex],
+          isVerified: true,
+          isApproved: true,
+          userId: reviewUsers[rIndex],
+          productId: createdProduct.id,
+        },
+      });
+    }
   }
 
-  console.log(
-    `Created ${categories.length} categories, ${products.length} products, and admin user ${adminEmail}.`
-  );
+  console.log(`✅ ${productsData.length} ta mahsulot muvaffaqiyatli qo'shildi!`);
 }
 
 main()
