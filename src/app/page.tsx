@@ -134,6 +134,32 @@ function EditorialBannerSection() {
   );
 }
 
+function BrandRibbonSection() {
+  const brands = ['Chanel', 'Dior', 'Tom Ford', 'Creed', 'Byredo', 'YSL'];
+
+  return (
+    <section className="py-4 md:py-6">
+      <div className="container-beb">
+        <div className="rounded-[26px] border border-[rgba(106,53,83,0.08)] bg-white px-6 py-5 shadow-[0_16px_35px_rgba(81,42,63,0.04)]">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#8c6d7d]">
+              Stocking Luxury Icons
+            </p>
+            {brands.map((brand) => (
+              <span
+                key={brand}
+                className="font-serif text-xl text-[#3f2a37] opacity-80"
+              >
+                {brand}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ScentJournalSection() {
   const articles = [
     {
@@ -212,6 +238,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <CategoriesSection />
+      <BrandRibbonSection />
 
       <Suspense fallback={<ProductsFallback />}>
         <FeaturedProductsSection />

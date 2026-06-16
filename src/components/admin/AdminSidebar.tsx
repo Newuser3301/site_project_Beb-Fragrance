@@ -10,7 +10,6 @@ import {
   ShoppingBag,
   Folder,
   Users,
-  Settings,
   ExternalLink,
   X,
   Menu,
@@ -26,7 +25,6 @@ const NAV_LINKS = [
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag, exact: false },
   { href: '/admin/categories', label: 'Categories', icon: Folder, exact: false },
   { href: '/admin/customers', label: 'Customers', icon: Users, exact: false },
-  { href: '/admin/settings', label: 'Settings', icon: Settings, exact: false },
 ];
 
 interface AdminSidebarProps {

@@ -19,7 +19,7 @@ export function AdminHeader({ onMenuToggle, title }: AdminHeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 shadow-sm sm:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[rgba(106,53,83,0.08)] bg-white/90 px-4 shadow-sm backdrop-blur-xl sm:px-6">
       {/* Left: hamburger + title */}
       <div className="flex items-center gap-3">
         <AdminMenuToggle onClick={onMenuToggle} />
@@ -35,7 +35,7 @@ export function AdminHeader({ onMenuToggle, title }: AdminHeaderProps) {
         {/* Notification bell */}
         <button
           type="button"
-          className="relative rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          className="relative rounded-xl border border-[rgba(106,53,83,0.08)] bg-[#fff8fa] p-2 text-gray-500 transition-colors hover:bg-white hover:text-gray-900"
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -47,7 +47,7 @@ export function AdminHeader({ onMenuToggle, title }: AdminHeaderProps) {
           <button
             type="button"
             onClick={() => setIsUserMenuOpen((o) => !o)}
-            className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-sm transition-colors hover:bg-gray-50"
+            className="flex items-center gap-2 rounded-xl border border-[rgba(106,53,83,0.08)] bg-white px-3 py-1.5 text-sm transition-colors hover:bg-[#fff8fa]"
             aria-expanded={isUserMenuOpen}
             aria-haspopup="menu"
           >

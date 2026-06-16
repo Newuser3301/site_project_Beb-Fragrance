@@ -2,7 +2,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
-  DollarSign,
   ShoppingBag,
   Package,
   Users,
@@ -78,30 +77,56 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Welcome */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="font-serif text-2xl font-bold text-gray-900 md:text-3xl">
-            Welcome back, {adminName}! 👋
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">{today}</p>
-        </div>
+      <div className="overflow-hidden rounded-[28px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(135deg,#2f1b28_0%,#55324b_42%,#8f5a76_100%)] p-6 text-white shadow-[0_26px_70px_rgba(62,33,51,0.16)] md:p-8">
+        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/68">
+              Admin Overview
+            </p>
+            <h1 className="mt-3 font-serif text-3xl font-bold md:text-4xl">
+              Welcome back, {adminName}
+            </h1>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-white/76">
+              {today}. Monitor revenue, recent orders, and catalog activity from
+              one premium command center.
+            </p>
 
-        {/* Quick actions */}
-        <div className="flex gap-2">
-          <Link
-            href="/admin/products/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:brightness-105"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </Link>
-          <Link
-            href="/admin/orders"
-            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            Orders
-          </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/admin/products/new"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#55324b] transition-all hover:brightness-95"
+              >
+                <Plus className="h-4 w-4" />
+                Add Product
+              </Link>
+              <Link
+                href="/admin/orders"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/15"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                View Orders
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: 'Revenue', value: formatPrice(stats.totalRevenue, 'USD', 'en-US') },
+              { label: 'Orders', value: `${stats.totalOrders}` },
+              { label: 'Products', value: `${stats.totalProducts}` },
+              { label: 'Customers', value: `${stats.totalCustomers}` },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-white/12 bg-white/10 px-4 py-4 backdrop-blur-sm"
+              >
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/62">
+                  {item.label}
+                </p>
+                <p className="mt-2 font-serif text-2xl text-white">{item.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -145,7 +170,7 @@ export default async function AdminDashboardPage() {
       {/* Recent Orders + Quick actions */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
         {/* Recent Orders */}
-        <div className="rounded-2xl border border-gray-200 bg-white">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-[0_18px_50px_rgba(83,48,67,0.06)]">
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-gold-500" />
@@ -226,7 +251,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-[0_18px_50px_rgba(83,48,67,0.06)]">
           <h2 className="mb-4 font-serif text-lg font-bold text-gray-900">
             Quick Actions
           </h2>
