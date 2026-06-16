@@ -57,7 +57,7 @@ export function UserMenu({ user, className }: UserMenuProps) {
 
           <DropdownMenu.Item asChild>
             <Link
-              href="/account/orders"
+              href="/orders"
               className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors hover:bg-cream-100 focus:bg-cream-100"
             >
               <Package className="h-4 w-4" />

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, PenLine } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
@@ -42,6 +42,7 @@ export function ProductReviews({
 }: ProductReviewsProps) {
   const { data: session } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const [reviews, setReviews] = useState<ReviewWithUser[]>(initialReviews);
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
@@ -83,7 +84,7 @@ export function ProductReviews({
 
   const handleWriteReview = () => {
     if (!session?.user) {
-      router.push(`/auth/login?callbackUrl=/shop/${productId}`);
+      router.push(`/auth/login?callbackUrl=${encodeURIComponent(pathname)}`);
       return;
     }
     setIsDialogOpen(true);

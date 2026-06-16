@@ -123,26 +123,36 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const params = parseResult.data;
     const where = buildWhereClause(params);
     const skip = (params.page - 1) * params.limit;
+    const isPriceSort =
+      params.sort === 'price-asc' || params.sort === 'price-desc';
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         where,
         include: productInclude,
-        skip,
-        take: params.limit,
-        orderBy: buildOrderBy(params.sort),
+        ...(isPriceSort
+          ? {}
+          : {
+              skip,
+              take: params.limit,
+              orderBy: buildOrderBy(params.sort),
+            }),
       }),
       prisma.product.count({ where }),
     ]);
 
     let sortedProducts = products;
 
-    if (params.sort === 'price-asc' || params.sort === 'price-desc') {
-      sortedProducts = [...products].sort((a, b) => {
-        const priceA = a.variants[0] ? Number(a.variants[0].price) : 0;
-        const priceB = b.variants[0] ? Number(b.variants[0].price) : 0;
+    if (isPriceSort) {
+      const sorted = [...products].sort((a, b) => {
+        const activeVariantsA = a.variants.filter((variant) => variant.isActive);
+        const activeVariantsB = b.variants.filter((variant) => variant.isActive);
+        const priceA = activeVariantsA[0] ? Number(activeVariantsA[0].price) : 0;
+        const priceB = activeVariantsB[0] ? Number(activeVariantsB[0].price) : 0;
         return params.sort === 'price-asc' ? priceA - priceB : priceB - priceA;
       });
+
+      sortedProducts = sorted.slice(skip, skip + params.limit);
     }
 
     const totalPages = Math.ceil(total / params.limit);

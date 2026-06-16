@@ -98,7 +98,7 @@ export function Header({ user }: HeaderProps) {
           isScrolled && 'shadow-[0_18px_40px_rgba(41,61,94,0.12)]'
         )}
       >
-        <div className="border-b border-[rgba(13,28,48,0.08)] bg-[#0f1b2d] text-white dark:border-slate-800 dark:bg-slate-980">
+        <div className="border-b border-[rgba(13,28,48,0.08)] bg-[#0f1b2d] text-white dark:border-slate-800 dark:bg-slate-950">
           <div className="container-beb flex h-9 items-center justify-between gap-4 text-[11px]">
             <p className="truncate tracking-[0.06em] text-white/80">
               Onlayn buyurtma va aloqa: {CONTACT_PHONE}
