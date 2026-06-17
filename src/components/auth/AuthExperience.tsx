@@ -64,7 +64,7 @@ export function AuthExperience({ initialTab }: AuthExperienceProps) {
     password: '',
   });
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const callbackUrl = searchParams.get('callbackUrl') || '/profile';
   const registered = searchParams.get('registered') === '1';
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export function AuthExperience({ initialTab }: AuthExperienceProps) {
       return "Login uchun email va parol kiriting. Agar akkaunt yo'q bo'lsa, Ro'yxatdan o'tish bo'limiga o'ting.";
     }
 
-    return "Ro'yxatdan o'tishda email va parol yetarli. Profil nomi email asosida avtomatik yaratiladi.";
+    return "Ro'yxatdan o'tishda email va parol yetarli. Parolda kamida bitta harf va bitta raqam bo'lishi shart.";
   }, [activeTab]);
 
   const syncTab = (nextTab: AuthTab) => {
@@ -138,6 +138,24 @@ export function AuthExperience({ initialTab }: AuthExperienceProps) {
       const normalizedEmail = form.email.trim().toLowerCase();
       const password = form.password;
 
+      // 1. Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(normalizedEmail)) {
+        throw new Error("Email manzili noto'g'ri formatda kiritildi. Iltimos, haqiqiy email kiriting.");
+      }
+
+      // 2. Password complexity validation (for registration)
+      if (activeTab === 'register') {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(password)) {
+          throw new Error("Parol kamida 8 ta belgidan iborat bo'lishi hamda harflar va raqamlarni o'z ichiga olishi shart.");
+        }
+      } else {
+        if (password.length < 8) {
+          throw new Error("Parol kamida 8 ta belgidan iborat bo'lishi kerak.");
+        }
+      }
+
       if (rememberMe) {
         window.localStorage.setItem(REMEMBER_EMAIL_KEY, normalizedEmail);
       } else {
@@ -157,11 +175,12 @@ export function AuthExperience({ initialTab }: AuthExperienceProps) {
           return;
         }
 
-        router.push(result.url || callbackUrl);
+        router.push(callbackUrl);
         router.refresh();
         return;
       }
 
+      // Customer Registration
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -178,9 +197,23 @@ export function AuthExperience({ initialTab }: AuthExperienceProps) {
         throw new Error(data.error ?? "Ro'yxatdan o'tishda xatolik yuz berdi.");
       }
 
-      setNotice("Akkaunt yaratildi. Endi shu ma'lumotlar bilan kirishingiz mumkin.");
-      setActiveTab('login');
-      router.replace(`/auth/login?registered=1&email=${encodeURIComponent(normalizedEmail)}`);
+      // Auto Login after registration
+      const result = await signIn('credentials', {
+        email: normalizedEmail,
+        password,
+        callbackUrl,
+        redirect: false,
+      });
+
+      if (!result || result.error) {
+        setNotice("Akkaunt yaratildi. Tizimga kirish uchun parolingizni kiriting.");
+        setActiveTab('login');
+        router.replace(`/auth/login?registered=1&email=${encodeURIComponent(normalizedEmail)}`);
+        return;
+      }
+
+      router.push(callbackUrl);
+      router.refresh();
     } catch (authError) {
       setError(
         authError instanceof Error

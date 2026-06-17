@@ -1,7 +1,7 @@
 // src/components/admin/AdminSidebar.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -14,6 +14,11 @@ import {
   X,
   Menu,
   Gem,
+  LifeBuoy,
+  Settings,
+  Mail,
+  FileText,
+  TrendingUp,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { cn } from '@/lib/utils';
@@ -21,10 +26,12 @@ import { getInitials } from '@/lib/utils';
 
 const NAV_LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { href: '/admin/products', label: 'Products', icon: Package, exact: false },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag, exact: false },
+  { href: '/admin/products', label: 'Products', icon: Package, exact: false, badgeKey: 'totalProducts' as const },
+  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag, exact: false, badgeKey: 'pendingOrders' as const, badgeColor: 'bg-amber-500/20 text-amber-400 border border-amber-500/30' },
   { href: '/admin/categories', label: 'Categories', icon: Folder, exact: false },
-  { href: '/admin/customers', label: 'Customers', icon: Users, exact: false },
+  { href: '/admin/customers', label: 'Customers', icon: Users, exact: false, badgeKey: 'totalCustomers' as const },
+  { href: '/admin/analytics', label: 'Analytics', icon: TrendingUp, exact: false },
+  { href: '/admin/settings', label: 'Settings', icon: Settings, exact: false },
 ];
 
 interface AdminSidebarProps {
@@ -35,6 +42,26 @@ interface AdminSidebarProps {
 export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [stats, setStats] = useState<{
+    totalProducts?: number;
+    pendingOrders?: number;
+    totalCustomers?: number;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/stats')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setStats({
+            totalProducts: data.totalProducts,
+            pendingOrders: data.pendingOrders,
+            totalCustomers: data.totalCustomers,
+          });
+        }
+      })
+      .catch((err) => console.error('Failed to fetch sidebar stats:', err));
+  }, []);
 
   const isActive = (href: string, exact: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
@@ -84,14 +111,56 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           </button>
         </div>
 
+        {/* Quick Access Cards 2x2 */}
+        <div className="px-4 py-3 border-b border-slate-700/50">
+          <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+            Quick Access
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/admin/support"
+              onClick={onClose}
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/40 p-2 px-1 text-center text-[11px] text-slate-400 transition-all hover:bg-slate-800/80 hover:text-white"
+            >
+              <LifeBuoy className="h-4 w-4 text-emerald-400" />
+              <span>Support</span>
+            </Link>
+            <Link
+              href="/admin/settings"
+              onClick={onClose}
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/40 p-2 px-1 text-center text-[11px] text-slate-400 transition-all hover:bg-slate-800/80 hover:text-white"
+            >
+              <Settings className="h-4 w-4 text-blue-400" />
+              <span>Settings</span>
+            </Link>
+            <Link
+              href="/admin/subscribers"
+              onClick={onClose}
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/40 p-2 px-1 text-center text-[11px] text-slate-400 transition-all hover:bg-slate-800/80 hover:text-white"
+            >
+              <Mail className="h-4 w-4 text-amber-400" />
+              <span>Subscribers</span>
+            </Link>
+            <Link
+              href="/admin/invoices"
+              onClick={onClose}
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-800/40 p-2 px-1 text-center text-[11px] text-slate-400 transition-all hover:bg-slate-800/80 hover:text-white"
+            >
+              <FileText className="h-4 w-4 text-purple-400" />
+              <span>Invoices</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-600">
             Navigation
           </p>
           <ul className="space-y-0.5">
-            {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
+            {NAV_LINKS.map(({ href, label, icon: Icon, exact, badgeKey, badgeColor }) => {
               const active = isActive(href, exact);
+              const badgeValue = badgeKey && stats ? stats[badgeKey] : null;
               return (
                 <li key={href}>
                   <Link
@@ -111,8 +180,16 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                         active ? 'text-gold-400' : 'text-slate-500'
                       )}
                     />
-                    {label}
-                    {active && (
+                    <span>{label}</span>
+                    {badgeValue !== undefined && badgeValue !== null && (
+                      <span className={cn(
+                        'ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold shrink-0',
+                        badgeColor || 'bg-slate-800 text-slate-300 border border-slate-750'
+                      )}>
+                        {badgeValue}
+                      </span>
+                    )}
+                    {active && !badgeValue && (
                       <span className="ml-auto h-1.5 w-1.5 rounded-full bg-gold-400" />
                     )}
                   </Link>
@@ -188,3 +265,4 @@ export function AdminMenuToggle({ onClick }: { onClick: () => void }) {
     </button>
   );
 }
+

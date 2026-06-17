@@ -19,12 +19,22 @@ export default auth((request) => {
 
   const isAdminRoute = pathname.startsWith('/admin');
   const isAuthRoute = pathname.startsWith('/auth');
+  const isProfileRoute = pathname.startsWith('/profile');
 
   if (PUBLIC_AUTH_ROUTES.has(pathname)) {
     if (pathname === '/admin/login' && isLoggedIn && userRole && ADMIN_ROLES.includes(userRole)) {
       return NextResponse.redirect(new URL('/admin', nextUrl));
     }
 
+    return NextResponse.next();
+  }
+
+  if (isProfileRoute) {
+    if (!isLoggedIn) {
+      const loginUrl = new URL('/auth/login', nextUrl);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
     return NextResponse.next();
   }
 
@@ -48,5 +58,5 @@ export default auth((request) => {
 });
 
 export const config = {
-  matcher: ['/admin/:path*', '/auth/:path*'],
+  matcher: ['/admin/:path*', '/auth/:path*', '/profile/:path*'],
 };

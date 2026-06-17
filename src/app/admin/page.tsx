@@ -8,6 +8,11 @@ import {
   Plus,
   ArrowRight,
   TrendingUp,
+  Folder,
+  Settings,
+  Search,
+  Activity,
+  DollarSign,
 } from 'lucide-react';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -76,111 +81,319 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome */}
-      <div className="overflow-hidden rounded-[28px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(135deg,#2f1b28_0%,#55324b_42%,#8f5a76_100%)] p-6 text-white shadow-[0_26px_70px_rgba(62,33,51,0.16)] md:p-8">
-        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/68">
-              Admin Overview
-            </p>
-            <h1 className="mt-3 font-serif text-3xl font-bold md:text-4xl">
-              Welcome back, {adminName}
-            </h1>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-white/76">
-              {today}. Monitor revenue, recent orders, and catalog activity from
-              one premium command center.
-            </p>
+      {/* 1. Header Search + Welcome */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+            Xush kelibsiz, {adminName} 👋
+          </h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Bugun {today}. Boshqaruv paneli holati.
+          </p>
+        </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/admin/products/new"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-[#55324b] transition-all hover:brightness-95"
-              >
-                <Plus className="h-4 w-4" />
-                Add Product
-              </Link>
-              <Link
-                href="/admin/orders"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/15"
-              >
-                <ShoppingBag className="h-4 w-4" />
-                View Orders
-              </Link>
-            </div>
+        {/* Search Input */}
+        <div className="relative w-full sm:max-w-xs">
+          <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <Search className="h-4.5 w-4.5" />
           </div>
+          <input
+            type="search"
+            placeholder="Qidirish (mahsulot, buyurtma...)"
+            className="w-full rounded-xl border border-gray-200 bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: 'Revenue', value: formatPrice(stats.totalRevenue, 'USD', 'en-US') },
-              { label: 'Orders', value: `${stats.totalOrders}` },
-              { label: 'Products', value: `${stats.totalProducts}` },
-              { label: 'Customers', value: `${stats.totalCustomers}` },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-white/12 bg-white/10 px-4 py-4 backdrop-blur-sm"
-              >
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/62">
-                  {item.label}
-                </p>
-                <p className="mt-2 font-serif text-2xl text-white">{item.value}</p>
-              </div>
-            ))}
+      {/* 2. Hero Banner with search */}
+      <div className="relative overflow-hidden rounded-[28px] border border-blue-100 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 text-white shadow-lg">
+        {/* Background elements */}
+        <div className="pointer-events-none absolute inset-0 opacity-20">
+          <div className="absolute right-[-10%] top-[-10%] h-56 w-56 rounded-full bg-blue-500 blur-3xl" />
+          <div className="absolute left-[30%] bottom-[-20%] h-64 w-64 rounded-full bg-purple-500 blur-3xl" />
+        </div>
+
+        <div className="relative max-w-xl">
+          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-blue-400">
+            Beb Fragrance Search Engine
+          </p>
+          <h2 className="mt-3 font-serif text-2xl font-bold leading-tight sm:text-3xl">
+            What are you looking for today?
+          </h2>
+          <p className="mt-2 text-xs text-slate-300">
+            Tezkor qidiruv orqali kerakli mahsulot, buyurtma, toifa yoki xaridor ma'lumotlarini soniyalarda toping.
+          </p>
+
+          <div className="relative mt-6 max-w-lg">
+            <div className="pointer-events-none absolute left-4.5 top-1/2 -translate-y-1/2 text-slate-400">
+              <Search className="h-5 w-5" />
+            </div>
+            <input
+              type="text"
+              placeholder="Qidiruv kalit so'zini kiriting..."
+              className="w-full rounded-2xl border border-slate-700 bg-slate-800/80 py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-400 backdrop-blur-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
           </div>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <StatsCard
-          title="Total Revenue"
-          value={stats.totalRevenue}
-          icon="revenue"
-          prefix="$"
-          color="gold"
-          change={12.5}
-          changeType="increase"
-        />
-        <StatsCard
-          title="Total Orders"
-          value={stats.totalOrders}
-          icon="orders"
-          color="blue"
-          change={8.2}
-          changeType="increase"
-        />
-        <StatsCard
-          title="Total Products"
-          value={stats.totalProducts}
-          icon="products"
-          color="purple"
-          change={3}
-          changeType="increase"
-        />
-        <StatsCard
-          title="Total Customers"
-          value={stats.totalCustomers}
-          icon="customers"
-          color="green"
-          change={5.4}
-          changeType="increase"
-        />
+      {/* 3. Quick Action Cards Grid (6 items) */}
+      <div>
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              href: '/admin/products',
+              label: 'Mahsulotlar',
+              desc: 'Katalog, parfyum qoʻshish va narx variantlarini boshqarish',
+              icon: Package,
+              color: 'text-blue-600 bg-blue-50 border-blue-100',
+            },
+            {
+              href: '/admin/orders',
+              label: 'Buyurtmalar',
+              desc: 'Doʻkondagi barcha sotuvlar roʻyxati va holatini yangilash',
+              icon: ShoppingBag,
+              color: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+            },
+            {
+              href: '/admin/customers',
+              label: 'Mijozlar',
+              desc: 'Foydalanuvchilar maʼlumotlari va xarid tarixi bilan tanishish',
+              icon: Users,
+              color: 'text-purple-600 bg-purple-50 border-purple-100',
+            },
+            {
+              href: '/admin/categories',
+              label: 'Kategoriyalar',
+              desc: 'Doʻkondagi parfyumeriya toifalari, brendlar va oilalarni sozlash',
+              icon: Folder,
+              color: 'text-amber-600 bg-amber-50 border-amber-100',
+            },
+            {
+              href: '/admin/settings',
+              label: 'Sozlamalar',
+              desc: 'Tizim sozlamalari, valyuta, email va toʻlov tizimlari sozlash',
+              icon: Settings,
+              color: 'text-rose-600 bg-rose-50 border-rose-100',
+            },
+            {
+              href: '/admin/analytics',
+              label: 'Hisobotlar',
+              desc: 'Doʻkonning oylik va haftalik sotuv koʻrsatkichlari analitikasi',
+              icon: TrendingUp,
+              color: 'text-cyan-600 bg-cyan-50 border-cyan-100',
+            },
+          ].map(({ href, label, desc, icon: Icon, color }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group flex flex-col justify-between rounded-2xl border border-gray-150 bg-white p-5 shadow-sm transition-all hover:border-gray-300 hover:shadow-md"
+            >
+              <div>
+                <div className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border ${color}`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-serif text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  {label}
+                </h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-gray-500">
+                  {desc}
+                </p>
+              </div>
+              <div className="mt-4 flex items-center gap-1 text-[11px] font-semibold text-gray-700">
+                Oʻtish <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* Recent Orders + Quick actions */}
+      {/* 4. Statistics Cards */}
+      <div>
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
+          Statistika va Trendlar
+        </h2>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <StatsCard
+            title="Total Revenue"
+            value={stats.totalRevenue}
+            icon="revenue"
+            prefix="$"
+            color="gold"
+            change={12.5}
+            changeType="increase"
+          />
+          <StatsCard
+            title="Total Orders"
+            value={stats.totalOrders}
+            icon="orders"
+            color="blue"
+            change={8.2}
+            changeType="increase"
+          />
+          <StatsCard
+            title="Total Products"
+            value={stats.totalProducts}
+            icon="products"
+            color="purple"
+            change={3}
+            changeType="increase"
+          />
+          <StatsCard
+            title="Total Customers"
+            value={stats.totalCustomers}
+            icon="customers"
+            color="green"
+            change={5.4}
+            changeType="increase"
+          />
+        </div>
+      </div>
+
+      {/* 5. Custom Sparkline Charts (Revenue, Sales, Orders) */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Revenue SVG Chart */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Revenue Trend (Oylik)
+              </p>
+              <h3 className="mt-1 text-xl font-bold text-gray-900">
+                {formatPrice(stats.totalRevenue, 'USD', 'en-US')}
+              </h3>
+            </div>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600 border border-amber-100">
+              <DollarSign className="h-4.5 w-4.5" />
+            </span>
+          </div>
+
+          <div className="mt-6 flex h-32 w-full items-end">
+            {/* Visual Custom SVG Line Chart */}
+            <svg viewBox="0 0 300 100" className="w-full h-full text-amber-500 overflow-visible">
+              <defs>
+                <linearGradient id="revenue-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgb(245, 158, 11)" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="rgb(245, 158, 11)" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+              {/* Path */}
+              <path
+                d="M 0 80 Q 50 60 100 75 T 200 40 T 300 20 L 300 100 L 0 100 Z"
+                fill="url(#revenue-grad)"
+              />
+              <path
+                d="M 0 80 Q 50 60 100 75 T 200 40 T 300 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+              {/* Dots */}
+              <circle cx="100" cy="75" r="4.5" className="fill-amber-600 stroke-white stroke-2" />
+              <circle cx="200" cy="40" r="4.5" className="fill-amber-600 stroke-white stroke-2" />
+              <circle cx="300" cy="20" r="4.5" className="fill-amber-600 stroke-white stroke-2 animate-pulse" />
+            </svg>
+          </div>
+          <p className="mt-3 text-[11px] text-gray-500 text-center">
+            Oxirgi 6 oylik oʻsish surʼati: +12.5%
+          </p>
+        </div>
+
+        {/* Sales Volume (Bars) */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Sotuv Hajmi (Haftalik)
+              </p>
+              <h3 className="mt-1 text-xl font-bold text-gray-900">
+                {stats.totalOrders} buyurtma
+              </h3>
+            </div>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100">
+              <ShoppingBag className="h-4.5 w-4.5" />
+            </span>
+          </div>
+
+          <div className="mt-6 flex h-32 w-full items-end gap-3 px-2">
+            {[45, 60, 52, 70, 85, 65, 95].map((val, idx) => (
+              <div key={idx} className="flex flex-1 flex-col items-center gap-1.5 h-full justify-end">
+                <div
+                  className="w-full rounded-t-md bg-gradient-to-t from-blue-600 to-blue-400 group-hover:brightness-105 transition-all"
+                  style={{ height: `${val}%` }}
+                />
+                <span className="text-[10px] text-gray-400 uppercase font-mono">
+                  {['D', 'S', 'Ch', 'P', 'J', 'Sh', 'Y'][idx]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Order Conversion (Area/Line) */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Buyurtmalar Dinamikasi
+              </p>
+              <h3 className="mt-1 text-xl font-bold text-gray-900">
+                Aktiv konversiya
+              </h3>
+            </div>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-purple-50 text-purple-600 border border-purple-100">
+              <Activity className="h-4.5 w-4.5" />
+            </span>
+          </div>
+
+          <div className="mt-6 flex h-32 w-full items-end">
+            <svg viewBox="0 0 300 100" className="w-full h-full text-purple-500 overflow-visible">
+              <defs>
+                <linearGradient id="purple-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgb(168, 85, 247)" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="rgb(168, 85, 247)" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+              {/* Path */}
+              <path
+                d="M 0 50 Q 75 80 150 40 T 300 15 L 300 100 L 0 100 Z"
+                fill="url(#purple-grad)"
+              />
+              <path
+                d="M 0 50 Q 75 80 150 40 T 300 15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+              <circle cx="150" cy="40" r="4.5" className="fill-purple-600 stroke-white stroke-2" />
+              <circle cx="300" cy="15" r="4.5" className="fill-purple-600 stroke-white stroke-2" />
+            </svg>
+          </div>
+          <p className="mt-3 text-[11px] text-gray-500 text-center">
+            Buyurtma toʻldirish darajasi: 98.6%
+          </p>
+        </div>
+      </div>
+
+      {/* 6. Recent Orders Table (keep data loading intact) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
-        {/* Recent Orders */}
-        <div className="rounded-2xl border border-gray-200 bg-white shadow-[0_18px_50px_rgba(83,48,67,0.06)]">
-          <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+        {/* Recent Orders Table */}
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b border-gray-150 px-6 py-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-gold-500" />
+              <TrendingUp className="h-5 w-5 text-amber-500" />
               <h2 className="font-serif text-lg font-bold text-gray-900">
                 Recent Orders
               </h2>
             </div>
             <Link
               href="/admin/orders"
-              className="flex items-center gap-1 text-sm font-medium text-gold-600 hover:text-gold-700"
+              className="flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700"
             >
               View All
               <ArrowRight className="h-4 w-4" />
@@ -220,7 +433,7 @@ export default async function AdminDashboardPage() {
                       <td className="px-6 py-3">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="font-mono text-xs font-semibold text-gold-600 hover:underline"
+                          className="font-mono text-xs font-semibold text-blue-600 hover:underline"
                         >
                           #{order.orderNumber}
                         </Link>
@@ -250,30 +463,32 @@ export default async function AdminDashboardPage() {
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-[0_18px_50px_rgba(83,48,67,0.06)]">
-          <h2 className="mb-4 font-serif text-lg font-bold text-gray-900">
-            Quick Actions
+        {/* Small stats summary / actions box */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm space-y-5">
+          <h2 className="font-serif text-lg font-bold text-gray-900">
+            Quick Actions Shortcuts
           </h2>
-          <div className="space-y-2.5">
-            {[
-              { href: '/admin/products/new', label: 'Add New Product', icon: Plus, color: 'bg-gold-50 text-gold-600' },
-              { href: '/admin/orders', label: 'View All Orders', icon: ShoppingBag, color: 'bg-blue-50 text-blue-600' },
-              { href: '/admin/products', label: 'Manage Products', icon: Package, color: 'bg-purple-50 text-purple-600' },
-              { href: '/admin/customers', label: 'View Customers', icon: Users, color: 'bg-emerald-50 text-emerald-600' },
-            ].map(({ href, label, icon: Icon, color }) => (
-              <Link
-                key={href}
-                href={href}
-                className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:border-gray-200 hover:bg-white hover:shadow-sm"
-              >
-                <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${color}`}>
-                  <Icon className="h-4 w-4" />
-                </span>
-                {label}
-                <ArrowRight className="ml-auto h-4 w-4 text-gray-400" />
-              </Link>
-            ))}
+          <div className="space-y-3">
+            <Link
+              href="/admin/products/new"
+              className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-xs font-medium text-gray-700 transition-all hover:bg-white hover:border-gray-200"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <Plus className="h-4 w-4" />
+              </span>
+              Add New Product
+              <ArrowRight className="ml-auto h-4 w-4 text-gray-400" />
+            </Link>
+            <Link
+              href="/admin/orders"
+              className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 text-xs font-medium text-gray-700 transition-all hover:bg-white hover:border-gray-200"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                <ShoppingBag className="h-4 w-4" />
+              </span>
+              View All Orders
+              <ArrowRight className="ml-auto h-4 w-4 text-gray-400" />
+            </Link>
           </div>
         </div>
       </div>

@@ -14,22 +14,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Yaroqli email kiriting.' }, { status: 400 });
     }
 
-    if (!isResendEnabled()) {
-      return NextResponse.json(
-        {
-          error:
-            'Parolni tiklash xizmati vaqtincha ishlamayapti. Iltimos, support bilan bog‘laning.',
-        },
-        { status: 503 }
-      );
-    }
-
     const user = await prisma.user.findUnique({
       where: { email },
       select: { id: true, email: true, name: true },
     });
 
     if (!user) {
+      // Return success: true so we don't leak registered emails
       return NextResponse.json({ success: true });
     }
 
@@ -50,11 +41,16 @@ export async function POST(request: Request) {
     });
 
     const resetUrl = `${SITE_URL}/auth/reset-password?token=${token}`;
-    await sendPasswordResetEmail(user.email, user.name ?? 'Customer', resetUrl);
+
+    if (isResendEnabled()) {
+      await sendPasswordResetEmail(user.email, user.name ?? 'Customer', resetUrl);
+    } else {
+      console.log(`\n========================================\n[DEV RESET LINK] password reset url for ${email}:\n${resetUrl}\n========================================\n`);
+    }
 
     return NextResponse.json({
       success: true,
-      ...(process.env.NODE_ENV !== 'production' ? { previewUrl: resetUrl } : {}),
+      ...(!isResendEnabled() ? { previewUrl: resetUrl } : {}),
     });
   } catch (error) {
     console.error('[AUTH_FORGOT_PASSWORD_POST]', error);

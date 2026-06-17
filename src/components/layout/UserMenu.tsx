@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Heart, LogOut, Package } from 'lucide-react';
+import { Heart, LogOut, Package, User } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useTranslations } from 'next-intl';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
@@ -57,6 +57,16 @@ export function UserMenu({ user, className }: UserMenuProps) {
             <p className="text-sm font-medium">{user.name}</p>
             <p className="truncate text-xs text-muted-foreground">{user.email}</p>
           </div>
+
+          <DropdownMenu.Item asChild>
+            <Link
+              href="/profile"
+              className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm outline-none transition-colors hover:bg-cream-100 focus:bg-cream-100"
+            >
+              <User className="h-4 w-4" />
+              {tCommon('myProfile')}
+            </Link>
+          </DropdownMenu.Item>
 
           <DropdownMenu.Item asChild>
             <Link
