@@ -132,17 +132,17 @@ export function ProductsCatalog({
 
   return (
     <div className="container-beb py-10">
-      <nav className="mb-6 text-xs text-[#6B6B6B]" style={{ letterSpacing: '0.02em' }}>
+      <nav className="mb-6 text-xs text-[#6B6B6B] dark:text-slate-400" style={{ letterSpacing: '0.02em' }}>
         <ol className="flex flex-wrap items-center gap-2">
           {breadcrumbs.map((crumb, index) => (
             <li key={crumb.label} className="flex items-center gap-2">
-              {index > 0 && <span className="text-[#D0D0D0]">/</span>}
+              {index > 0 && <span className="text-[#D0D0D0] dark:text-slate-600">/</span>}
               {crumb.href ? (
-                <Link href={crumb.href} className="transition-colors hover:text-[#1A1A1A]">
+                <Link href={crumb.href} className="transition-colors hover:text-[#1A1A1A] dark:hover:text-white">
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="font-medium text-[#1A1A1A]">{crumb.label}</span>
+                <span className="font-medium text-[#1A1A1A] dark:text-slate-200">{crumb.label}</span>
               )}
             </li>
           ))}
@@ -150,15 +150,15 @@ export function ProductsCatalog({
       </nav>
 
       <div className="mb-8">
-        <h1 className="font-serif text-4xl font-bold leading-tight text-[#1A1A1A]">
+        <h1 className="font-serif text-4xl font-bold leading-tight text-[#1A1A1A] dark:text-white">
           {pageTitle}
         </h1>
         {pageDescription && (
-          <p className="mt-2 max-w-2xl text-sm text-[#6B6B6B]">
+          <p className="mt-2 max-w-2xl text-sm text-[#6B6B6B] dark:text-slate-400">
             {pageDescription}
           </p>
         )}
-        <p className="mt-3 text-xs text-[#6B6B6B]">
+        <p className="mt-3 text-xs text-[#6B6B6B] dark:text-slate-400">
           {startItem}–{endItem} / {total} mahsulot
         </p>
       </div>
@@ -180,7 +180,7 @@ export function ProductsCatalog({
               page: '1',
             })
           }
-          className="h-11 rounded-2xl border border-[rgba(13,28,48,0.10)] bg-white px-4 text-sm text-[#163050] outline-none"
+          className="h-11 rounded-2xl border border-[rgba(13,28,48,0.10)] dark:border-slate-700 bg-white dark:bg-slate-800 px-4 text-sm text-[#163050] dark:text-slate-200 outline-none"
         >
           <option value="">Kategoriya tanlang</option>
           {categories.map((category) => (
@@ -207,7 +207,7 @@ export function ProductsCatalog({
                 'rounded-full border px-4 py-2 text-sm font-medium transition-colors',
                 active
                   ? 'border-[#3B82F6] bg-[#3B82F6] text-white'
-                  : 'border-[rgba(13,28,48,0.10)] bg-white text-[#163050] hover:border-[#bfdbfe] hover:bg-[#f8fbff]'
+                  : 'border-[rgba(13,28,48,0.10)] dark:border-slate-700 bg-white dark:bg-slate-800 text-[#163050] dark:text-slate-200 hover:border-[#bfdbfe] dark:hover:border-slate-600 hover:bg-[#f8fbff] dark:hover:bg-slate-700'
               )}
             >
               {tab.label}
