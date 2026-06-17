@@ -9,6 +9,7 @@ import { CartDrawer } from '@/components/layout/CartDrawer';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import { getMessages } from '@/lib/i18n';
 import { getLocaleFromRequest } from '@/lib/i18n-server';
+import { prisma } from '@/lib/prisma';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -115,6 +116,12 @@ export default async function RootLayout({
     })();
   `;
 
+  const settingsList = await prisma.setting.findMany().catch(() => []);
+  const settings = settingsList.reduce((acc, s) => {
+    acc[s.key] = s.value;
+    return acc;
+  }, {} as Record<string, string>);
+
   return (
     <html
       lang={locale}
@@ -124,9 +131,9 @@ export default async function RootLayout({
       <body className="min-h-screen bg-background font-sans text-foreground antialiased transition-colors duration-300">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Providers session={session} locale={locale} messages={messages}>
-          <Header user={session?.user} locale={locale} />
+          <Header user={session?.user} locale={locale} settings={settings} />
           <main className="min-h-screen">{children}</main>
-          <Footer />
+          <Footer settings={settings} />
           <CartDrawer />
           <ScrollToTop />
         </Providers>

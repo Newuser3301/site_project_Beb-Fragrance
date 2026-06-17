@@ -16,6 +16,7 @@ import {
   fetchFeaturedProducts,
 } from '@/lib/products-server';
 import { getTranslator } from '@/lib/i18n-server';
+import { prisma } from '@/lib/prisma';
 
 export const metadata: Metadata = {
   title: 'Beb Fragrance | Premium Perfume Store',
@@ -94,8 +95,13 @@ async function BestSellersSection() {
   );
 }
 
-async function EditorialBannerSection() {
+async function EditorialBannerSection({ settings }: { settings?: Record<string, string> }) {
   const t = await getTranslator();
+  const bannerImage = settings?.promo_banner_image;
+  const bannerTitle = settings?.promo_banner_title || t('home.editorialTitle');
+  const bannerDesc = settings?.promo_banner_desc || t('home.editorialDescription');
+  const bannerLink = settings?.promo_banner_link || '/products';
+
   return (
     <section className="py-10 md:py-14">
       <div className="container-beb">
@@ -104,13 +110,13 @@ async function EditorialBannerSection() {
           <div className="grid gap-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
             <div className="max-w-xl">
               <h2 className="section-title">
-                {t('home.editorialTitle')}
+                {bannerTitle}
               </h2>
               <p className="mt-4 text-sm leading-7 text-[#7d6874]">
-                {t('home.editorialDescription')}
+                {bannerDesc}
               </p>
               <Link
-                href="/products"
+                href={bannerLink}
                 className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#55324b] px-6 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#43253a]"
               >
                 {t('home.editorialButton')}
@@ -118,11 +124,23 @@ async function EditorialBannerSection() {
               </Link>
             </div>
 
-            <div className="relative min-h-[250px] overflow-hidden rounded-[24px] bg-gradient-to-br from-[#24182e] via-[#40284e] to-[#8b5673] p-6 shadow-[0_24px_50px_rgba(48,20,41,0.18)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_30%)]" />
-              <div className="absolute left-[16%] top-[18%] h-36 w-24 rounded-[18px] bg-[#bfa8cb]/25 shadow-[0_30px_40px_rgba(0,0,0,0.25)] backdrop-blur-sm" />
-              <div className="absolute left-[38%] top-[12%] h-44 w-28 rounded-[20px] bg-[#f5d7df]/20 shadow-[0_35px_45px_rgba(0,0,0,0.28)] backdrop-blur-sm" />
-              <div className="absolute left-[60%] top-[27%] h-28 w-20 rounded-[18px] bg-[#ffedf5]/18 shadow-[0_25px_35px_rgba(0,0,0,0.22)] backdrop-blur-sm" />
+            <div className="relative min-h-[250px] overflow-hidden rounded-[24px] bg-gradient-to-br from-[#24182e] via-[#40284e] to-[#8b5673] shadow-[0_24px_50px_rgba(48,20,41,0.18)]">
+              {bannerImage ? (
+                <Image
+                  src={bannerImage}
+                  alt={bannerTitle}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_30%)]" />
+                  <div className="absolute left-[16%] top-[18%] h-36 w-24 rounded-[18px] bg-[#bfa8cb]/25 shadow-[0_30px_40px_rgba(0,0,0,0.25)] backdrop-blur-sm" />
+                  <div className="absolute left-[38%] top-[12%] h-44 w-28 rounded-[20px] bg-[#f5d7df]/20 shadow-[0_35px_45px_rgba(0,0,0,0.28)] backdrop-blur-sm" />
+                  <div className="absolute left-[60%] top-[27%] h-28 w-20 rounded-[18px] bg-[#ffedf5]/18 shadow-[0_25px_35px_rgba(0,0,0,0.22)] backdrop-blur-sm" />
+                </>
+              )}
               <button
                 type="button"
                 className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-sm"
@@ -242,17 +260,31 @@ function ProductsFallback() {
 export default async function HomePage() {
   const t = await getTranslator();
 
+  const [settingsList, categories] = await Promise.all([
+    prisma.setting.findMany().catch(() => []),
+    prisma.category.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, slug: true, image: true },
+      orderBy: { sortOrder: 'asc' },
+    }).catch(() => []),
+  ]);
+
+  const settings = settingsList.reduce((acc, s) => {
+    acc[s.key] = s.value;
+    return acc;
+  }, {} as Record<string, string>);
+
   return (
     <>
-      <HeroSection />
-      <CategoriesSection />
+      <HeroSection settings={settings} />
+      <CategoriesSection categories={categories} />
       <BrandRibbonSection />
 
       <Suspense fallback={<ProductsFallback />}>
         <FeaturedProductsSection />
       </Suspense>
 
-      <EditorialBannerSection />
+      <EditorialBannerSection settings={settings} />
 
       <Suspense fallback={<ProductsFallback />}>
         <BestSellersSection />

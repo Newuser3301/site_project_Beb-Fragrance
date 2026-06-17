@@ -6,19 +6,23 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-export function HeroSection() {
+interface HeroSectionProps {
+  settings?: Record<string, string>;
+}
+
+export function HeroSection({ settings }: HeroSectionProps) {
   const t = useTranslations('hero');
   const bottles = [
     {
-      src: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=700&fit=crop',
+      src: settings?.hero_bottle_image_1 || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=700&fit=crop',
       className: 'left-[4%] top-[44%] h-[170px] w-[118px] -rotate-[6deg]',
     },
     {
-      src: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=760&fit=crop',
+      src: settings?.hero_bottle_image_2 || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=760&fit=crop',
       className: 'left-[22%] top-[18%] h-[238px] w-[164px] rotate-[1deg]',
     },
     {
-      src: 'https://images.unsplash.com/photo-1615634260162-c5170a9bbf62?w=500&h=760&fit=crop',
+      src: settings?.hero_bottle_image_3 || 'https://images.unsplash.com/photo-1615634260162-c5170a9bbf62?w=500&h=760&fit=crop',
       className: 'left-[49%] top-[28%] h-[204px] w-[140px] -rotate-[5deg]',
     },
     {
@@ -30,7 +34,10 @@ export function HeroSection() {
   return (
     <section className="pb-6 pt-4 md:pb-8 md:pt-6">
       <div className="container-beb">
-        <div className="relative overflow-hidden rounded-[32px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(180deg,#ffffff_0%,#fbfbfc_55%,#f6f7f8_100%)] px-6 py-6 shadow-[0_24px_60px_rgba(86,43,66,0.08)] md:px-10 md:py-10 lg:px-14 lg:py-12">
+        <div 
+          className="relative overflow-hidden rounded-[32px] border border-[rgba(106,53,83,0.08)] bg-[linear-gradient(180deg,#ffffff_0%,#fbfbfc_55%,#f6f7f8_100%)] dark:border-slate-800 dark:bg-[linear-gradient(180deg,#1e293b_0%,#0f172a_100%)] px-6 py-6 shadow-[0_24px_60px_rgba(86,43,66,0.08)] md:px-10 md:py-10 lg:px-14 lg:py-12"
+          style={settings?.hero_bg_image ? { backgroundImage: `url(${settings.hero_bg_image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+        >
           <div className="absolute inset-y-0 right-0 w-[58%] bg-gradient-to-l from-[rgba(234,236,239,0.75)] via-[rgba(255,255,255,0.35)] to-transparent" />
           <div className="absolute inset-x-0 top-0 h-10 bg-[linear-gradient(180deg,rgba(186,191,198,0.10),transparent)]" />
           <div className="absolute left-[42%] top-10 h-36 w-36 rounded-full bg-white/80 blur-3xl" />
@@ -54,9 +61,9 @@ export function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.1 }}
                 className="max-w-[480px] font-serif text-4xl font-semibold leading-[0.97] text-[#2f1d28] md:text-5xl lg:text-[58px]"
               >
-                {t('titleLine1')}
+                {settings?.hero_title_line1 || t('titleLine1')}
                 <br />
-                {t('titleLine2')}
+                {settings?.hero_title_line2 || t('titleLine2')}
               </motion.h1>
 
               <motion.p
@@ -65,7 +72,7 @@ export function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.2 }}
                 className="mt-4 max-w-md text-sm leading-7 text-[#5f5860] md:text-base"
               >
-                {t('description')}
+                {settings?.hero_description || t('description')}
               </motion.p>
 
               <motion.div
@@ -96,16 +103,16 @@ export function HeroSection() {
                 className="mt-6 grid max-w-lg grid-cols-3 gap-3"
               >
                 {[
-                  { label: t('stats.brands'), value: '120+' },
-                  { label: t('stats.giftReady'), value: '24h' },
-                  { label: t('stats.signaturePicks'), value: 'Top 50' },
+                  { label: settings?.hero_stat_1_label || t('stats.brands'), value: settings?.hero_stat_1_value || '120+' },
+                  { label: settings?.hero_stat_2_label || t('stats.giftReady'), value: settings?.hero_stat_2_value || '24h' },
+                  { label: settings?.hero_stat_3_label || t('stats.signaturePicks'), value: settings?.hero_stat_3_value || 'Top 50' },
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-2xl border border-white/45 bg-white/45 px-4 py-3 backdrop-blur-sm"
+                    className="rounded-2xl border border-white/45 bg-white/45 px-4 py-3 backdrop-blur-sm dark:bg-slate-900/60 dark:border-slate-800/60"
                   >
-                    <p className="font-serif text-xl text-[#2f1d28]">{item.value}</p>
-                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#7c5668]">
+                    <p className="font-serif text-xl text-[#2f1d28] dark:text-slate-100">{item.value}</p>
+                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#7c5668] dark:text-slate-400">
                       {item.label}
                     </p>
                   </div>
@@ -138,11 +145,11 @@ export function HeroSection() {
                   />
                 </motion.div>
               ))}
-              <div className="absolute bottom-[8%] right-[8%] rounded-[24px] border border-white/70 bg-white/80 px-5 py-4 backdrop-blur-md">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#73475f]">
+              <div className="absolute bottom-[8%] right-[8%] rounded-[24px] border border-white/70 bg-white/80 px-5 py-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#73475f] dark:text-slate-400">
                   {t('newSeason')}
                 </p>
-                <p className="mt-2 font-serif text-2xl text-[#2f1d28]">{t('shelfMood')}</p>
+                <p className="mt-2 font-serif text-2xl text-[#2f1d28] dark:text-slate-100">{t('shelfMood')}</p>
               </div>
             </motion.div>
           </div>

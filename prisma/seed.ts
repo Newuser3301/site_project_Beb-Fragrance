@@ -192,6 +192,7 @@ async function main() {
   await prisma.collection.deleteMany();
   await prisma.category.deleteMany();
   await prisma.brand.deleteMany();
+  await prisma.setting.deleteMany();
 
   // Create admin user
   const adminUser = await prisma.user.upsert({
@@ -374,6 +375,42 @@ async function main() {
   }
 
   console.log(`✅ ${productsData.length} ta mahsulot muvaffaqiyatli qo'shildi!`);
+
+  console.log('Seeding default settings...');
+  const defaultSettings = [
+    { key: 'site_name', value: 'Beb Fragrance', group: 'general' },
+    { key: 'site_tagline', value: 'premium perfume store', group: 'general' },
+    { key: 'contact_phone', value: '+998 (71) 123 45 67', group: 'general' },
+    { key: 'contact_email', value: 'info@bebfragrance.uz', group: 'general' },
+    { key: 'contact_address', value: 'Toshkent sh., Chilonzor tumani, 9-mavze', group: 'general' },
+    { key: 'social_facebook', value: 'https://facebook.com/bebfragrance', group: 'general' },
+    { key: 'social_instagram', value: 'https://instagram.com/bebfragrance', group: 'general' },
+    { key: 'social_twitter', value: 'https://twitter.com/bebfragrance', group: 'general' },
+    { key: 'hero_title_line1', value: 'Har bir', group: 'hero' },
+    { key: 'hero_title_line2', value: 'lahza uchun ifor', group: 'hero' },
+    { key: 'hero_description', value: 'Kundalik marosimlar va unutilmas uchrashuvlar uchun tanlangan romantik floral, nafis musk va kechki aksent iforlarni kashf eting.', group: 'hero' },
+    { key: 'hero_bg_image', value: '', group: 'hero' },
+    { key: 'hero_bottle_image_1', value: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=700&fit=crop', group: 'hero' },
+    { key: 'hero_bottle_image_2', value: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=760&fit=crop', group: 'hero' },
+    { key: 'hero_bottle_image_3', value: 'https://images.unsplash.com/photo-1615634260162-c5170a9bbf62?w=500&h=760&fit=crop', group: 'hero' },
+    { key: 'hero_stat_1_value', value: '120+', group: 'hero' },
+    { key: 'hero_stat_1_label', value: 'Lux brendlar', group: 'hero' },
+    { key: 'hero_stat_2_value', value: '24h', group: 'hero' },
+    { key: 'hero_stat_2_label', value: 'Sovg\'aga tayyor', group: 'hero' },
+    { key: 'hero_stat_3_value', value: 'Top 50', group: 'hero' },
+    { key: 'hero_stat_3_label', value: 'Saralangan hitlar', group: 'hero' },
+    { key: 'promo_banner_image', value: '', group: 'banners' },
+    { key: 'promo_banner_title', value: 'Sizning o\'ziga xos iforingiz', group: 'banners' },
+    { key: 'promo_banner_desc', value: 'Issiq amber kechalari, yumshoq atirgul tonglari va har kun uchun nafis yangi notalarni kayfiyat bo\'yicha o\'rganing.', group: 'banners' },
+    { key: 'promo_banner_link', value: '/products', group: 'banners' },
+  ];
+
+  for (const setting of defaultSettings) {
+    await prisma.setting.create({
+      data: setting,
+    });
+  }
+  console.log('✅ Default settings seeded!');
 }
 
 main()

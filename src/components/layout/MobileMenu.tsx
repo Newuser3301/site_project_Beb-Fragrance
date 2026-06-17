@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Package, Heart } from 'lucide-react';
+import { LogOut, Package, Heart, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import {
   Sheet,
@@ -114,6 +114,14 @@ export function MobileMenu({ user }: MobileMenuProps) {
             <>
               <Separator className="my-6" />
               <div className="space-y-1">
+                <Link
+                  href="/profile"
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-cream-100 hover:text-gold-600"
+                >
+                  <User className="h-4 w-4" />
+                  {tCommon('myProfile')}
+                </Link>
                 <Link
                   href="/orders"
                   onClick={closeMobileMenu}

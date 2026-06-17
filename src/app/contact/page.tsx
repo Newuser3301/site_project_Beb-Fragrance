@@ -1,7 +1,7 @@
 // src/app/contact/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Metadata } from 'next';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
@@ -20,6 +20,18 @@ const contactSchema = z.object({
 export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [liveSettings, setLiveSettings] = useState<Record<string, string> | null>(null);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setLiveSettings(data);
+        }
+      })
+      .catch((err) => console.error('Failed to load contact settings:', err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,10 +81,14 @@ export default function ContactPage() {
     }
   };
 
+  const phone = liveSettings?.contact_phone || CONTACT_PHONE;
+  const email = liveSettings?.contact_email || CONTACT_EMAIL;
+  const address = liveSettings?.contact_address || CONTACT_ADDRESS;
+
   const contactInfo = [
-    { icon: Mail, label: 'Email', value: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` },
-    { icon: Phone, label: 'Phone', value: CONTACT_PHONE, href: `tel:${CONTACT_PHONE}` },
-    { icon: MapPin, label: 'Address', value: CONTACT_ADDRESS, href: '#' },
+    { icon: Mail, label: 'Email', value: email, href: `mailto:${email}` },
+    { icon: Phone, label: 'Phone', value: phone, href: `tel:${phone}` },
+    { icon: MapPin, label: 'Address', value: address, href: '#' },
     { icon: Clock, label: 'Hours', value: 'Mon-Fri: 9AM-6PM EST', href: '#' },
   ];
 

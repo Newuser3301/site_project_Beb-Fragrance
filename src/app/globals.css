@@ -146,4 +146,85 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* ─── Global Dark Mode Overrides ────────────────────────────────────────── */
+  .dark {
+    color-scheme: dark;
+  }
+
+  /* Force background changes for hardcoded bg-white and light theme cards */
+  .dark .bg-white,
+  .dark .bg-white\/90,
+  .dark .bg-white\/95,
+  .dark .bg-white\/80 {
+    background-color: hsl(223 26% 14%) !important; /* matches --card */
+  }
+
+  .dark .bg-white\/10 {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .dark .bg-white\/45 {
+    background-color: rgba(30, 41, 59, 0.45) !important;
+  }
+
+  .dark .bg-gray-50,
+  .dark .bg-gray-50\/60,
+  .dark .bg-\[\#f8fbff\],
+  .dark .bg-\[\#f7f9fd\],
+  .dark .bg-\[\#fbfbfc\],
+  .dark .bg-\[\#f6f7f8\],
+  .dark .bg-cream-50,
+  .dark .bg-cream-100,
+  .dark .bg-blue-50\/70,
+  .dark .bg-blue-50\/50,
+  .dark .bg-\[\#EFF6FF\] {
+    background-color: hsl(226 28% 11%) !important; /* matches --background */
+  }
+
+  .dark .bg-\[\#f5eadf\],
+  .dark .bg-\[\#fbfdff\],
+  .dark .bg-\[\#fcfdff\] {
+    background-color: hsl(223 26% 14%) !important; /* matches --card */
+  }
+
+  /* Force border changes for light theme borders */
+  .dark .border-gray-100,
+  .dark .border-gray-150,
+  .dark .border-gray-200,
+  .dark .border-gray-300,
+  .dark .border-\[rgba\(13\,28\,48\,0\.08\)\],
+  .dark .border-\[rgba\(13\,28\,48\,0\.10\)\],
+  .dark .border-\[rgba\(106\,53\,83\,0\.08\)\],
+  .dark .border-\[rgba\(106\,53\,83\,0\.10\)\] {
+    border-color: hsl(223 18% 22%) !important; /* matches --border */
+  }
+
+  /* Force readable text colors for elements that hardcoded light mode slate/charcoal colors */
+  .dark .text-\[\#10233e\],
+  .dark .text-\[\#12315c\],
+  .dark .text-\[\#163050\],
+  .dark .text-\[\#17355d\],
+  .dark .text-\[\#2f1d28\],
+  .dark .text-\[\#3f2a37\],
+  .dark .text-\[\#341f2b\],
+  .dark .text-gray-900,
+  .dark .text-gray-950,
+  .dark .text-slate-900 {
+    color: hsl(210 22% 96%) !important; /* matches --foreground */
+  }
+
+  /* Force readable secondary text colors for elements that hardcoded light mode grays/pinks */
+  .dark .text-\[\#465a74\],
+  .dark .text-\[\#5f5860\],
+  .dark .text-\[\#60738f\],
+  .dark .text-\[\#6e7f96\],
+  .dark .text-\[\#7d6874\],
+  .dark .text-\[\#8c6d7d\],
+  .dark .text-\[\#7f6474\],
+  .dark .text-gray-500,
+  .dark .text-gray-600,
+  .dark .text-slate-600 {
+    color: hsl(217 12% 70%) !important; /* matches --muted-foreground */
+  }
 }

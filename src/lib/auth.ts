@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import type { UserRole } from '@prisma/client';
 import { isMockModeEnabled, logFallbackOnce } from '@/lib/app-mode';
@@ -17,6 +18,10 @@ if (process.env.NODE_ENV === 'production' && !authSecret) {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: authUsesDatabase ? PrismaAdapter(prisma) : undefined,
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     Credentials({
       name: 'Credentials',
       credentials: {

@@ -30,9 +30,10 @@ export interface HeaderProps {
     image?: string | null;
   } | null;
   locale: AppLocale;
+  settings?: Record<string, string>;
 }
 
-export function Header({ user, locale }: HeaderProps) {
+export function Header({ user, locale, settings }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<AppLocale>(locale);
@@ -104,14 +105,14 @@ export function Header({ user, locale }: HeaderProps) {
         <div className="border-b border-[rgba(13,28,48,0.08)] bg-[#0f1b2d] text-white dark:border-slate-800 dark:bg-slate-950">
           <div className="container-beb flex h-9 items-center justify-between gap-4 text-[11px]">
             <p className="truncate tracking-[0.06em] text-white/80">
-              {tHeader('topbar', { phone: CONTACT_PHONE })}
+              {tHeader('topbar', { phone: settings?.contact_phone || CONTACT_PHONE })}
             </p>
             <div className="ml-auto hidden items-center gap-4 text-white/80 sm:flex">
               <a
-                href={`mailto:${CONTACT_EMAIL}`}
+                href={`mailto:${settings?.contact_email || CONTACT_EMAIL}`}
                 className="transition-colors hover:text-white"
               >
-                {CONTACT_EMAIL}
+                {settings?.contact_email || CONTACT_EMAIL}
               </a>
             </div>
           </div>
@@ -130,10 +131,10 @@ export function Header({ user, locale }: HeaderProps) {
               </button>
               <Link href="/" className="flex flex-col text-left">
                 <span className="font-serif text-[24px] font-semibold tracking-[0.10em] text-[#12315c] dark:text-white">
-                  BEB FRAGRANCE
+                  {settings?.site_name || 'BEB FRAGRANCE'}
                 </span>
                 <span className="text-[10px] uppercase tracking-[0.30em] text-[#6e7f96] dark:text-slate-400">
-                  {tHeader('storeTagline')}
+                  {settings?.site_tagline || tHeader('storeTagline')}
                 </span>
               </Link>
             </div>
