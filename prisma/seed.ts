@@ -2,6 +2,8 @@ import {
   Gender,
   NoteType,
   PrismaClient,
+  OrderStatus,
+  PaymentStatus,
 } from '@prisma/client';
 import { randomBytes, scrypt as scryptCallback } from 'crypto';
 import { promisify } from 'util';
@@ -185,6 +187,7 @@ async function main() {
   await prisma.cart.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.address.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.productNote.deleteMany();
   await prisma.productVariant.deleteMany();
@@ -193,6 +196,8 @@ async function main() {
   await prisma.category.deleteMany();
   await prisma.brand.deleteMany();
   await prisma.setting.deleteMany();
+  await prisma.supportTicket.deleteMany();
+  await prisma.notification.deleteMany();
 
   // Create admin user
   const adminUser = await prisma.user.upsert({
@@ -261,6 +266,8 @@ async function main() {
   });
 
   const CONVERSION_RATE = 12800;
+
+  const seededProducts: any[] = [];
 
   // Seed products
   for (let index = 0; index < productsData.length; index += 1) {
@@ -334,7 +341,11 @@ async function main() {
           })),
         },
       },
+      include: {
+        variants: true,
+      },
     });
+    seededProducts.push(createdProduct);
 
     // Seed mock reviews from unique users to populate averageRating (rating is out of 5)
     const ratingTarget = prod.rating;
@@ -411,6 +422,187 @@ async function main() {
     });
   }
   console.log('✅ Default settings seeded!');
+
+  // Create Shipping Address for user1 and user2
+  console.log('Seeding shipping addresses...');
+  const address1 = await prisma.address.create({
+    data: {
+      firstName: 'Azizbek',
+      lastName: 'Karimov',
+      phone: '+998901234567',
+      street: 'Mustaqillik ko\'chasi, 15-uy',
+      city: 'Toshkent',
+      postalCode: '100000',
+      userId: user1.id,
+      type: 'SHIPPING',
+      isDefault: true,
+    }
+  });
+
+  const address2 = await prisma.address.create({
+    data: {
+      firstName: 'Madina',
+      lastName: 'Aliyeva',
+      phone: '+998939876543',
+      street: 'Amir Temur ko\'chasi, 22-uy',
+      city: 'Samarqand',
+      postalCode: '140100',
+      userId: user2.id,
+      type: 'SHIPPING',
+      isDefault: true,
+    }
+  });
+
+  // Seed mock orders for analytics
+  console.log('Seeding mock orders for analytics...');
+  const orderDates = [
+    // Current month (June 2026)
+    new Date('2026-06-16T14:32:00Z'),
+    new Date('2026-06-15T09:12:00Z'),
+    new Date('2026-06-12T18:45:00Z'),
+    new Date('2026-06-08T10:20:00Z'),
+    // May 2026
+    new Date('2026-05-24T11:30:00Z'),
+    new Date('2026-05-18T16:40:00Z'),
+    new Date('2026-05-05T15:22:00Z'),
+    // April 2026
+    new Date('2026-04-20T10:05:00Z'),
+    new Date('2026-04-02T13:50:00Z'),
+    // March 2026
+    new Date('2026-03-25T11:15:00Z'),
+    new Date('2026-03-14T09:30:00Z'),
+    new Date('2026-03-01T17:10:00Z'),
+    // February 2026
+    new Date('2026-02-18T12:00:00Z'),
+    new Date('2026-02-05T08:45:00Z'),
+    // January 2026
+    new Date('2026-01-20T14:20:00Z')
+  ];
+
+  for (let i = 0; i < orderDates.length; i++) {
+    const orderDate = orderDates[i];
+    const orderNum = `ORD-${1000 + i}`;
+    const user = i % 2 === 0 ? user1 : user2;
+    const address = i % 2 === 0 ? address1 : address2;
+    
+    // Select 1 or 2 products randomly from seededProducts
+    const p1 = seededProducts[i % seededProducts.length];
+    const p2 = seededProducts[(i + 3) % seededProducts.length];
+    const items = [p1];
+    if (i % 3 === 0) items.push(p2);
+
+    let subtotal = 0;
+    const orderItemsData = items.map((product) => {
+      const variant = product.variants[0];
+      const quantity = (i % 2) + 1;
+      const price = Number(variant.price);
+      const itemTotal = price * quantity;
+      subtotal += itemTotal;
+      return {
+        productId: product.id,
+        variantId: variant.id,
+        quantity,
+        price,
+        total: itemTotal,
+      };
+    });
+
+    const shippingCost = 15000 / CONVERSION_RATE; // Let's use currency-adjusted price in USD for database
+    const discount = i % 4 === 0 ? 10 : 0; // $10 discount
+    const total = subtotal + shippingCost - discount;
+
+    const statusOptions: OrderStatus[] = ['DELIVERED', 'SHIPPED', 'PROCESSING', 'PENDING', 'CONFIRMED'];
+    const status = i < 3 ? statusOptions[i] : 'DELIVERED'; // keep recent orders pending/processing/shipped, others delivered
+    
+    const paymentStatusOptions: PaymentStatus[] = ['PAID', 'PENDING'];
+    const paymentStatus = status === 'DELIVERED' || status === 'SHIPPED' ? 'PAID' : paymentStatusOptions[i % 2];
+
+    await prisma.order.create({
+      data: {
+        orderNumber: orderNum,
+        status,
+        paymentStatus,
+        paymentMethod: i % 2 === 0 ? 'STRIPE' : 'CASH_ON_DELIVERY',
+        subtotal,
+        shippingCost,
+        discount,
+        total,
+        currency: 'USD',
+        userId: user.id,
+        shippingAddressId: address.id,
+        billingAddressId: address.id,
+        createdAt: orderDate,
+        updatedAt: orderDate,
+        items: {
+          create: orderItemsData,
+        },
+      },
+    });
+  }
+  console.log(`✅ ${orderDates.length} ta buyurtma muvaffaqiyatli qo'shildi!`);
+
+  // Support Tickets
+  console.log('Seeding support tickets...');
+  await prisma.supportTicket.createMany({
+    data: [
+      {
+        name: 'Olimjon Tojiyev',
+        email: 'olimjon@mail.com',
+        subject: 'Yetkazib berish muddati',
+        message: 'Salom, Chilonzorga yetkazib berish qancha vaqt oladi? To\'lovni click orqali qilsa bo\'ladimi?',
+        status: 'NEW',
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      },
+      {
+        name: 'Dilnoza Salimova',
+        email: 'dilnoza@gmail.com',
+        subject: 'Atir sifati haqida savol',
+        message: 'Menga "TT Kirke" atiri juda ma\'qul keldi, lekin uning hidi qancha vaqtgacha turadi?',
+        status: 'IN_PROGRESS',
+        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      },
+      {
+        name: 'Sherzod Alimov',
+        email: 'sherzod@yahoo.com',
+        subject: 'Buyurtmani bekor qilish',
+        message: 'Assalomu alaykum, adashib boshqa mahsulotga buyurtma berib qo\'yibman. Iltimos bekor qilib bering.',
+        status: 'RESOLVED',
+        response: 'Assalomu alaykum, Sherzod aka. Buyurtmangiz bekor qilindi. To\'lovingiz to\'liq qaytarildi.',
+        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      }
+    ]
+  });
+  console.log('✅ Support tickets seeded!');
+
+  // Notifications
+  console.log('Seeding notifications...');
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: null,
+        message: 'Yangi murojaat qabul qilindi: Olimjon Tojiyev - Yetkazib berish muddati',
+        type: 'NEW_TICKET',
+        isRead: false,
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      },
+      {
+        userId: null,
+        message: 'Yangi mijoz ro\'yxatdan o\'tdi: Madina Aliyeva',
+        type: 'NEW_USER',
+        isRead: false,
+        createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      },
+      {
+        userId: user1.id,
+        message: 'Sizning #ORD-1001 buyurtmangiz tasdiqlandi!',
+        type: 'ORDER_STATUS_CHANGE',
+        isRead: false,
+        createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      }
+    ]
+  });
+  console.log('✅ Notifications seeded!');
 }
 
 main()

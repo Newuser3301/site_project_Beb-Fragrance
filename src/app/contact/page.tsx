@@ -2,22 +2,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Metadata } from 'next';
-import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
-import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_ADDRESS, SITE_NAME } from '@/lib/constants';
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_ADDRESS } from '@/lib/constants';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 const contactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email'),
-  subject: z.string().min(5, 'Subject must be at least 5 characters'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
+  name: z.string().min(2),
+  email: z.string().email(),
+  subject: z.string().min(5),
+  message: z.string().min(10),
 });
 
 export default function ContactPage() {
+  const t = useTranslations('contactPage');
+  const tCommon = useTranslations('common');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [liveSettings, setLiveSettings] = useState<Record<string, string> | null>(null);
@@ -50,7 +51,9 @@ export default function ContactPage() {
     if (!validation.success) {
       const fieldErrors: Record<string, string> = {};
       validation.error.errors.forEach((err) => {
-        fieldErrors[err.path[0] as string] = err.message;
+        const field = err.path[0] as string;
+        const key = `validation${field.charAt(0).toUpperCase() + field.slice(1)}`;
+        fieldErrors[field] = t(key);
       });
       setErrors(fieldErrors);
       setIsLoading(false);
@@ -67,14 +70,14 @@ export default function ContactPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to send message');
+        throw new Error(result.error || t('errorMessage'));
       }
 
-      toast.success('Message sent successfully! We will get back to you soon.');
+      toast.success(t('successMessage'));
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'Failed to send message. Please try again.'
+        error instanceof Error ? error.message : t('errorMessage')
       );
     } finally {
       setIsLoading(false);
@@ -87,20 +90,19 @@ export default function ContactPage() {
 
   const contactInfo = [
     { icon: Mail, label: 'Email', value: email, href: `mailto:${email}` },
-    { icon: Phone, label: 'Phone', value: phone, href: `tel:${phone}` },
-    { icon: MapPin, label: 'Address', value: address, href: '#' },
-    { icon: Clock, label: 'Hours', value: 'Mon-Fri: 9AM-6PM EST', href: '#' },
+    { icon: Phone, label: tCommon('contact'), value: phone, href: `tel:${phone}` },
+    { icon: MapPin, label: t('hoursLabel'), value: address, href: '#' },
+    { icon: Clock, label: t('hoursLabel'), value: t('hoursValue'), href: '#' },
   ];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
-        <h1 className="font-serif text-4xl font-bold text-gray-900 sm:text-5xl">
-          Contact Us
+        <h1 className="font-serif text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
+          {t('title')}
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500">
-          Have a question? We&apos;d love to hear from you. Send us a message and we&apos;ll
-          respond as soon as possible.
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500 dark:text-gray-400">
+          {t('description')}
         </p>
       </div>
 
@@ -110,85 +112,85 @@ export default function ContactPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                  Name *
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('formName')}
                 </label>
                 <input
                   type="text"
                   name="name"
-                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20"
-                  placeholder="Your name"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                  placeholder={t('placeholderName')}
                 />
                 {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                  Email *
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('formEmail')}
                 </label>
                 <input
                   type="email"
                   name="email"
-                  className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20"
-                  placeholder="your@email.com"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                  placeholder={t('placeholderEmail')}
                 />
                 {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
               </div>
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                Subject *
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('formSubject')}
               </label>
               <input
                 type="text"
                 name="subject"
-                className="w-full rounded-xl border px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20"
-                placeholder="How can we help?"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                placeholder={t('placeholderSubject')}
               />
               {errors.subject && <p className="mt-1 text-xs text-red-500">{errors.subject}</p>}
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                Message *
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('formMessage')}
               </label>
               <textarea
                 name="message"
                 rows={6}
-                className="w-full resize-none rounded-xl border px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20"
-                placeholder="Your message..."
+                className="w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition-all placeholder:text-gray-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                placeholder={t('placeholderMessage')}
               />
               {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
             </div>
             <Button type="submit" variant="luxury" isLoading={isLoading}>
               <Send className="mr-2 h-4 w-4" />
-              Send Message
+              {t('buttonSend')}
             </Button>
           </form>
         </div>
 
         {/* Contact Info */}
         <div className="space-y-4">
-          {contactInfo.map((item) => (
+          {contactInfo.map((item, idx) => (
             <div
-              key={item.label}
-              className="rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md"
+              key={idx}
+              className="rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md dark:border-slate-850 dark:bg-slate-900"
             >
               <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold-50">
-                  <item.icon className="h-5 w-5 text-gold-600" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold-50 dark:bg-gold-500/10">
+                  <item.icon className="h-5 w-5 text-gold-600 dark:text-gold-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                  <p className="text-xs font-medium uppercase tracking-wide text-gray-400 dark:text-slate-500">
                     {item.label}
                   </p>
                   {item.href !== '#' ? (
                     <a
                       href={item.href}
-                      className="text-sm font-medium text-gray-900 hover:text-gold-600"
+                      className="text-sm font-medium text-gray-900 dark:text-white hover:text-gold-600 dark:hover:text-gold-450"
                     >
                       {item.value}
                     </a>
                   ) : (
-                    <p className="text-sm text-gray-900">{item.value}</p>
+                    <p className="text-sm text-gray-900 dark:text-white">{item.value}</p>
                   )}
                 </div>
               </div>

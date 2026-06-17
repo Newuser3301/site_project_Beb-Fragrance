@@ -16,6 +16,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { SearchBar } from '@/components/layout/SearchBar';
 import { UserMenu } from '@/components/layout/UserMenu';
 import { MobileMenu } from '@/components/layout/MobileMenu';
+import { NotificationBell } from '@/components/layout/NotificationBell';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
 import { useWishlistStore } from '@/store/useWishlistStore';
@@ -203,6 +204,8 @@ export function Header({ user, locale, settings }: HeaderProps) {
                   </span>
                 )}
               </button>
+ 
+              {user && <NotificationBell />}
 
               <div className="hidden sm:block">
                 <UserMenu user={user} className="rounded-2xl" />

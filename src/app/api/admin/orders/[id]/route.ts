@@ -214,6 +214,20 @@ export async function PUT(
       }
     }
 
+    // Create customer notification
+    try {
+      await prisma.notification.create({
+        data: {
+          userId: updatedOrder.userId,
+          message: `Buyurtmangiz statusi o'zgardi: #${updatedOrder.orderNumber} buyurtma holati "${newStatus}" ga o'zgartirildi.`,
+          type: 'ORDER_STATUS_CHANGE',
+          isRead: false,
+        },
+      });
+    } catch (notifError) {
+      console.error('[ADMIN_ORDER_NOTIFICATION]', notifError);
+    }
+
     // Send email notifications
     try {
       if (currentOrder.user.email) {

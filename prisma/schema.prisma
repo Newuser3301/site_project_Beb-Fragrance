@@ -112,6 +112,7 @@ model User {
   orders        Order[]
   reviews       Review[]
   blogPosts     BlogPost[]
+  notifications Notification[]
 
   @@index([email])
   @@index([role])
@@ -557,4 +558,40 @@ model Setting {
   @@index([key])
   @@index([group])
   @@map("settings")
+}
+
+enum TicketStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+model SupportTicket {
+  id        String       @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String       @db.Text
+  status    TicketStatus @default(NEW)
+  response  String?      @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([status])
+  @@map("support_tickets")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  message   String   @db.Text
+  type      String   // 'NEW_ORDER', 'NEW_USER', 'NEW_TICKET', 'ORDER_STATUS_CHANGE', etc.
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
 }

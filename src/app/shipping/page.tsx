@@ -1,73 +1,72 @@
 // src/app/shipping/page.tsx
-import { Metadata } from 'next';
-import { SITE_NAME, SHIPPING_FREE_THRESHOLD, SHIPPING_COST } from '@/lib/constants';
-import { Truck, Globe, Clock, Package } from 'lucide-react';
+import { Truck, Clock } from 'lucide-react';
+import { getTranslator } from '@/lib/i18n-server';
 
-export const metadata: Metadata = {
-  title: `Shipping Policy | ${SITE_NAME}`,
-  description: 'Learn about our shipping rates, delivery times, and policies.',
-};
+export async function generateMetadata() {
+  const t = await getTranslator();
+  return {
+    title: `${t('shippingPage.title')} | Beb Fragrance`,
+    description: t('shippingPage.description'),
+  };
+}
 
-export default function ShippingPage() {
+export default async function ShippingPage() {
+  const t = await getTranslator();
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
-        <h1 className="font-serif text-4xl font-bold text-gray-900 sm:text-5xl">
-          Shipping Policy
+        <h1 className="font-serif text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
+          {t('shippingPage.title')}
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-lg text-gray-500">
-          Everything you need to know about our shipping process.
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-500 dark:text-slate-400">
+          {t('shippingPage.description')}
         </p>
       </div>
 
       <div className="prose prose-lg max-w-none space-y-12">
         <section>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">Processing Time</h2>
-          <p className="mt-4 text-gray-600">
-            All orders are processed within 1-2 business days (excluding weekends and holidays).
-            You will receive a confirmation email once your order has been shipped.
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('shippingPage.s1Title')}</h2>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            {t('shippingPage.s1Desc')}
           </p>
         </section>
 
         <section>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">Shipping Rates</h2>
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('shippingPage.s2Title')}</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6">
-              <Truck className="h-8 w-8 text-gold-600" />
-              <h3 className="mt-3 font-semibold text-gray-900">Standard Shipping</h3>
-              <p className="mt-1 text-sm text-gray-500">5-7 business days</p>
-              <p className="mt-2 text-2xl font-bold text-gold-600">
-                Free over 
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+              <Truck className="h-8 w-8 text-gold-600 dark:text-gold-400" />
+              <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{t('shippingPage.standardTitle')}</h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('shippingPage.standardTime')}</p>
+              <p className="mt-2 text-2xl font-bold text-gold-600 dark:text-gold-400">
+                {t('shippingPage.standardPriceFree')}
               </p>
-              <p className="text-sm text-gray-400">
-                 for orders under 
+              <p className="text-sm text-gray-450 dark:text-slate-500">
+                {t('shippingPage.standardPriceFlat')}
               </p>
             </div>
-            <div className="rounded-2xl border border-gray-200 bg-white p-6">
-              <Clock className="h-8 w-8 text-gold-600" />
-              <h3 className="mt-3 font-semibold text-gray-900">Express Shipping</h3>
-              <p className="mt-1 text-sm text-gray-500">2-3 business days</p>
-              <p className="mt-2 text-2xl font-bold text-gold-600">.99</p>
-              <p className="text-sm text-gray-400">Flat rate for all orders</p>
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+              <Clock className="h-8 w-8 text-gold-600 dark:text-gold-400" />
+              <h3 className="mt-3 font-semibold text-gray-900 dark:text-white">{t('shippingPage.expressTitle')}</h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('shippingPage.expressTime')}</p>
+              <p className="mt-2 text-2xl font-bold text-gold-600 dark:text-gold-400">{t('shippingPage.expressPrice')}</p>
+              <p className="text-sm text-gray-450 dark:text-slate-500">{t('shippingPage.expressPriceSub')}</p>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">International Shipping</h2>
-          <p className="mt-4 text-gray-600">
-            We ship to over 50 countries worldwide. International shipping rates are calculated
-            at checkout based on destination and package weight. Delivery typically takes 7-14
-            business days. Please note that international orders may be subject to customs fees
-            and import duties.
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('shippingPage.s3Title')}</h2>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            {t('shippingPage.s3Desc')}
           </p>
         </section>
 
         <section>
-          <h2 className="font-serif text-2xl font-bold text-gray-900">Order Tracking</h2>
-          <p className="mt-4 text-gray-600">
-            Once your order ships, you will receive a confirmation email with a tracking number.
-            You can track your package through our website or directly on the carrier&apos;s website.
+          <h2 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">{t('shippingPage.s4Title')}</h2>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">
+            {t('shippingPage.s4Desc')}
           </p>
         </section>
       </div>

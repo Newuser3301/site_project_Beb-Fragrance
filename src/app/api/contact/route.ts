@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { isResendEnabled } from '@/lib/app-mode';
 import { sendContactMessageEmail } from '@/lib/email';
+import { prisma } from '@/lib/prisma';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -25,17 +26,43 @@ export async function POST(request: NextRequest) {
 
     const { name, email, subject, message } = validation.data;
 
-    if (!isResendEnabled()) {
-      return NextResponse.json(
-        { error: 'Contact form is temporarily unavailable. Please email us directly.' },
-        { status: 503 }
-      );
+    // Save support ticket in the database
+    let ticket;
+    try {
+      ticket = await prisma.supportTicket.create({
+        data: {
+          name,
+          email,
+          subject,
+          message,
+          status: 'NEW',
+        },
+      });
+
+      // Dispatch admin notification
+      await prisma.notification.create({
+        data: {
+          userId: null,
+          message: `Yangi murojaat: ${name} - ${subject}`,
+          type: 'NEW_TICKET',
+          isRead: false,
+        },
+      });
+    } catch (dbError) {
+      console.error('[CONTACT_DB_ERROR]', dbError);
     }
 
-    await sendContactMessageEmail({ name, email, subject, message });
+    // Try sending email if Resend is enabled, but don't crash if not
+    if (isResendEnabled()) {
+      try {
+        await sendContactMessageEmail({ name, email, subject, message });
+      } catch (emailError) {
+        console.error('[CONTACT_EMAIL_ERROR]', emailError);
+      }
+    }
 
     return NextResponse.json(
-      { message: 'Message sent successfully' },
+      { message: 'Message sent successfully', ticketId: ticket?.id },
       { status: 200 }
     );
   } catch (error) {

@@ -251,6 +251,20 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // Create admin notification
+      try {
+        await tx.notification.create({
+          data: {
+            userId: null,
+            message: `Yangi buyurtma qabul qilindi: #${orderNumber} (${shippingAddress.name} - $${total.toFixed(2)})`,
+            type: 'NEW_ORDER',
+            isRead: false,
+          },
+        });
+      } catch (err) {
+        console.error('Checkout notification error:', err);
+      }
+
       return { order: newOrder };
     });
 

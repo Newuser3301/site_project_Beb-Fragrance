@@ -60,6 +60,20 @@ export async function POST(request: Request) {
       },
     });
 
+    // Create admin notification
+    try {
+      await prisma.notification.create({
+        data: {
+          userId: null,
+          message: `Yangi mijoz ro'yxatdan o'tdi: ${name} (${email})`,
+          type: 'NEW_USER',
+          isRead: false,
+        },
+      });
+    } catch (notifError) {
+      console.error('[REGISTER_NOTIFICATION_ERROR]', notifError);
+    }
+
     return NextResponse.json({ user }, { status: 201 });
   } catch (error) {
     console.error('[AUTH_REGISTER_POST]', error);
