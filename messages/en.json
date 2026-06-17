@@ -307,5 +307,28 @@
     "s3Desc": "Refunds are processed within 5-10 business days after we receive and inspect the returned item. The refund will be credited to the original payment method. Please note that shipping charges are non-refundable.",
     "s4Title": "Exceptions",
     "s4Desc": "For hygiene reasons, we cannot accept returns on opened or used fragrances. Gift cards are non-returnable. Sale items are final sale and cannot be returned."
+  },
+  "whyChooseUs": {
+    "eyebrow": "Only High Quality Is The Only Way",
+    "title": "Premium service wrapped in a soft luxury shopping experience",
+    "description": "From authentic perfumes to gift-ready packaging, every detail is tailored to feel elegant, smooth, and trustworthy.",
+    "features": {
+      "authentic": {
+        "title": "Authentic Products",
+        "description": "100% genuine fragrances from authorized distributors"
+      },
+      "shipping": {
+        "title": "Free Shipping",
+        "description": "On orders over $100 worldwide"
+      },
+      "payment": {
+        "title": "Secure Payment",
+        "description": "Encrypted transactions for your peace of mind"
+      },
+      "returns": {
+        "title": "Easy Returns",
+        "description": "30-day return policy on unopened items"
+      }
+    }
   }
 }

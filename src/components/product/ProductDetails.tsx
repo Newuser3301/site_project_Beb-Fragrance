@@ -1,3 +1,4 @@
+// src/components/product/ProductDetails.tsx
 'use client';
 
 import { useState } from 'react';
@@ -118,8 +119,8 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
         {/* Left Column */}
         <div className="lg:col-span-7 space-y-6">
           {/* Large main product image (full width, rounded card, white bg) */}
-          <div className="relative overflow-hidden rounded-[12px] border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="relative overflow-hidden rounded-[8px] bg-[#f7fbff] aspect-square">
+          <div className="relative overflow-hidden rounded-[12px] border border-gray-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div className="relative overflow-hidden rounded-[8px] bg-[#f7fbff] aspect-square dark:bg-slate-950">
               {/* Top-left: badge pill */}
               {mainBadge && (
                 <span className="absolute left-4 top-4 z-10 rounded-full bg-slate-900 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
@@ -132,7 +133,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
                 <button
                   type="button"
                   onClick={openFullscreen}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-slate-700 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-slate-700 shadow-sm hover:scale-105 active:scale-95 transition-all dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
                   aria-label="To'liq ekran"
                 >
                   <span className="text-sm font-bold">⛶</span>
@@ -140,7 +141,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
                 <button
                   type="button"
                   onClick={shareProduct}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-slate-700 shadow-sm hover:scale-105 active:scale-95 transition-all"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-slate-700 shadow-sm hover:scale-105 active:scale-95 transition-all dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
                   aria-label="Ulashish"
                 >
                   <span className="text-sm font-bold">⤴</span>
@@ -148,7 +149,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
                 <button
                   type="button"
                   onClick={toggleWishlist}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-[#ec4899] shadow-sm hover:scale-105 active:scale-95 transition-all"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-100 text-[#ec4899] shadow-sm hover:scale-105 active:scale-95 transition-all dark:bg-slate-800 dark:border-slate-700"
                   aria-label="Sevimlilar"
                 >
                   <Heart className={cn('h-4.5 w-4.5 text-[#ec4899]', inWishlist && 'fill-[#ec4899]')} />
@@ -180,8 +181,8 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
                       type="button"
                       onClick={() => setActiveImageIndex(index)}
                       className={cn(
-                        'relative aspect-square overflow-hidden rounded-lg border-2 bg-[#f7fbff] transition-all',
-                        index === activeImageIndex ? 'border-[#2563eb]' : 'border-transparent hover:border-gray-200'
+                        'relative aspect-square overflow-hidden rounded-lg border-2 bg-[#f7fbff] transition-all dark:bg-slate-950',
+                        index === activeImageIndex ? 'border-[#2563eb]' : 'border-transparent hover:border-gray-200 dark:hover:border-slate-800'
                       )}
                     >
                       <Image
@@ -199,17 +200,17 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
 
           {/* Tab bar with 4 tabs: Tavsif | Specs | Sharhlar | Yetkazish */}
           <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 rounded-xl bg-gray-100 p-1">
-              <TabsTrigger value="description" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold">
+            <TabsList className="grid w-full grid-cols-4 rounded-xl bg-gray-100 p-1 dark:bg-slate-950">
+              <TabsTrigger value="description" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold dark:data-[state=active]:bg-slate-900 dark:text-slate-400 dark:data-[state=active]:text-slate-100">
                 Tavsif
               </TabsTrigger>
-              <TabsTrigger value="specs" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold">
+              <TabsTrigger value="specs" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold dark:data-[state=active]:bg-slate-900 dark:text-slate-400 dark:data-[state=active]:text-slate-100">
                 Specs
               </TabsTrigger>
-              <TabsTrigger value="reviews" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold">
+              <TabsTrigger value="reviews" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold dark:data-[state=active]:bg-slate-900 dark:text-slate-400 dark:data-[state=active]:text-slate-100">
                 Sharhlar
               </TabsTrigger>
-              <TabsTrigger value="delivery" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold">
+              <TabsTrigger value="delivery" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm font-semibold dark:data-[state=active]:bg-slate-900 dark:text-slate-400 dark:data-[state=active]:text-slate-100">
                 Yetkazish
               </TabsTrigger>
             </TabsList>
@@ -217,56 +218,56 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
             {/* Active tab content box (rounded border: radius 12px, border-gray-200, bg-white) */}
             <TabsContent
               value="description"
-              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm"
+              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
             >
-              <h3 className="text-base font-bold text-gray-900 mb-2">Qisqacha tavsif ✨</h3>
-              <p className="font-semibold text-gray-800 mb-5">
+              <h3 className="text-base font-bold text-gray-900 mb-2 dark:text-white">Qisqacha tavsif ✨</h3>
+              <p className="font-semibold text-gray-800 mb-5 dark:text-slate-200">
                 {product.shortDescription ?? product.description}
               </p>
 
               {/* 2×2 info grid inside same box */}
-              <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 mt-4">
+              <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 mt-4 dark:border-slate-800">
                 {/* Cell 1: Brendi — Original sertifikat */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50 border border-purple-100">
-                    <Award className="h-4.5 w-4.5 text-purple-600" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-50 border border-purple-100 dark:bg-purple-950/30 dark:border-purple-900/50">
+                    <Award className="h-4.5 w-4.5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400">Brendi</span>
-                    <span className="block text-xs sm:text-sm font-bold text-gray-900">Original sertifikat</span>
+                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400 dark:text-slate-500">Brendi</span>
+                    <span className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white">Original sertifikat</span>
                   </div>
                 </div>
 
                 {/* Cell 2: Yetkazish — 24–48 soat (Toshkent) */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 border border-blue-100">
-                    <Truck className="h-4.5 w-4.5 text-blue-600" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 border border-blue-100 dark:bg-blue-950/30 dark:border-blue-900/50">
+                    <Truck className="h-4.5 w-4.5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400">Yetkazish</span>
-                    <span className="block text-xs sm:text-sm font-bold text-gray-900">24–48 soat (Toshkent)</span>
+                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400 dark:text-slate-500">Yetkazish</span>
+                    <span className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white">24–48 soat (Toshkent)</span>
                   </div>
                 </div>
 
                 {/* Cell 3: Hajmi — dynamically mapped size(s) */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-pink-50 border border-pink-100">
-                    <Droplet className="h-4.5 w-4.5 text-pink-600" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-pink-50 border border-pink-100 dark:bg-pink-950/30 dark:border-pink-900/50">
+                    <Droplet className="h-4.5 w-4.5 text-pink-600 dark:text-pink-400" />
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400">Hajmi</span>
-                    <span className="block text-xs sm:text-sm font-bold text-gray-900">{dynamicVolumeLabel}</span>
+                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400 dark:text-slate-500">Hajmi</span>
+                    <span className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white">{dynamicVolumeLabel}</span>
                   </div>
                 </div>
 
                 {/* Cell 4: Reyting — rating value / 5.0 */}
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-100">
-                    <Star className="h-4.5 w-4.5 text-amber-500 fill-current" />
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 border border-amber-100 dark:bg-amber-950/30 dark:border-amber-900/50">
+                    <Star className="h-4.5 w-4.5 text-amber-500 fill-current dark:text-amber-400" />
                   </div>
                   <div>
-                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400">Reyting</span>
-                    <span className="block text-xs sm:text-sm font-bold text-gray-900">{ratingValue.toFixed(1)} / 5.0</span>
+                    <span className="block text-[11px] uppercase tracking-wider font-semibold text-gray-400 dark:text-slate-500">Reyting</span>
+                    <span className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white">{ratingValue.toFixed(1)} / 5.0</span>
                   </div>
                 </div>
               </div>
@@ -274,13 +275,13 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
 
             <TabsContent
               value="specs"
-              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm"
+              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-350"
             >
               <div className="grid gap-3 sm:grid-cols-2">
-                <div><span className="font-semibold text-gray-900">Brend:</span> {product.brand}</div>
-                <div><span className="font-semibold text-gray-900">Hajm:</span> {volumeLabel}</div>
-                <div><span className="font-semibold text-gray-900">Kategoriya:</span> {product.category.name}</div>
-                <div><span className="font-semibold text-gray-900">SKU:</span> {product.sku}</div>
+                <div><span className="font-semibold text-gray-900 dark:text-white">Brend:</span> {product.brand}</div>
+                <div><span className="font-semibold text-gray-900 dark:text-white">Hajm:</span> {volumeLabel}</div>
+                <div><span className="font-semibold text-gray-900 dark:text-white">Kategoriya:</span> {product.category.name}</div>
+                <div><span className="font-semibold text-gray-900 dark:text-white">SKU:</span> {product.sku}</div>
               </div>
             </TabsContent>
 
@@ -293,7 +294,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
 
             <TabsContent
               value="delivery"
-              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm"
+              className="mt-5 rounded-[12px] border border-gray-200 bg-white p-5 text-sm leading-7 text-gray-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
             >
               Toshkent bo&apos;ylab 24–48 soat ichida tez yetkazib beriladi. Hududlarga buyurtmalar ham ishonchli qadoqlash bilan yuboriladi.
             </TabsContent>
@@ -310,43 +311,43 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
 
         {/* Right Column */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="rounded-[12px] border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-[12px] border border-gray-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             {/* Breadcrumb: Bosh sahifa › Katalog › [Category] › [Product name] */}
-            <nav className="text-xs sm:text-sm text-[#60738f] mb-4">
+            <nav className="text-xs sm:text-sm text-[#60738f] mb-4 dark:text-slate-400">
               <ol className="flex flex-wrap items-center gap-1.5">
                 <li>
-                  <Link href="/" className="transition-colors hover:text-[#2563EB]">
+                  <Link href="/" className="transition-colors hover:text-[#2563EB] dark:hover:text-blue-400">
                     Bosh sahifa
                   </Link>
                 </li>
                 <li className="text-gray-400">›</li>
                 <li>
-                  <Link href="/products" className="transition-colors hover:text-[#2563EB]">
+                  <Link href="/products" className="transition-colors hover:text-[#2563EB] dark:hover:text-blue-400">
                     Katalog
                   </Link>
                 </li>
                 <li className="text-gray-400">›</li>
                 <li>
-                  <Link href={`/categories/${product.category.slug}`} className="transition-colors hover:text-[#2563EB]">
+                  <Link href={`/categories/${product.category.slug}`} className="transition-colors hover:text-[#2563EB] dark:hover:text-blue-400">
                     {product.category.name}
                   </Link>
                 </li>
                 <li className="text-gray-400">›</li>
-                <li className="font-semibold text-gray-900 truncate max-w-[150px]">{product.name}</li>
+                <li className="font-semibold text-gray-900 truncate max-w-[150px] dark:text-slate-100">{product.name}</li>
               </ol>
             </nav>
 
             {/* Product name (large, bold, h1) */}
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight dark:text-white">
               {product.name}
             </h1>
 
             {/* Two badge pills on one line: category tag (e.g. Floral) + # ID: 3 */}
             <div className="flex flex-wrap items-center gap-2 mt-3 mb-4">
-              <span className="rounded-full bg-purple-50 px-3 py-0.5 text-xs font-semibold text-purple-700 border border-purple-100 uppercase tracking-wider">
+              <span className="rounded-full bg-purple-50 px-3 py-0.5 text-xs font-semibold text-purple-700 border border-purple-100 uppercase tracking-wider dark:bg-purple-950/30 dark:text-purple-400 dark:border-purple-900/50">
                 {product.fragranceFamily ? product.fragranceFamily.charAt(0) + product.fragranceFamily.slice(1).toLowerCase() : product.category.name}
               </span>
-              <span className="rounded-full bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-600 border border-gray-200">
+              <span className="rounded-full bg-gray-50 px-3 py-0.5 text-xs font-semibold text-gray-650 border border-gray-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">
                 # ID: {product.id.slice(-1)}
               </span>
             </div>
@@ -363,30 +364,30 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
                     )}
                   />
                 ))}
-                <span className="ml-1 font-bold text-gray-900">{ratingValue.toFixed(1)}</span>
+                <span className="ml-1 font-bold text-gray-900 dark:text-slate-100">{ratingValue.toFixed(1)}</span>
               </div>
               <span className="text-gray-400">|</span>
-              <span className="text-gray-600 font-medium">{reviewCount} ta sharh</span>
+              <span className="text-gray-600 font-medium dark:text-slate-300">{reviewCount} ta sharh</span>
             </div>
 
             {/* Stock badge: ✅ Omborda bor: X ta */}
             <div className="mt-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-450 dark:border-emerald-900/50">
                 ✅ Omborda bor: {product.stock} ta
               </span>
             </div>
 
             {/* Price block */}
             <div className="mt-6 flex flex-wrap items-baseline gap-3">
-              <span className="text-3xl font-extrabold text-gray-900">
+              <span className="text-3xl font-extrabold text-gray-900 dark:text-white">
                 {formatUzPrice(product.price)}
               </span>
               {product.comparePrice && product.comparePrice > product.price ? (
                 <>
-                  <span className="text-lg text-gray-400 line-through">
+                  <span className="text-lg text-gray-400 line-through dark:text-slate-500">
                     {formatUzPrice(product.comparePrice)}
                   </span>
-                  <span className="rounded-full bg-pink-50 border border-pink-100 px-2.5 py-0.5 text-xs font-semibold text-pink-600">
+                  <span className="rounded-full bg-pink-50 border border-pink-100 px-2.5 py-0.5 text-xs font-semibold text-pink-600 dark:bg-pink-950/30 dark:text-pink-400 dark:border-pink-900/50">
                     Tejaysiz: -{discountPercent}%
                   </span>
                 </>
@@ -410,7 +411,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
               />
               <Button
                 variant="outline"
-                className="h-11 rounded-[12px] border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-center gap-1.5 w-full"
+                className="h-11 rounded-[12px] border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-center gap-1.5 w-full dark:border-slate-700 dark:text-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700"
                 asChild
               >
                 <Link href="/cart">
@@ -421,18 +422,18 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
             </div>
 
             {/* Delivery info row (2 cells with icons) */}
-            <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 p-4">
-              <div className="flex flex-col gap-3 text-sm text-gray-600">
+            <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+              <div className="flex flex-col gap-3 text-sm text-gray-600 dark:text-slate-400">
                 <div className="flex items-center gap-2.5">
                   <span className="text-lg">🚚</span>
                   <p>
-                    <span className="font-semibold text-gray-900">Tez yetkazish</span> / 24–48 soat (Toshkent)
+                    <span className="font-semibold text-gray-900 dark:text-slate-200">Tez yetkazish</span> / 24–48 soat (Toshkent)
                   </p>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <span className="text-lg">✳️</span>
                   <p>
-                    <span className="font-semibold text-gray-900">Original</span> / Tech-House kafolati
+                    <span className="font-semibold text-gray-900 dark:text-slate-200">Original</span> / Tech-House kafolati
                   </p>
                 </div>
               </div>
@@ -441,7 +442,7 @@ export function ProductDetails({ product, className }: ProductDetailsProps) {
             {/* ⓘ Yetkazish haqida batafsil — outline button full width */}
             <Button
               variant="outline"
-              className="mt-4 h-11 w-full rounded-[12px] border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-center gap-1.5"
+              className="mt-4 h-11 w-full rounded-[12px] border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-center gap-1.5 dark:border-slate-700 dark:text-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700"
               asChild
             >
               <Link href="/shipping">

@@ -1,10 +1,11 @@
+// src/components/home/HeroSection.tsx
 'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface HeroSectionProps {
   settings?: Record<string, string>;
@@ -12,6 +13,20 @@ interface HeroSectionProps {
 
 export function HeroSection({ settings }: HeroSectionProps) {
   const t = useTranslations('hero');
+  const locale = useLocale();
+  const isUz = locale === 'uz';
+
+  const titleLine1 = (isUz && settings?.hero_title_line1) || t('titleLine1');
+  const titleLine2 = (isUz && settings?.hero_title_line2) || t('titleLine2');
+  const description = (isUz && settings?.hero_description) || t('description');
+
+  const stat1Label = (isUz && settings?.hero_stat_1_label) || t('stats.brands');
+  const stat1Value = (isUz && settings?.hero_stat_1_value) || '120+';
+  const stat2Label = (isUz && settings?.hero_stat_2_label) || t('stats.giftReady');
+  const stat2Value = (isUz && settings?.hero_stat_2_value) || '24h';
+  const stat3Label = (isUz && settings?.hero_stat_3_label) || t('stats.signaturePicks');
+  const stat3Value = (isUz && settings?.hero_stat_3_value) || 'Top 50';
+
   const bottles = [
     {
       src: settings?.hero_bottle_image_1 || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=700&fit=crop',
@@ -59,20 +74,20 @@ export function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="max-w-[480px] font-serif text-4xl font-semibold leading-[0.97] text-[#2f1d28] md:text-5xl lg:text-[58px]"
+                className="max-w-[480px] font-serif text-4xl font-semibold leading-[0.97] text-[#2f1d28] md:text-5xl lg:text-[58px] dark:text-white"
               >
-                {settings?.hero_title_line1 || t('titleLine1')}
+                {titleLine1}
                 <br />
-                {settings?.hero_title_line2 || t('titleLine2')}
+                {titleLine2}
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="mt-4 max-w-md text-sm leading-7 text-[#5f5860] md:text-base"
+                className="mt-4 max-w-md text-sm leading-7 text-[#5f5860] md:text-base dark:text-slate-300"
               >
-                {settings?.hero_description || t('description')}
+                {description}
               </motion.p>
 
               <motion.div
@@ -103,9 +118,9 @@ export function HeroSection({ settings }: HeroSectionProps) {
                 className="mt-6 grid max-w-lg grid-cols-3 gap-3"
               >
                 {[
-                  { label: settings?.hero_stat_1_label || t('stats.brands'), value: settings?.hero_stat_1_value || '120+' },
-                  { label: settings?.hero_stat_2_label || t('stats.giftReady'), value: settings?.hero_stat_2_value || '24h' },
-                  { label: settings?.hero_stat_3_label || t('stats.signaturePicks'), value: settings?.hero_stat_3_value || 'Top 50' },
+                  { label: stat1Label, value: stat1Value },
+                  { label: stat2Label, value: stat2Value },
+                  { label: stat3Label, value: stat3Value },
                 ].map((item) => (
                   <div
                     key={item.label}

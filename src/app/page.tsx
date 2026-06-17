@@ -17,6 +17,7 @@ import {
 } from '@/lib/products-server';
 import { getTranslator } from '@/lib/i18n-server';
 import { prisma } from '@/lib/prisma';
+import { FeaturedProductsClient } from '@/components/home/FeaturedProductsClient';
 
 export const metadata: Metadata = {
   title: 'Beb Fragrance | Premium Perfume Store',
@@ -54,7 +55,7 @@ function HomeSectionHeading({
 
 async function FeaturedProductsSection() {
   const t = await getTranslator();
-  const products = await fetchFeaturedProducts(4);
+  const products = await fetchFeaturedProducts(24);
 
   return (
     <section className="py-10 md:py-14">
@@ -64,13 +65,7 @@ async function FeaturedProductsSection() {
           title={t('home.featuredTitle')}
         />
 
-        <div className="mb-8 flex items-center justify-center gap-5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8c6d7d]">
-          <span className="text-[#55324b]">Women</span>
-          <span>Men</span>
-          <span>Kids</span>
-        </div>
-
-        <ProductGrid products={products} />
+        <FeaturedProductsClient initialProducts={products} />
       </div>
     </section>
   );

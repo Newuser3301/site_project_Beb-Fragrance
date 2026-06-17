@@ -1,3 +1,4 @@
+// src/components/home/CategoriesSection.tsx
 'use client';
 
 import Image from 'next/image';
@@ -18,36 +19,36 @@ interface CategoriesSectionProps {
   categories?: CategoryCard[];
 }
 
-const fallbackCategoryCards = [
-  {
-    id: 'women',
-    name: 'Ayollar atirlari',
-    slug: 'women',
-    href: '/products?gender=WOMEN',
-    image:
-      'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1200&h=900&fit=crop',
-  },
-  {
-    id: 'men',
-    name: 'Erkaklar kolleksiyasi',
-    slug: 'men',
-    href: '/products?gender=MEN',
-    image:
-      'https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&h=900&fit=crop',
-  },
-  {
-    id: 'gift',
-    name: 'Sovg\'a setlari',
-    slug: 'gift',
-    href: '/products?gender=UNISEX',
-    image:
-      'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&h=900&fit=crop',
-  },
-];
-
 export function CategoriesSection({ categories }: CategoriesSectionProps) {
   const t = useTranslations('homeCategories');
   const tCommon = useTranslations('common');
+
+  const fallbackCategoryCards = [
+    {
+      id: 'women',
+      name: t('cards.women.title'),
+      slug: 'women',
+      href: '/products?gender=WOMEN',
+      image:
+        'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1200&h=900&fit=crop',
+    },
+    {
+      id: 'men',
+      name: t('cards.men.title'),
+      slug: 'men',
+      href: '/products?gender=MEN',
+      image:
+        'https://images.unsplash.com/photo-1541643600914-78b084683601?w=900&h=900&fit=crop',
+    },
+    {
+      id: 'gift',
+      name: t('cards.gift.title'),
+      slug: 'gift',
+      href: '/products?gender=UNISEX',
+      image:
+        'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=900&h=900&fit=crop',
+    },
+  ];
 
   const items = categories && categories.length > 0 
     ? categories.map(c => ({

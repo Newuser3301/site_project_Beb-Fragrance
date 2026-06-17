@@ -307,5 +307,28 @@
     "s3Desc": "Qaytarilgan mahsulot bizga kelib tushib, tekshirilgandan so'ng 5-10 ish kuni ichida pulingiz kartangizga qaytariladi. Yetkazib berish xarajatlari qaytarilmaydi.",
     "s4Title": "Istisnolar",
     "s4Desc": "Gigiyena va xavfsizlik qoidalariga ko'ra, ochilgan yoki ishlatilgan atirlar qaytarib olinmaydi. Sovg'a kartalari va chegirmadagi mahsulotlar qaytarilmaydi."
+  },
+  "whyChooseUs": {
+    "eyebrow": "Sifat - yagona yo'l",
+    "title": "Nafis va hashamatli xarid taassuroti bilan premium xizmat",
+    "description": "Haqiqiy parfyumdan tortib sovg'aga tayyor qadoqlashgacha - har bir tafsilot nafis, silliq va ishonchli bo'lishi uchun ishlab chiqilgan.",
+    "features": {
+      "authentic": {
+        "title": "Haqiqiy mahsulotlar",
+        "description": "Ishonchli distribyutorlardan 100% original atirlar"
+      },
+      "shipping": {
+        "title": "Yetkazib berish",
+        "description": "Toshkent bo'ylab va butun respublika bo'ylab tezkor yetkazish"
+      },
+      "payment": {
+        "title": "Xavfsiz to'lov",
+        "description": "Sizning xotirjamligingiz uchun xavfsiz va himoyalangan to'lovlar"
+      },
+      "returns": {
+        "title": "Oson qaytarish",
+        "description": "Ochilmagan mahsulotlar uchun 30 kunlik qaytarish kafolati"
+      }
+    }
   }
 }
