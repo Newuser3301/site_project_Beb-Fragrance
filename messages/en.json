@@ -330,5 +330,20 @@
         "description": "30-day return policy on unopened items"
       }
     }
+  },
+  "footer": {
+    "downloadApp": "Download the App",
+    "information": "Information",
+    "aboutUs": "About Us (Our Locations)",
+    "contactUs": "Contact Us",
+    "faq": "Frequently Asked Questions (FAQ)",
+    "usefulLinks": "Useful Links",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "shipping": "Shipping Policy",
+    "returns": "Returns Policy",
+    "contact": "Contact",
+    "workingHours": "Every day 9:00 - 22:00",
+    "allRightsReserved": "© {year} {siteName}. All rights reserved."
   }
 }

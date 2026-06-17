@@ -51,6 +51,7 @@ export function CheckoutForm() {
   const [shippingErrors, setShippingErrors] = useState<ShippingFormErrors>({});
   const [paymentErrors, setPaymentErrors] = useState<PaymentFormErrors>({});
   const [stripeEnabled, setStripeEnabled] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'TON' | 'CASH_ON_DELIVERY'>('STRIPE');
 
   useEffect(() => {
     let isMounted = true;
@@ -67,11 +68,14 @@ export function CheckoutForm() {
         };
 
         if (isMounted) {
-          setStripeEnabled(Boolean(data.services?.stripe));
+          const hasStripe = Boolean(data.services?.stripe);
+          setStripeEnabled(hasStripe);
+          setPaymentMethod(hasStripe ? 'STRIPE' : 'TON');
         }
       } catch {
         if (isMounted) {
           setStripeEnabled(false);
+          setPaymentMethod('TON');
         }
       }
     };
@@ -126,7 +130,7 @@ export function CheckoutForm() {
   };
 
   const validatePayment = (): boolean => {
-    if (!stripeEnabled) {
+    if (paymentMethod !== 'STRIPE') {
       setPaymentErrors({});
       return true;
     }
@@ -162,6 +166,7 @@ export function CheckoutForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          paymentMethod,
           items: items.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
@@ -279,6 +284,9 @@ export function CheckoutForm() {
                 errors={paymentErrors}
                 onChange={handlePaymentChange}
                 stripeEnabled={stripeEnabled}
+                paymentMethod={paymentMethod}
+                onPaymentMethodChange={setPaymentMethod}
+                total={total}
               />
             )}
 
@@ -323,13 +331,17 @@ export function CheckoutForm() {
                       Edit
                     </button>
                   </div>
-                  {stripeEnabled ? (
+                  {paymentMethod === 'STRIPE' ? (
                     <>
                       <p className="text-sm text-muted-foreground">
                         •••• •••• •••• {payment.cardNumber.replace(/\s/g, '').slice(-4)}
                       </p>
                       <p className="text-sm text-muted-foreground">{payment.cardholderName}</p>
                     </>
+                  ) : paymentMethod === 'TON' ? (
+                    <p className="text-sm text-muted-foreground">
+                      Telegram Wallet (TON)
+                    </p>
                   ) : (
                     <p className="text-sm text-muted-foreground">
                       Cash on delivery

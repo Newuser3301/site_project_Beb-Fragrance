@@ -330,5 +330,20 @@
         "description": "Ochilmagan mahsulotlar uchun 30 kunlik qaytarish kafolati"
       }
     }
+  },
+  "footer": {
+    "downloadApp": "Ilovani yuklab oling",
+    "information": "Ma'lumotlar",
+    "aboutUs": "Biz haqimizda (Manzillarimiz)",
+    "contactUs": "Aloqa / Kontaktlar",
+    "faq": "Ko'p so'raladigan savollar (FAQ)",
+    "usefulLinks": "Foydali havolalar",
+    "terms": "Foydalanish shartlari",
+    "privacy": "Maxfiylik siyosati",
+    "shipping": "Yetkazib berish shartlari",
+    "returns": "Qaytarish shartlari",
+    "contact": "Bog'lanish",
+    "workingHours": "Har kuni 9:00 - 22:00",
+    "allRightsReserved": "© {year} {siteName}. Barcha huquqlar himoyalangan."
   }
 }

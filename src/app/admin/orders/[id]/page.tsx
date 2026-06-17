@@ -98,6 +98,21 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          {order.paymentStatus === 'PENDING' && (
+            <form
+              action={async () => {
+                'use server';
+                await prisma.order.update({
+                  where: { id: order.id },
+                  data: { paymentStatus: 'PAID' },
+                });
+              }}
+            >
+              <Button type="submit" variant="luxury" size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                Mark as Paid
+              </Button>
+            </form>
+          )}
           <StatusBadge status={order.status} />
           {order.status === 'PENDING' && (
             <form
@@ -325,6 +340,19 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Payment Method</span>
+                <span className="font-semibold text-gray-900">
+                  {order.paymentMethod}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Payment Status</span>
+                <span className={`font-semibold ${order.paymentStatus === 'PAID' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  {order.paymentStatus}
+                </span>
+              </div>
+              <Separator />
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
                 <span className="font-medium text-gray-900">

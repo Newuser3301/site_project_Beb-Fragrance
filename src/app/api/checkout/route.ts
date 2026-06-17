@@ -31,6 +31,7 @@ const checkoutRequestSchema = z.object({
     )
     .min(1, 'At least one item required'),
   shippingAddress: shippingAddressSchema,
+  paymentMethod: z.enum(['STRIPE', 'CASH_ON_DELIVERY', 'TON']).optional(),
 });
 
 const FREE_SHIPPING_THRESHOLD = 100;
@@ -50,9 +51,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { items: cartItems, shippingAddress } = parsed.data;
+    const { items: cartItems, shippingAddress, paymentMethod: chosenPaymentMethod } = parsed.data;
     const stripeEnabled = isStripeEnabled();
     const databaseReady = await canUseDatabase();
+
+    let finalPaymentMethod = chosenPaymentMethod;
+    if (!finalPaymentMethod) {
+      finalPaymentMethod = stripeEnabled ? 'STRIPE' : 'CASH_ON_DELIVERY';
+    } else if (finalPaymentMethod === 'STRIPE' && !stripeEnabled) {
+      finalPaymentMethod = 'CASH_ON_DELIVERY';
+    }
 
     // Fetch products and validate stock (get first active variant for each product)
     const productIds = cartItems.map((i) => i.productId);
@@ -197,7 +205,7 @@ export async function POST(req: NextRequest) {
         success: true,
         orderId: `demo-${orderNumber}`,
         orderNumber,
-        paymentMethod: stripeEnabled ? 'STRIPE' : 'CASH_ON_DELIVERY',
+        paymentMethod: finalPaymentMethod,
         url: absoluteUrl(`/checkout/success?order=${orderNumber}`),
       });
     }
@@ -223,9 +231,9 @@ export async function POST(req: NextRequest) {
           orderNumber,
           userId: customer.id,
           shippingAddressId: address.id,
-          status: stripeEnabled ? 'PENDING' : 'CONFIRMED',
+          status: finalPaymentMethod === 'CASH_ON_DELIVERY' ? 'CONFIRMED' : 'PENDING',
           paymentStatus: 'PENDING',
-          paymentMethod: stripeEnabled ? 'STRIPE' : 'CASH_ON_DELIVERY',
+          paymentMethod: finalPaymentMethod,
           subtotal,
           shippingCost,
           tax,
@@ -268,12 +276,12 @@ export async function POST(req: NextRequest) {
       return { order: newOrder };
     });
 
-    if (!stripeEnabled) {
+    if (finalPaymentMethod === 'TON' || finalPaymentMethod === 'CASH_ON_DELIVERY') {
       return NextResponse.json({
         success: true,
         orderId: order.id,
         orderNumber,
-        paymentMethod: 'CASH_ON_DELIVERY',
+        paymentMethod: finalPaymentMethod,
         url: absoluteUrl(`/checkout/success?order=${order.id}`),
       });
     }

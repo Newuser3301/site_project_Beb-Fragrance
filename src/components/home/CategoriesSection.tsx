@@ -22,6 +22,21 @@ interface CategoriesSectionProps {
 export function CategoriesSection({ categories }: CategoriesSectionProps) {
   const t = useTranslations('homeCategories');
   const tCommon = useTranslations('common');
+  const tNav = useTranslations('nav.categories');
+
+  const getCategoryName = (slug: string, defaultName: string) => {
+    const key = slug
+      .toLowerCase()
+      .replace(/[-_]([a-z])/g, (g) => g[1].toUpperCase());
+    try {
+      if (tNav.has(key)) {
+        return tNav(key);
+      }
+    } catch {
+      // Ignore
+    }
+    return defaultName;
+  };
 
   const fallbackCategoryCards = [
     {
@@ -53,7 +68,7 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   const items = categories && categories.length > 0 
     ? categories.map(c => ({
         id: c.id,
-        name: c.name,
+        name: getCategoryName(c.slug, c.name),
         slug: c.slug,
         href: `/categories/${c.slug}`,
         image: c.image || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&h=800&fit=crop',

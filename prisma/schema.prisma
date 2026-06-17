@@ -71,6 +71,7 @@ enum PaymentStatus {
 enum PaymentMethod {
   STRIPE
   CASH_ON_DELIVERY
+  TON
 }
 
 enum AddressType {
