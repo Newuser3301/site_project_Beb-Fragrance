@@ -37,7 +37,7 @@ export function HeroSection({ settings }: HeroSectionProps) {
       className: 'left-[22%] top-[18%] h-[238px] w-[164px] rotate-[1deg]',
     },
     {
-      src: settings?.hero_bottle_image_3 || 'https://images.unsplash.com/photo-1615634260162-c5170a9bbf62?w=500&h=760&fit=crop',
+      src: settings?.hero_bottle_image_3 || 'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=500&h=760&fit=crop',
       className: 'left-[49%] top-[28%] h-[204px] w-[140px] -rotate-[5deg]',
     },
     {

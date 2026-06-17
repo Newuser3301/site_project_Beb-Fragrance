@@ -79,7 +79,7 @@ export function SettingsClientPage({
       'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=760&fit=crop',
     hero_bottle_image_3:
       initialSettings.hero_bottle_image_3 ??
-      'https://images.unsplash.com/photo-1615634260162-c5170a9bbf62?w=500&h=760&fit=crop',
+      'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=500&h=760&fit=crop',
 
     // Hero Stats
     hero_stat_1_value: initialSettings.hero_stat_1_value ?? '120+',

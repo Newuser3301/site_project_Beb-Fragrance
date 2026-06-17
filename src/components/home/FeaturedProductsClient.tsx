@@ -12,7 +12,7 @@ interface FeaturedProductsClientProps {
 
 export function FeaturedProductsClient({ initialProducts }: FeaturedProductsClientProps) {
   const t = useTranslations('products.filters.genders');
-  const [activeTab, setActiveTab] = useState<'WOMEN' | 'MEN' | 'UNISEX'>('WOMEN');
+  const [activeTab, setActiveTab] = useState<'WOMEN' | 'MEN'>('WOMEN');
 
   const filteredProducts = initialProducts.filter(
     (product) => product.gender === activeTab
@@ -21,7 +21,6 @@ export function FeaturedProductsClient({ initialProducts }: FeaturedProductsClie
   const tabs = [
     { id: 'WOMEN' as const, label: t('women') },
     { id: 'MEN' as const, label: t('men') },
-    { id: 'UNISEX' as const, label: t('unisex') }, // UNISEX acts as Kids / Gift / Unisex sets
   ];
 
   return (
